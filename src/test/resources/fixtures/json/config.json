@@ -1,0 +1,14 @@
+{
+    "simple": {
+        "steps": 4
+    },
+    "error-recovery": {
+        "steps": 17
+    },
+    "large": {
+        "steps": 3,
+        "outputFrom": 1,
+        "token": false,
+        "shortOutput": true
+    }
+}

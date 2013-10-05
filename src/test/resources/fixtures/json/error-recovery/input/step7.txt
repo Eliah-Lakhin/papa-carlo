@@ -1,0 +1,4 @@
+{
+  "key 1": "hello world",
+  key2: ["array value 1", "array value 2"]
+}

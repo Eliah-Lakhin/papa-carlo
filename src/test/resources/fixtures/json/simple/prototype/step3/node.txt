@@ -1,0 +1,233 @@
+ > remove:
+string:14
+{
+  "key 1": <<<"value 1">>>,
+  "key 2": "value 2",
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  "key 3.5": "value 3.5",
+  "key 4": {"subkey": null}
+}
+
+
+ > remove:
+entry:15
+{
+  <<<"key 1": "value 1">>>,
+  "key 2": "value 2",
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  "key 3.5": "value 3.5",
+  "key 4": {"subkey": null}
+}
+
+
+ > remove:
+string:12
+{
+  "key 1": "value 1",
+  "key 2": <<<"value 2">>>,
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  "key 3.5": "value 3.5",
+  "key 4": {"subkey": null}
+}
+
+
+ > remove:
+entry:13
+{
+  "key 1": "value 1",
+  <<<"key 2": "value 2">>>,
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  "key 3.5": "value 3.5",
+  "key 4": {"subkey": null}
+}
+
+
+ > remove:
+entry:11
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  <<<"key 3": ["array element", 100, true, "false", ["a", "b"]]>>>,
+  "key 3.5": "value 3.5",
+  "key 4": {"subkey": null}
+}
+
+
+ > remove:
+entry:5
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  "key 3.5": "value 3.5",
+  <<<"key 4": {"subkey": null}>>>
+}
+
+
+ > create:
+entry:27
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  "key 3.5": "value 3.5",
+  <<<"key 4": {"subkey": null}>>>
+}
+
+
+ > create:
+string:28
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  "key 3.5": <<<"value 3.5">>>,
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+entry:29
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  <<<"key 3.5": "value 3.5">>>,
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+entry:30
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  <<<"key 3": ["array element", 100, true, "false", ["a", "b"]]>>>,
+  "key 3.5": "value 3.5",
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+string:31
+{
+  "key 1": "value 1",
+  "key 2": <<<"value 2">>>,
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  "key 3.5": "value 3.5",
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+entry:32
+{
+  "key 1": "value 1",
+  <<<"key 2": "value 2">>>,
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  "key 3.5": "value 3.5",
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+string:33
+{
+  "key 1": <<<"value 1">>>,
+  "key 2": "value 2",
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  "key 3.5": "value 3.5",
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+entry:34
+{
+  <<<"key 1": "value 1">>>,
+  "key 2": "value 2",
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  "key 3.5": "value 3.5",
+  "key 4": {"subkey": null}
+}
+
+
+ > merge:
+object 1 {
+  entry:
+    entry 34 {
+      key: "key 1"
+      value:
+        string 33 {
+          value: "value 1"
+        }
+    }
+  entry:
+    entry 32 {
+      key: "key 2"
+      value:
+        string 31 {
+          value: "value 2"
+        }
+    }
+  entry:
+    entry 30 {
+      key: "key 3"
+      value:
+        array 10
+        cachable {
+          value:
+            string 26 {
+              value: "array element"
+            }
+          value:
+            number 25 {
+              value: 100
+            }
+          value:
+            boolean 24 {
+              value: true
+            }
+          value:
+            string 23 {
+              value: "false"
+            }
+          value:
+            array 18
+            cachable {
+              value:
+                string 17 {
+                  value: "a"
+                }
+              value:
+                string 16 {
+                  value: "b"
+                }
+            }
+        }
+    }
+  entry:
+    entry 29 {
+      key: "key 3.5"
+      value:
+        string 28 {
+          value: "value 3.5"
+        }
+    }
+  entry:
+    entry 27 {
+      key: "key 4"
+      value:
+        object 4
+        cachable {
+          entry:
+            entry 3 {
+              key: ]
+              value:
+                null 2 {
+                }
+            }
+        }
+    }
+}
+

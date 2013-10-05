@@ -1,0 +1,57 @@
+ > remove:
+string:13
+{
+  "key 1": "hello world",
+  "key 2": [<<<"array value 1">>>, "array value 2", "array value 3"],
+}
+
+
+ > remove:
+string:12
+{
+  "key 1": "hello world",
+  "key 2": ["array value 1", <<<"array value 2">>>, "array value 3"],
+}
+
+
+ > create:
+string:21
+{
+  "key 1": "hello world",
+  "key 2": ["array value 1", "array value 2", <<<"array value 3">>>],
+}
+
+
+ > create:
+string:22
+{
+  "key 1": "hello world",
+  "key 2": ["array value 1", <<<"array value 2">>>, "array value 3"],
+}
+
+
+ > create:
+string:23
+{
+  "key 1": "hello world",
+  "key 2": [<<<"array value 1">>>, "array value 2", "array value 3"],
+}
+
+
+ > merge:
+array 14
+cachable {
+  value:
+    string 23 {
+      value: "array value 1"
+    }
+  value:
+    string 22 {
+      value: "array value 2"
+    }
+  value:
+    string 21 {
+      value: "array value 3"
+    }
+}
+

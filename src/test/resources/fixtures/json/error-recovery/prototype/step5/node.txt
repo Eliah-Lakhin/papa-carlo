@@ -1,0 +1,44 @@
+ > remove:
+string:4
+{
+  "key 1": <<<"hello world">>>,
+  ["array value 1"
+}
+
+
+ > remove:
+entry:5
+{
+  <<<"key 1": "hello world">>>,
+  ["array value 1"
+}
+
+
+ > create:
+string:6
+{
+  "key 1": <<<"hello world">>>,
+  ["array value 1"
+}
+
+
+ > create:
+entry:7
+{
+  <<<"key 1": "hello world">>>,
+  ["array value 1"
+}
+
+
+ > merge:
+object 1 {
+  entry:
+    entry 7 {
+      key: "key 1"
+      value:
+        string 6 {
+          value: "hello world"
+        }
+    }
+}
+

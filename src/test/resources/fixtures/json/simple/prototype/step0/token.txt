@@ -1,0 +1,7 @@
+{~2:0~
+  string: string,
+  string: string,
+  string: [~1:2:0~string, number, true, false],~2:0~
+  string: {~2:2:0~string: null}
+~2:0~}
+~0~

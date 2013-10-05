@@ -1,0 +1,130 @@
+ > remove:
+string:35
+{
+  "key 1": <<<"hello world">>>,
+  "key 1.1": "value 1.1",
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > remove:
+entry:36
+{
+  <<<"key 1": "hello world">>>,
+  "key 1.1": "value 1.1",
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > remove:
+string:33
+{
+  "key 1": "hello world",
+  "key 1.1": <<<"value 1.1">>>,
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > remove:
+entry:34
+{
+  "key 1": "hello world",
+  <<<"key 1.1": "value 1.1">>>,
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > remove:
+entry:32
+{
+  "key 1": "hello world",
+  "key 1.1": "value 1.1",
+  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
+}
+
+
+ > create:
+entry:37
+{
+  "key 1": "hello world",
+  "key 1.1": "value 1.1",
+  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
+}
+
+
+ > create:
+string:38
+{
+  "key 1": "hello world",
+  "key 1.1": <<<"value 1.1">>>,
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > create:
+entry:39
+{
+  "key 1": "hello world",
+  <<<"key 1.1": "value 1.1">>>,
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > create:
+string:40
+{
+  "key 1": <<<"hello world">>>,
+  "key 1.1": "value 1.1",
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > create:
+entry:41
+{
+  <<<"key 1": "hello world">>>,
+  "key 1.1": "value 1.1",
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > merge:
+object 1 {
+  entry:
+    entry 41 {
+      key: "key 1"
+      value:
+        string 40 {
+          value: "hello world"
+        }
+    }
+  entry:
+    entry 39 {
+      key: "key 1.1"
+      value:
+        string 38 {
+          value: "value 1.1"
+        }
+    }
+  entry:
+    entry 37 {
+      key: "key 2"
+      value:
+        array 31
+        cachable {
+          value:
+            string 30 {
+              value: [
+            }
+          value:
+            string 29 {
+              value:  
+            }
+          value:
+            string 28 {
+              value:  
+            }
+        }
+    }
+}
+

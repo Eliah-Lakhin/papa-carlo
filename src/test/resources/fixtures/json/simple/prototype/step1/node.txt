@@ -1,0 +1,143 @@
+ > remove:
+string:9
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": [<<<"array element">>>, 2.6e-2, true, "false", ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > remove:
+number:8
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", <<<2.6e-2>>>, true, "false", ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > remove:
+boolean:7
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, <<<true>>>, "false", ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > remove:
+boolean:6
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, <<<"false">>>, ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+string:16
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, "false", ["a", <<<"b">>>]],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+string:17
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, "false", [<<<"a">>>, "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+array:18 cachable
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, "false", <<<["a", "b"]>>>],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+string:19
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, <<<"false">>>, ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+boolean:20
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, <<<true>>>, "false", ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+number:21
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", <<<2.6e-2>>>, true, "false", ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+string:22
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": [<<<"array element">>>, 2.6e-2, true, "false", ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > merge:
+array 10
+cachable {
+  value:
+    string 22 {
+      value: "array element"
+    }
+  value:
+    number 21 {
+      value: 2.6e-2
+    }
+  value:
+    boolean 20 {
+      value: true
+    }
+  value:
+    string 19 {
+      value: "false"
+    }
+  value:
+    array 18
+    cachable {
+      value:
+        string 17 {
+          value: "a"
+        }
+      value:
+        string 16 {
+          value: "b"
+        }
+    }
+}
+

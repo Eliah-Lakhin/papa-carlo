@@ -1,0 +1,113 @@
+ > remove:
+string:22
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": [<<<"array element">>>, 100, true, "false", ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > remove:
+number:21
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", <<<100>>>, true, "false", ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > remove:
+boolean:20
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 100, <<<true>>>, "false", ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > remove:
+string:19
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 100, true, <<<"false">>>, ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+string:23
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 100, true, <<<"false">>>, ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+boolean:24
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 100, <<<true>>>, "false", ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+number:25
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", <<<100>>>, true, "false", ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+string:26
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": [<<<"array element">>>, 100, true, "false", ["a", "b"]],
+  "key 4": {"subkey": null}
+}
+
+
+ > merge:
+array 10
+cachable {
+  value:
+    string 26 {
+      value: "array element"
+    }
+  value:
+    number 25 {
+      value: 100
+    }
+  value:
+    boolean 24 {
+      value: true
+    }
+  value:
+    string 23 {
+      value: "false"
+    }
+  value:
+    array 18
+    cachable {
+      value:
+        string 17 {
+          value: "a"
+        }
+      value:
+        string 16 {
+          value: "b"
+        }
+    }
+}
+

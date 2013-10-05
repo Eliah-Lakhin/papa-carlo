@@ -1,0 +1,18 @@
+ > invalidate:
+Node 1. Fragment:
+<<<{
+  "key 1": "hello world",
+  "key 1.1":
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+>>>
+
+ > remove:
+Node 14. Fragment:
+{
+  "key 1": "hello world",
+  "key 1.1":
+  "key 2": <<<["array value 1", "array value 2", "array value 3"]>>>,
+}
+
+

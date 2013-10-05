@@ -1,0 +1,26 @@
+ > create:
+string:2
+{
+  "key 1": <<<"hello world">>>
+}
+
+
+ > create:
+entry:3
+{
+  <<<"key 1": "hello world">>>
+}
+
+
+ > merge:
+object 1 {
+  entry:
+    entry 3 {
+      key: "key 1"
+      value:
+        string 2 {
+          value: "hello world"
+        }
+    }
+}
+

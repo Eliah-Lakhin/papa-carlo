@@ -1,0 +1,14 @@
+ > create:
+{
+  "key 1": "hello world",
+  <<<["array value 1", "array value 2"]>>>
+}
+
+
+ > invalidate:
+<<<{
+  "key 1": "hello world",
+  ["array value 1", "array value 2"]
+}>>>
+
+

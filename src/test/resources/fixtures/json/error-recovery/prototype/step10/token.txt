@@ -1,0 +1,5 @@
+{~2:0~
+  string: string,
+  string: [~1:2:0~string, string, string],~2:0~
+}
+~0~

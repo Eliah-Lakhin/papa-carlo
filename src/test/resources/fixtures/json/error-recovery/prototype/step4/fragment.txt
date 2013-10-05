@@ -1,0 +1,6 @@
+ > invalidate:
+<<<{
+  "key 1": "hello world",
+}>>>
+
+

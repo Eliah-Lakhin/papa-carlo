@@ -1,0 +1,7 @@
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 100, true, "false", ["a", "b"]],
+  "key 3.5": "value 3.5",
+  "key 4": {"subkey": null}
+}

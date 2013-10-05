@@ -1,0 +1,36 @@
+ > create:
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": <<<["array element", 2.6e-2, true, false]>>>,
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, false],
+  "key 4": <<<{"subkey": null}>>>
+}
+
+
+ > create:
+<<<{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, false],
+  "key 4": {"subkey": null}
+}>>>
+
+
+ > invalidate:
+<<<{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, false],
+  "key 4": {"subkey": null}
+}
+>>>
+

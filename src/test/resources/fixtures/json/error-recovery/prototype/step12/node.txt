@@ -1,0 +1,157 @@
+ > remove:
+string:26
+{
+  "key 1": <<<"hello world">>>,
+  "key 1.1": "value 1.1"
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > remove:
+entry:27
+{
+  <<<"key 1": "hello world">>>,
+  "key 1.1": "value 1.1"
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > remove:
+string:24
+{
+  "key 1": "hello world",
+  "key 1.1": "value 1.1"
+  <<<"key 2">>>: ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > remove:
+entry:25
+{
+  "key 1": "hello world",
+  <<<"key 1.1": "value 1.1"
+  "key 2">>>: ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > create:
+string:28
+{
+  "key 1": "hello world",
+  "key 1.1": "value 1.1"
+  "key 2": ["array value 1", "array value 2", <<<"array value 3">>>],
+}
+
+
+ > create:
+string:29
+{
+  "key 1": "hello world",
+  "key 1.1": "value 1.1"
+  "key 2": ["array value 1", <<<"array value 2">>>, "array value 3"],
+}
+
+
+ > create:
+string:30
+{
+  "key 1": "hello world",
+  "key 1.1": "value 1.1"
+  "key 2": [<<<"array value 1">>>, "array value 2", "array value 3"],
+}
+
+
+ > create:
+array:31 cachable
+{
+  "key 1": "hello world",
+  "key 1.1": "value 1.1"
+  "key 2": <<<["array value 1", "array value 2", "array value 3"]>>>,
+}
+
+
+ > create:
+entry:32
+{
+  "key 1": "hello world",
+  "key 1.1": "value 1.1"
+  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
+}
+
+
+ > create:
+string:33
+{
+  "key 1": "hello world",
+  "key 1.1": <<<"value 1.1">>>
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > create:
+entry:34
+{
+  "key 1": "hello world",
+  <<<"key 1.1": "value 1.1">>>
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > create:
+string:35
+{
+  "key 1": <<<"hello world">>>,
+  "key 1.1": "value 1.1"
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > create:
+entry:36
+{
+  <<<"key 1": "hello world">>>,
+  "key 1.1": "value 1.1"
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+}
+
+
+ > merge:
+object 1 {
+  entry:
+    entry 36 {
+      key: "key 1"
+      value:
+        string 35 {
+          value: "hello world"
+        }
+    }
+  entry:
+    entry 34 {
+      key: "key 1.1"
+      value:
+        string 33 {
+          value: "value 1.1"
+        }
+    }
+  entry:
+    entry 32 {
+      key: "key 2"
+      value:
+        array 31
+        cachable {
+          value:
+            string 30 {
+              value: "array value 1"
+            }
+          value:
+            string 29 {
+              value: "array value 2"
+            }
+          value:
+            string 28 {
+              value: "array value 3"
+            }
+        }
+    }
+}
+

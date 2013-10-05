@@ -1,0 +1,100 @@
+ > create:
+string:919 (580:31) - (580:51)
+
+ > create:
+entry:920 (580:23) - (580:51)
+
+ > create:
+number:921 (580:18) - (580:21)
+
+ > create:
+entry:922 (580:12) - (580:21)
+
+ > create:
+object:923 cachable (580:11) - (580:52)
+
+ > merge:
+array 80
+cachable {
+  value:
+    object 79
+    cachable {
+      entry:
+        entry 78 {
+          key: "id"
+          value:
+            number 77 {
+              value: 0
+            }
+        }
+      entry:
+        entry 76 {
+          key: "name"
+          value:
+            string 75 {
+              value: "Rios Duffy"
+            }
+        }
+    }
+  value:
+    object 923
+    cachable {
+      entry:
+        entry 922 {
+          key: "id"
+          value:
+            number 921 {
+              value: 0.5
+            }
+        }
+      entry:
+        entry 920 {
+          key: "name"
+          value:
+            string 919 {
+              value: "another one friend"
+            }
+        }
+    }
+  value:
+    object 74
+    cachable {
+      entry:
+        entry 73 {
+          key:  
+          value:
+            number 72 {
+              value:  
+            }
+        }
+      entry:
+        entry 71 {
+          key: "another one friend"
+          value:
+            string 70 {
+              value:         
+            }
+        }
+    }
+  value:
+    object 69
+    cachable {
+      entry:
+        entry 68 {
+          key:           
+          value:
+            number 67 {
+              value:  
+            }
+        }
+      entry:
+        entry 66 {
+          key: }
+          value:
+            string 65 {
+              value:         
+            }
+        }
+    }
+}
+

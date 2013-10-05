@@ -1,0 +1,168 @@
+ > remove:
+string:40
+{
+  "key 1": <<<"hello world">>>,
+  "key 1.1": "value 1.1",
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+  "key 3": 100
+}
+
+
+ > remove:
+entry:41
+{
+  <<<"key 1": "hello world">>>,
+  "key 1.1": "value 1.1",
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+  "key 3": 100
+}
+
+
+ > remove:
+string:38
+{
+  "key 1": "hello world",
+  "key 1.1": <<<"value 1.1">>>,
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+  "key 3": 100
+}
+
+
+ > remove:
+entry:39
+{
+  "key 1": "hello world",
+  <<<"key 1.1": "value 1.1">>>,
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+  "key 3": 100
+}
+
+
+ > remove:
+entry:37
+{
+  "key 1": "hello world",
+  "key 1.1": "value 1.1",
+  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
+  "key 3": 100
+}
+
+
+ > create:
+number:42
+{
+  "key 1": "hello world",
+  "key 1.1": "value 1.1",
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+  "key 3": <<<100>>>
+}
+
+
+ > create:
+entry:43
+{
+  "key 1": "hello world",
+  "key 1.1": "value 1.1",
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+  <<<"key 3": 100>>>
+}
+
+
+ > create:
+entry:44
+{
+  "key 1": "hello world",
+  "key 1.1": "value 1.1",
+  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
+  "key 3": 100
+}
+
+
+ > create:
+string:45
+{
+  "key 1": "hello world",
+  "key 1.1": <<<"value 1.1">>>,
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+  "key 3": 100
+}
+
+
+ > create:
+entry:46
+{
+  "key 1": "hello world",
+  <<<"key 1.1": "value 1.1">>>,
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+  "key 3": 100
+}
+
+
+ > create:
+string:47
+{
+  "key 1": <<<"hello world">>>,
+  "key 1.1": "value 1.1",
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+  "key 3": 100
+}
+
+
+ > create:
+entry:48
+{
+  <<<"key 1": "hello world">>>,
+  "key 1.1": "value 1.1",
+  "key 2": ["array value 1", "array value 2", "array value 3"],
+  "key 3": 100
+}
+
+
+ > merge:
+object 1 {
+  entry:
+    entry 48 {
+      key: "key 1"
+      value:
+        string 47 {
+          value: "hello world"
+        }
+    }
+  entry:
+    entry 46 {
+      key: "key 1.1"
+      value:
+        string 45 {
+          value: "value 1.1"
+        }
+    }
+  entry:
+    entry 44 {
+      key: "key 2"
+      value:
+        array 31
+        cachable {
+          value:
+            string 30 {
+              value: [
+            }
+          value:
+            string 29 {
+              value:  
+            }
+          value:
+            string 28 {
+              value:  
+            }
+        }
+    }
+  entry:
+    entry 43 {
+      key: "key 3"
+      value:
+        number 42 {
+          value: 100
+        }
+    }
+}
+

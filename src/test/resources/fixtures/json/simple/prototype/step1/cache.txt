@@ -1,0 +1,20 @@
+ > invalidate:
+Node 10. Fragment:
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": <<<["array element", 2.6e-2, true, "false", ["a", "b"]]>>>,
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+Node 18. Fragment:
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, "false", <<<["a", "b"]>>>],
+  "key 4": {"subkey": null}
+}
+
+

@@ -1,0 +1,4 @@
+ > merge:
+object 1 {
+}
+

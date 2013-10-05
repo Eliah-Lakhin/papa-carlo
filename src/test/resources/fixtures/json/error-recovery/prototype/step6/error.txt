@@ -1,0 +1,19 @@
+ > code mismatched:
+{
+  "key 1": "hello world",
+  ["array value 1", <<<"array value 2"]>>>
+}
+
+
+ > code mismatched:
+{
+  "key 1": "hello world",
+  <<<["array value 1",>>> "array value 2"]
+}
+
+
+ > code mismatched:
+{
+  "key 1": "hello world"<<<,>>>
+  ["array value 1", "array value 2"]
+}
