@@ -35,17 +35,17 @@ Final. During this process library's public API may be changed many times.
 
 Here is a To-Do list:
 
- - [x] Lexical parser combinator.
- - [x] Fragment controller.
- - [x] Syntax parser combinator.
- - [x] Example of JSON parser.
- - [x] Functional tests for Json parser.
- - [x] Publish alpha version ready to use.
- - [ ] Additional functional tests for complicated fragmentation cases.
- - [ ] Support of [Pratt grammar](http://en.wikipedia.org/wiki/Pratt_parser).
- - [ ] Example of Lisp parser/interpreter.
- - [ ] Functional tests for Lisp example.
- - [ ] Library documentation and tutorials.
+ - ~~Lexical parser combinator.~~
+ - ~~Fragment controller.~~
+ - ~~Syntax parser combinator.~~
+ - ~~Example of JSON parser.~~
+ - ~~Functional tests for Json parser.~~
+ - ~~Publish alpha version ready to use.~~
+ - ~~Additional functional tests for complicated fragmentation cases.~~
+ - Support of [Pratt grammar](http://en.wikipedia.org/wiki/Pratt_parser).
+ - Example of Lisp parser/interpreter.
+ - Functional tests for Lisp example.
+ - Library documentation and tutorials.
 
 I use [Semantic Version policy](http://semver.org/) in naming project's
 versions. So the Final and ready to use version will be "1.0.0".

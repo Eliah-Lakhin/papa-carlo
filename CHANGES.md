@@ -1,6 +1,19 @@
 Development history
 ===================
 
+0.2.0
+-----
+_2013-10-07_
+
+ - Lexer and Syntax parser grammar definition API changed from operator based to
+   function based.
+ - Three additional functional tests for Json example parser implemented. These
+   three test were designed specifically to test various code fragmentation
+   cases.
+ - Minor refactoring:
+   - Term "environment" renamed to "monitor" in context of functional tests.
+   - Directory structure simplified.
+
 0.1.0
 -----
 _2013-10-05_
