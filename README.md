@@ -71,4 +71,4 @@ licensing details.
 Author
 ------
 
-Ilya Lakhin (Лахин Илья Александрович), eliah.lakhin [at] gmail.com
+Ilya Lakhin (Илья Александрович Лахин), eliah.lakhin [at] gmail.com
