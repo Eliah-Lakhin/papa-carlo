@@ -76,12 +76,15 @@ abstract class ParserSpec(parserName: String,
                 ))
                 .getOrElse(100)),
 
-            monitors = monitors
-              .keys
-              .filter(name => !settings
-                .get(name)
-                .exists(_ == JBool(value = false)))
-              .toSet,
+            monitors = settings.get("monitors").flatMap {
+              case JArray(monitors: List[JValue]) =>
+                Some(monitors.flatMap {
+                  case JString(monitor) => Some(monitor)
+                  case _ => None
+                }.toSet)
+
+              case _ => None
+            }.getOrElse(monitors.keys.toSet),
 
             shortOutput = settings
               .get("shortOutput")
