@@ -14,5 +14,9 @@
     "dense-fragments": {
         "steps": 5,
         "monitors": ["fragment"]
+    },
+    "fragment-recovery": {
+        "steps": 3,
+        "monitors": ["token", "fragment"]
     }
 }

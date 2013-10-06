@@ -1,0 +1,177 @@
+ > create:
+{node 0
+    {node 0-0
+        <<<{node 0-0-0
+
+        }>>>
+
+        {node 0-0-1
+
+        }
+    }
+
+    {node 0-1
+        {node 0-1-0
+
+        }
+16...
+
+ > create:
+{node 0
+    {node 0-0
+        {node 0-0-0
+
+        }
+
+        <<<{node 0-0-1
+
+        }>>>
+    }
+
+    {node 0-1
+        {node 0-1-0
+
+        }
+
+        {node 0-1-1
+
+        }
+20...
+
+ > create:
+{node 0
+    <<<{node 0-0
+        {node 0-0-0
+
+        }
+
+        {node 0-0-1
+
+        }
+    }>>>
+
+    {node 0-1
+        {node 0-1-0
+
+        }
+
+        {node 0-1-1
+
+        }
+    }
+21...
+
+ > create:
+...2
+        {node 0-0-0
+
+        }
+
+        {node 0-0-1
+
+        }
+    }
+
+    {node 0-1
+        <<<{node 0-1-0
+
+        }>>>
+
+        {node 0-1-1
+
+        }
+    }
+}
+
+
+ > create:
+...6
+        {node 0-0-1
+
+        }
+    }
+
+    {node 0-1
+        {node 0-1-0
+
+        }
+
+        <<<{node 0-1-1
+
+        }>>>
+    }
+}
+
+
+ > create:
+...1
+    {node 0-0
+        {node 0-0-0
+
+        }
+
+        {node 0-0-1
+
+        }
+    }
+
+    <<<{node 0-1
+        {node 0-1-0
+
+        }
+
+        {node 0-1-1
+
+        }
+    }>>>
+}
+
+
+ > create:
+<<<{node 0
+    {node 0-0
+        {node 0-0-0
+
+        }
+
+        {node 0-0-1
+
+        }
+    }
+
+    {node 0-1
+        {node 0-1-0
+
+        }
+
+        {node 0-1-1
+
+        }
+    }
+}>>>
+
+
+ > invalidate:
+<<<{node 0
+    {node 0-0
+        {node 0-0-0
+
+        }
+
+        {node 0-0-1
+
+        }
+    }
+
+    {node 0-1
+        {node 0-1-0
+
+        }
+
+        {node 0-1-1
+
+        }
+    }
+}
+>>>
+

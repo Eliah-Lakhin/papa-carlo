@@ -1,0 +1,22 @@
+{~2:0~alphanum number
+    {~2:2:0~alphanum numbernumber
+        {~2:2:2:0~alphanum numbernumbernumber
+
+
+~2:2:0~
+        {~2:2:2:0~alphanum numbernumbernumber
+
+        }
+~2:2:0~    }
+~2:0~
+    {~2:2:0~alphanum numbernumber
+        {~2:2:2:0~alphanum numbernumbernumber
+
+        }
+~2:2:0~
+        {~2:2:2:0~alphanum numbernumbernumber
+
+        }
+~2:2:0~    }
+~2:0~}
+~0~
