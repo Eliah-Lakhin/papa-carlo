@@ -19,18 +19,12 @@ package papacarlo.test.utils
 final case class Test(parserName: String,
                       testName: String,
                       steps: Int,
-                      allowedEnvironments: Set[String],
+                      monitors: Set[String],
                       shortOutput: Boolean,
                       outputFrom: Int) {
   val inputs = read("input")
 
-  val prototypes = Map(
-    "token" -> read("prototype", "token"),
-    "fragment" -> read("prototype", "fragment"),
-    "cache" -> read("prototype", "cache"),
-    "node" -> read("prototype", "node"),
-    "error" -> read("prototype", "error")
-  )
+  val prototypes = monitors.map(name => name -> read("prototype", name)).toMap
 
   private def read(dir: String, tag: String = "") = (
     for (step <- 0 until steps)

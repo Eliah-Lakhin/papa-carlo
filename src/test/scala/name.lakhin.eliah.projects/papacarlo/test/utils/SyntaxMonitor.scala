@@ -16,20 +16,11 @@
 package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
-import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
+import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
 
-final class ErrorEnvironment(lexerConstructor: () => Lexer,
-                             syntaxConstructor: Lexer => Syntax)
-  extends SyntaxEnvironment(lexerConstructor, syntaxConstructor) {
+abstract class SyntaxMonitor(lexerConstructor: () => Lexer,
+                                 syntaxConstructor: Lexer => Syntax)
+  extends Monitor(lexerConstructor) {
 
-  def getResult = syntax
-    .getErrors
-    .map(error => " > " + error.description +
-      (
-        if (shortOutput) " " + lexer.rangeToString(error.range)
-        else ":\n" + lexer.highlight(error.range, Some(10)))
-      )
-    .mkString("\n\n")
-
-  def prepare() {}
+  protected val syntax = syntaxConstructor(lexer)
 }

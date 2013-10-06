@@ -16,11 +16,33 @@
 package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
-import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
+import name.lakhin.eliah.projects.papacarlo.Lexer
 
-abstract class SyntaxEnvironment(lexerConstructor: () => Lexer,
-                                 syntaxConstructor: Lexer => Syntax)
-  extends Environment(lexerConstructor) {
+final class TokenizerMonitor(lexerConstructor: () => Lexer)
+  extends Monitor(lexerConstructor) {
 
-  protected val syntax = syntaxConstructor(lexer)
+  def getResult = {
+    var context = ""
+    val result = new StringBuilder
+
+    for (token <- lexer.fragments.rootFragment.getTokens) {
+      token.getContext.view
+      if (token.isMutable) result ++= "`"
+
+      if (token.isSkippable) result ++= token.value
+      else result ++= token.kind
+
+      if (token.isMutable) result ++= "`"
+
+      val tokenContext = token.getContext.view
+      if (context != tokenContext) {
+        context = tokenContext
+        result ++= "~" + context + "~"
+      }
+    }
+
+    result.toString()
+  }
+
+  def prepare() {}
 }

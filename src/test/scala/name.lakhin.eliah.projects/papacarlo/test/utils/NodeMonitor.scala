@@ -19,9 +19,9 @@ package papacarlo.test.utils
 import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
 import name.lakhin.eliah.projects.papacarlo.syntax.Node
 
-final class NodeEnvironment(lexerConstructor: () => Lexer,
+final class NodeMonitor(lexerConstructor: () => Lexer,
                             syntaxConstructor: Lexer => Syntax)
-  extends SyntaxEnvironment(lexerConstructor, syntaxConstructor) {
+  extends SyntaxMonitor(lexerConstructor, syntaxConstructor) {
 
   private var nodeLog = List.empty[(Symbol, String)]
 

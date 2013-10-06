@@ -17,34 +17,19 @@ package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
-import name.lakhin.eliah.projects.papacarlo.syntax.Cache
 
-final class CacheEnvironment(lexerConstructor: () => Lexer,
+final class ErrorMonitor(lexerConstructor: () => Lexer,
                              syntaxConstructor: Lexer => Syntax)
-  extends SyntaxEnvironment(lexerConstructor, syntaxConstructor) {
+  extends SyntaxMonitor(lexerConstructor, syntaxConstructor) {
 
-  private var cacheLog = List.empty[(Symbol, String)]
-
-  syntax.onCacheCreate.bind {
-    cache => cacheLog ::= ('create, cacheInfo(cache))
-  }
-
-  syntax.onCacheInvalidate.bind {
-    cache => cacheLog ::= ('invalidate, cacheInfo(cache))
-  }
-
-  syntax.onCacheRemove.bind {
-    cache => cacheLog ::= ('remove, cacheInfo(cache))
-  }
-
-  private def cacheInfo(cache: Cache) =
-    "Node " + cache.node.id + ". Fragment:" +
+  def getResult = syntax
+    .getErrors
+    .map(error => " > " + error.description +
       (
-        if (this.shortOutput) " " + cache.fragment + "."
-        else "\n" + cache.fragment.highlight(Some(10))
+        if (shortOutput) " " + lexer.rangeToString(error.range)
+        else ":\n" + lexer.highlight(error.range, Some(10)))
       )
+    .mkString("\n\n")
 
-  def getResult = unionLog(cacheLog)
-
-  def prepare() {cacheLog = Nil}
+  def prepare() {}
 }

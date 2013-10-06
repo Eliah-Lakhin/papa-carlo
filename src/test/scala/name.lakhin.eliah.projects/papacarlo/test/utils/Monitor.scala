@@ -18,31 +18,31 @@ package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.Lexer
 
-final class TokenizerEnvironment(lexerConstructor: () => Lexer)
-  extends Environment(lexerConstructor) {
+abstract class Monitor(lexerConstructor: () => Lexer) {
+  var shortOutput = false
 
-  def getResult = {
-    var context = ""
+  protected val lexer = lexerConstructor()
+
+  final def input(text: String) = {
+    val start = System.currentTimeMillis()
+    lexer.input(text)
+    val end = System.currentTimeMillis()
+
+    end - start
+  }
+
+  def prepare()
+  def getResult: String
+
+  protected final def unionLog(log: List[(Symbol, String)]) = {
     val result = new StringBuilder
 
-    for (token <- lexer.fragments.rootFragment.getTokens) {
-      token.getContext.view
-      if (token.isMutable) result ++= "`"
-
-      if (token.isSkippable) result ++= token.value
-      else result ++= token.kind
-
-      if (token.isMutable) result ++= "`"
-
-      val tokenContext = token.getContext.view
-      if (context != tokenContext) {
-        context = tokenContext
-        result ++= "~" + context + "~"
-      }
+    for (log <- log.reverse) {
+      result ++= " > " + log._1.name + ":\n"
+      result ++= log._2
+      result ++= "\n\n"
     }
 
     result.toString()
   }
-
-  def prepare() {}
 }

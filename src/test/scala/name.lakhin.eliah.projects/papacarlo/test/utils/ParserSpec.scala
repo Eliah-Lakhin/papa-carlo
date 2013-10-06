@@ -25,32 +25,32 @@ abstract class ParserSpec(parserName: String,
                           syntaxConstructor: Lexer => Syntax)
   extends FunSpec {
 
-  private val environments:
-    Map[String, (String, () => Environment)] = Map(
+  private val monitors:
+    Map[String, (String, () => Monitor)] = Map(
       "token" ->
         (
           "tokenize",
-          () => new TokenizerEnvironment(lexerConstructor)
+          () => new TokenizerMonitor(lexerConstructor)
         ),
       "fragment" ->
         (
           "produce fragments",
-          () => new FragmentationEnvironment(lexerConstructor)
+          () => new FragmentationMonitor(lexerConstructor)
         ),
       "cache" ->
         (
           "track cache",
-          () => new CacheEnvironment(lexerConstructor, syntaxConstructor)
+          () => new CacheMonitor(lexerConstructor, syntaxConstructor)
         ),
       "node" ->
         (
           "produce syntax nodes",
-          () => new NodeEnvironment(lexerConstructor, syntaxConstructor)
+          () => new NodeMonitor(lexerConstructor, syntaxConstructor)
         ),
       "error" ->
         (
           "produce syntax errors",
-          () => new ErrorEnvironment(lexerConstructor, syntaxConstructor)
+          () => new ErrorMonitor(lexerConstructor, syntaxConstructor)
         )
     )
 
@@ -65,10 +65,10 @@ abstract class ParserSpec(parserName: String,
 
             steps = settings
               .get("steps")
-              .flatMap(_ match {
+              .flatMap {
                 case JInt(value) => Some(value.toInt)
                 case _ => None
-              })
+              }
               .getOrElse((0 until 100)
                 .find(step => !Resources.exist(
                   parserName + "/" + testName + "/input",
@@ -76,7 +76,7 @@ abstract class ParserSpec(parserName: String,
                 ))
                 .getOrElse(100)),
 
-            allowedEnvironments = environments
+            monitors = monitors
               .keys
               .filter(name => !settings
                 .get(name)
@@ -89,10 +89,10 @@ abstract class ParserSpec(parserName: String,
 
             outputFrom = settings
               .get("outputFrom")
-              .flatMap(_ match {
+              .flatMap {
                 case JInt(value) => Some(value.toInt)
                 case _ => None
-              })
+              }
               .getOrElse(0)
           )
       })
@@ -100,28 +100,27 @@ abstract class ParserSpec(parserName: String,
   for (test <- tests) {
     describe(test.testName + " test") {
 
-      for ((environmentName, (description, environmentConstructor))
-           <- environments)
-        if (test.allowedEnvironments.contains(environmentName))
+      for ((monitorName, (description, monitorConstructor)) <- monitors)
+        if (test.monitors.contains(monitorName))
           it("should " + description) {
-            val environment = environmentConstructor()
-            environment.shortOutput = test.shortOutput
+            val monitor = monitorConstructor()
+            monitor.shortOutput = test.shortOutput
 
             var statistics = List.empty[Long]
             var results = List.empty[String]
 
             for (step <- 0 until test.steps) {
-              environment.prepare()
-              statistics ::= environment.input(test.inputs.getOrElse(step, ""))
-              val result = environment.getResult
+              monitor.prepare()
+              statistics ::= monitor.input(test.inputs.getOrElse(step, ""))
+              val result = monitor.getResult
               if (step >= test.outputFrom)
-                test.write(environmentName, step, result)
+                test.write(monitorName, step, result)
               results ::= result
             }
 
             Resources.update(
               parserName + "/" + test.testName + "/statistics",
-              environmentName + ".txt",
+              monitorName + ".txt",
               statistics.reverse.zipWithIndex.map {
                 case (time, step) => "Step " + step + ": " + time + "ms"
               }.mkString("\n")
@@ -130,7 +129,7 @@ abstract class ParserSpec(parserName: String,
             for ((result, step) <- results.reverse.zipWithIndex)
               if (step >= test.outputFrom)
                 assert(
-                  result == test.prototypes.get(environmentName)
+                  result == test.prototypes.get(monitorName)
                     .flatMap(_.get(step)).getOrElse(""),
                   "Step " + step + " result did not equal to the prototype"
                 )

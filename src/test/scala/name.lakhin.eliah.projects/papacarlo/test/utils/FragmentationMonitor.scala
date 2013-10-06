@@ -17,32 +17,30 @@ package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.Lexer
+import name.lakhin.eliah.projects.papacarlo.lexis.Fragment
 
-abstract class Environment(lexerConstructor: () => Lexer) {
-  var shortOutput = false
+private final class FragmentationMonitor(lexerConstructor: () => Lexer)
+  extends Monitor(lexerConstructor) {
 
-  protected val lexer = lexerConstructor()
+  private var fragmentLog = List.empty[(Symbol, String)]
 
-  final def input(text: String) = {
-    val start = System.currentTimeMillis()
-    lexer.input(text)
-    val end = System.currentTimeMillis()
-
-    end - start
+  lexer.fragments.onCreate.bind {
+    fragment => fragmentLog ::= ('create, fragmentToString(fragment))
   }
 
-  def prepare()
-  def getResult: String
-
-  protected final def unionLog(log: List[(Symbol, String)]) = {
-    val result = new StringBuilder
-
-    for (log <- log.reverse) {
-      result ++= " > " + log._1.name + ":\n"
-      result ++= log._2
-      result ++= "\n\n"
-    }
-
-    result.toString()
+  lexer.fragments.onInvalidate.bind {
+    fragment => fragmentLog ::= ('invalidate, fragmentToString(fragment))
   }
+
+  lexer.fragments.onRemove.bind {
+    fragment => fragmentLog ::= ('remove, fragmentToString(fragment))
+  }
+
+  private def fragmentToString(fragment: Fragment) =
+    if (shortOutput) fragment.toString
+    else fragment.highlight(Option(10))
+
+  def getResult = unionLog(fragmentLog)
+
+  def prepare() {fragmentLog = Nil}
 }
