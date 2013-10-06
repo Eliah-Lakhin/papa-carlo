@@ -17,11 +17,10 @@ package name.lakhin.eliah.projects
 package papacarlo.test
 
 import name.lakhin.eliah.projects.papacarlo.test.utils.ParserSpec
-import name.lakhin.eliah.projects.papacarlo.examples.{JsonSyntax, JsonLexer}
-import name.lakhin.eliah.projects.papacarlo.Lexer
+import name.lakhin.eliah.projects.papacarlo.examples.Json
 
 class JsonParserSpec extends ParserSpec(
   parserName = "json",
-  lexerConstructor = () => new JsonLexer().lexer,
-  syntaxConstructor = (lexer: Lexer) => new JsonSyntax(lexer).syntax
+  lexerConstructor = Json.lexer _,
+  syntaxConstructor = Json.syntax
 )

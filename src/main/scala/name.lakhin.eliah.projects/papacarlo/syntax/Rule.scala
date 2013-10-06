@@ -19,66 +19,71 @@ package papacarlo.syntax
 import name.lakhin.eliah.projects.papacarlo.syntax.rules._
 
 abstract class Rule {
-  final def &(another: Rule) = this match {
-    case SequentialRule(steps) => SequentialRule(steps :+ another)
-    case _ => SequentialRule(List(this, another))
-  }
-
-  final def |(another: Rule) = this match {
-    case ChoiceRule(choices) => ChoiceRule(choices :+ another)
-    case _ => ChoiceRule(List(this, another))
-  }
-
-  final def |(exception: String) = this match {
-    case RecoveryRule(rule, _) => RecoveryRule(rule, exception)
-    case _ => RecoveryRule(this, exception)
-  }
-
-  final def min(min: Int) = this match {
-    case RepetitionRule(element, division, minOption, max) =>
-      RepetitionRule(element, division, minOption.orElse(Some(min)), max)
-    case _ => this
-  }
-
-  final def max(max: Int) = this match {
-    case RepetitionRule(element, division, min, maxOption) =>
-      RepetitionRule(element, division, min, maxOption.orElse(Some(max)))
-    case _ => this
-  }
-
-  final def by(division: Rule) = this match {
-    case RepetitionRule(element, divisionOption, min, max) =>
-      RepetitionRule(element, divisionOption.orElse(Some(division)), min, max)
-    case _ => this
-  }
-
-  final def as(tag: String): Rule = this match {
-    case NamedRule(subrule, name) => NamedRule(subrule.as(tag), name)
-    case ReferentialRule(ruleName, None) =>
-      ReferentialRule(ruleName, Some(tag))
-    case _ => this
-  }
-
   def apply(session: Session): Int
 }
 
 object Rule {
   def token(kind: String) = TokenRule(kind)
 
-  def marker(kind: String, tag: String = "") =
-    capture(token(kind), if (tag.size > 0) tag else kind)
+  def tokensUntil(lastKind: String) = TokenRule(lastKind, matchUntil = true)
 
-  def capture(rule: Rule, tag: String) = CapturingRule(rule, tag)
+  def capture(tag: String, rule: Rule) = rule match {
+    case CapturingRule(_, rule: Rule) => CapturingRule(tag, rule)
+    case _ => CapturingRule(tag, rule)
+  }
 
-  def composition(label: String)(subrule: Rule) =
-    NamedRule(subrule, label)
+  def branch(tag: String, rule: Rule): Rule = rule match {
+    case rule: ReferentialRule =>
+      rule.copy(tag = Some(tag))
 
-  def seqUntil(leaveKind: String) = TokenRule(leaveKind, matchUntil = true)
+    case ChoiceRule(cases) =>
+      ChoiceRule(cases.map(choice => branch(tag, choice)))
 
-  def optional(rule: Rule) = repeat(rule).min(0).max(1)
+    case SequentialRule(steps) =>
+      ChoiceRule(steps.map(step => branch(tag, step)))
 
-  def repeat(rule: Rule) = rule match {
-    case RepetitionRule(_, _, _, _) => rule
-    case _ => RepetitionRule(rule)
+    case rule@RepetitionRule(element, _, _, _) =>
+      rule.copy(element = branch(tag, element))
+
+    case RecoveryRule(rule: Rule, exception) =>
+      RecoveryRule(branch(tag, rule), exception)
+
+    case NamedRule(label: String, rule: Rule) =>
+      NamedRule(label, branch(tag, rule))
+
+    case _ => rule
+  }
+
+  def name(label: String, rule: Rule) = rule match {
+    case NamedRule(_, rule: Rule) => NamedRule(label, rule)
+    case _ => NamedRule(label, rule)
+  }
+
+  def optional(rule: Rule) = RepetitionRule(rule, max = Some(1))
+
+  def zeroOrMore(rule: Rule) = RepetitionRule(rule)
+
+  def oneOrMore(rule: Rule) = RepetitionRule(rule, min = Some(1))
+
+  def repeat(rule: Rule, times: Int) =
+    RepetitionRule(rule, min = Some(times), max = Some(times))
+
+  def zeroOrMore(rule: Rule, separator: Rule) =
+    RepetitionRule(rule, separator = Some(separator))
+
+  def oneOrMore(rule: Rule, separator: Rule) =
+    RepetitionRule(rule, separator = Some(separator), min = Some(1))
+
+  def repeat(rule: Rule, separator: Rule, times: Int) =
+    RepetitionRule(rule, separator = Some(separator), min = Some(times),
+      max = Some(times))
+
+  def sequence(steps: Rule*) = SequentialRule(steps.toList)
+
+  def choice(cases: Rule*) = ChoiceRule(cases.toList)
+
+  def recover(rule: Rule, exception: String) = rule match {
+    case RecoveryRule(rule: Rule, _) => RecoveryRule(rule, exception)
+    case _ => RecoveryRule(rule, exception)
   }
 }

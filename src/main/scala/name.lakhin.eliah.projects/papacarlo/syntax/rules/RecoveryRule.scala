@@ -20,11 +20,11 @@ import name.lakhin.eliah.projects.papacarlo.syntax.{Issue, Session, Rule}
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 import name.lakhin.eliah.projects.papacarlo.syntax.InterpretationResult._
 
-final case class RecoveryRule(subrule: Rule,
+final case class RecoveryRule(rule: Rule,
                               exception: String) extends Rule {
   def apply(session: Session) = {
     val initialState = session.state
-    var result = subrule(session)
+    var result = rule(session)
 
     if (result == Failed) {
       session.state = initialState.copy(issues =

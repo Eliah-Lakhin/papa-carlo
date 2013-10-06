@@ -20,18 +20,16 @@ import name.lakhin.eliah.projects.papacarlo.syntax.{Issue,
   InterpretationResult, Session, Rule}
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 
-final case class NamedRule(subrule: Rule,
-                           name: String) extends Rule {
+final case class NamedRule(label: String, rule: Rule) extends Rule {
   def apply(session: Session) = {
     val initialState = session.state
-
-    val result = subrule(session)
+    val result = rule(session)
 
     if (result == InterpretationResult.Failed)
       session.state = initialState.copy(issues =
         Issue(
           Bounds.cursor(initialState.virtualPosition),
-          name + " expected"
+          label + " expected"
         ) :: initialState.issues)
 
     result

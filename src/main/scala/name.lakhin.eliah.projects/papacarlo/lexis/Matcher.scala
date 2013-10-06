@@ -18,12 +18,6 @@ package papacarlo.lexis
 
 sealed abstract class Matcher {
   def apply(code: String, position: Int): Option[Int]
-
-  def &(another: Matcher) = SequentialMatcher(this, another)
-
-  def |(another: Matcher) = ChoiceMatcher(this, another)
-
-  def unary_!() = PredicativeMatcher(this, positive = false)
 }
 
 final case class StringMatcher(pattern: String)
@@ -105,4 +99,45 @@ final case class PredicativeMatcher(sub: Matcher,
   def apply(code: String, position: Int) =
     Some(position)
       .filter(_ => sub.apply(code, position).isDefined == positive)
+}
+
+object Matcher {
+  def zeroOrMore(sub: Matcher) = RepetitionMatcher(sub, 0)
+
+  def oneOrMore(sub: Matcher) = RepetitionMatcher(sub, 1)
+
+  def optional(sub: Matcher) = RepetitionMatcher(sub, 0, 1)
+
+  def repeat(sub: Matcher, times: Int) =
+    RepetitionMatcher(sub, times, times)
+
+  def anyOf(pattern: String) = CharSetMatcher(pattern.toSet)
+
+  def anyExceptOf(pattern: String) = CharSetMatcher(pattern.toSet).sup
+
+  def nothing() = CharSetMatcher(Set.empty)
+
+  def any() = CharSetMatcher(Set.empty).sup
+
+  def rangeOf(from: Char, to: Char) = CharRangeMatcher(from, to)
+
+  def chunk(pattern: String) = StringMatcher(pattern)
+
+  def test(sub: Matcher) = PredicativeMatcher(sub, positive = true)
+
+  def testNot(sub: Matcher) = PredicativeMatcher(sub, positive = false)
+
+  def sequence(steps: Matcher*): Matcher = steps.toList match {
+    case first :: Nil => first
+    case first :: second :: tail =>
+      (sequence _).apply(SequentialMatcher(first, second) :: tail)
+    case _ => nothing()
+  }
+
+  def choice(cases: Matcher*): Matcher = cases.toList match {
+    case first :: Nil => first
+    case first :: second :: tail =>
+      (choice _).apply(ChoiceMatcher(first, second) :: tail)
+    case _ => nothing()
+  }
 }

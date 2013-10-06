@@ -100,24 +100,3 @@ final class Tokenizer {
     output.reverse
   }
 }
-
-object Tokenizer {
-  def zeroOrMore(sub: Matcher) = RepetitionMatcher(sub, 0)
-
-  def oneOrMore(sub: Matcher) = RepetitionMatcher(sub, 1)
-
-  def optional(sub: Matcher) = RepetitionMatcher(sub, 0, 1)
-
-  def repeat(sub: Matcher, counter: Int) =
-    RepetitionMatcher(sub, counter, counter)
-
-  def anyOf(pattern: String) = CharSetMatcher(pattern.toSet)
-
-  def anyExceptOf(pattern: String) = CharSetMatcher(pattern.toSet).sup
-
-  def any() = CharSetMatcher(Set.empty).sup
-
-  def rangeOf(from: Char, to: Char) = CharRangeMatcher(from, to)
-
-  def chunk(pattern: String) = StringMatcher(pattern)
-}

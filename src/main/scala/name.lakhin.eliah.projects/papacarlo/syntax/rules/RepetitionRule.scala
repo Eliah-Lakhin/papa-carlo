@@ -20,7 +20,7 @@ import name.lakhin.eliah.projects.papacarlo.syntax.{Session, Rule}
 import name.lakhin.eliah.projects.papacarlo.syntax.InterpretationResult._
 
 final case class RepetitionRule(element: Rule,
-                                division: Option[Rule] = None,
+                                separator: Option[Rule] = None,
                                 min: Option[Int] = None,
                                 max: Option[Int] = None) extends Rule {
   def apply(session: Session): Int = {
@@ -38,7 +38,7 @@ final case class RepetitionRule(element: Rule,
     var counter = 1
     var lastIssues = session.state.issues
 
-    this.division match {
+    this.separator match {
       case Some(division: Rule) =>
         var finished = counter >= max
 

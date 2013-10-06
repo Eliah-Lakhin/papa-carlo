@@ -20,11 +20,10 @@ import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 import name.lakhin.eliah.projects.papacarlo.syntax.{Rule, Session}
 import name.lakhin.eliah.projects.papacarlo.syntax.InterpretationResult._
 
-final case class CapturingRule(subrule: Rule,
-                               tag: String) extends Rule {
+final case class CapturingRule(tag: String, rule: Rule) extends Rule {
   def apply(session: Session) = {
     val initialState = session.state
-    var result = subrule(session)
+    var result = rule(session)
 
     if (initialState.virtualPosition < session.state.virtualPosition) {
       session.state = session.state.copy(captures =
