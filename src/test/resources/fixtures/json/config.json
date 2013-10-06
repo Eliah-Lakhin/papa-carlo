@@ -18,5 +18,9 @@
     "fragment-recovery": {
         "steps": 3,
         "monitors": ["token", "fragment"]
+    },
+    "fragment-recovery-advanced": {
+        "steps": 3,
+        "monitors": ["token", "fragment"]
     }
 }
