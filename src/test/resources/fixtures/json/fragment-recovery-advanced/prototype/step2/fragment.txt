@@ -1,0 +1,108 @@
+ > remove:
+{node 0
+    {node 00
+        <<<{node 000
+
+        }>>>
+
+        {node 001
+}
+        }
+    }
+
+    {node 01
+        {node 010
+
+        }
+16...
+
+ > remove:
+{node 0
+    {node 00
+        {node 000
+
+        }
+
+        <<<{node 001
+}>>>
+        }
+    }
+
+    {node 01
+        {node 010
+
+        }
+
+        {node 011
+
+19...
+
+ > create:
+{node 0
+    {node 00
+        {node 000
+
+
+
+        <<<{node 001
+
+}>>>
+        }
+    }
+
+    {node 01
+        {node 010
+
+        }
+
+        {node 011
+
+20...
+
+ > create:
+{node 0
+    {node 00
+        <<<{node 000
+
+
+
+        {node 001
+
+}
+        }>>>
+    }
+
+    {node 01
+        {node 010
+
+        }
+
+        {node 011
+
+        }
+21...
+
+ > invalidate:
+{node 0
+    <<<{node 00
+        {node 000
+
+
+
+        {node 001
+
+}
+        }
+    }>>>
+
+    {node 01
+        {node 010
+
+        }
+
+        {node 011
+
+        }
+    }
+22...
+

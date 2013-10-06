@@ -1,0 +1,47 @@
+ > create:
+{node 0
+    {node 0-0
+        <<<{node 0-0-0
+
+
+
+        {node 0-0-1
+
+        }
+        }>>>
+    }
+
+    {node 0-1
+        {node 0-1-0
+
+        }
+
+        {node 0-1-1
+
+        }
+21...
+
+ > invalidate:
+{node 0
+    <<<{node 0-0
+        {node 0-0-0
+
+
+
+        {node 0-0-1
+
+        }
+        }
+    }>>>
+
+    {node 0-1
+        {node 0-1-0
+
+        }
+
+        {node 0-1-1
+
+        }
+    }
+22...
+

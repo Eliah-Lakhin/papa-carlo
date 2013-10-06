@@ -6,7 +6,7 @@ Development history
 _2013-10-05_
 
 The project source code was derived from the internal project "Malvina"
-developed and copyrighted by Ilya Lakhin (Илья Александврочи Лахин). The code is
+developed and copyrighted by Ilya Lakhin (Илья Александрович Лахин). The code is
 published under the terms of Apache Public License v2:
 http://www.apache.org/licenses/LICENSE-2.0.txt
 

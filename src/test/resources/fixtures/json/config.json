@@ -8,7 +8,19 @@
     "large": {
         "steps": 3,
         "outputFrom": 1,
-        "token": false,
+        "monitors": ["fragment", "cache", "node", "error"],
         "shortOutput": true
+    },
+    "dense-fragments": {
+        "steps": 5,
+        "monitors": ["fragment"]
+    },
+    "fragment-recovery": {
+        "steps": 3,
+        "monitors": ["token", "fragment"]
+    },
+    "fragment-recovery-advanced": {
+        "steps": 3,
+        "monitors": ["token", "fragment"]
     }
 }
