@@ -16,11 +16,16 @@
 package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
 
-import name.lakhin.eliah.projects.papacarlo.syntax.{Result, Node, Session, Rule}
+import name.lakhin.eliah.projects.papacarlo.syntax.{Node, Session, Rule}
+import name.lakhin.eliah.projects.papacarlo.syntax.Result._
+
 
 final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
 
-  final case class ExpressionState(private[ExpressionRule] val session: Session)
+  final case class ExpressionState(
+    private[ExpressionRule] val session: Session,
+    private[ExpressionRule] var issues: Boolean = false
+  )
 
   final class Parselet {
     private[ExpressionRule] var lbp: Int = 0
@@ -67,19 +72,33 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
 
       partParsers.get(expectedToken)
         .map(_(expression.session))
-        .flatMap(result =>
-          if (result != Result.Failed)
+        .flatMap(result => {
+          if (result != Successful) expression.issues = true
+
+          if (result != Failed)
             Some(expression.session.reference(expression.session
               .relativeIndexOf(currentPosition)))
           else
-            None)
+            None
+        })
     }
   }
 
   private var parselets = Map.empty[String, Parselet]
 
-  def apply(session: Session): Int = {
-    0
+  def apply(session: Session) = {
+    val state = ExpressionState(session)
+
+    parse(state) match {
+      case Some(result) =>
+        session.state = session.state.copy(products = (tag, result) ::
+          session.state.products)
+
+        if (state.issues) Recoverable
+        else Successful
+
+      case None => Failed
+    }
   }
 
   def parselet(operator: String) =
@@ -103,30 +122,30 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
       session.state.virtualPosition + 1)
   }
 
-  private def operand(session: Session) = {
-    val initialState = session.state
+  private def operand(expression: ExpressionState) = {
+    val initialState = expression.session.state
 
-    atom(session)
+    if (atom(expression.session) != Successful) expression.issues = true
 
-    val result = session.state.products
+    val result = expression.session.state.products
       .headOption
-      .filter(_._1 == "operand" && session.state.products.length >
+      .filter(_._1 == "operand" && expression.session.state.products.length >
         initialState.products.length)
       .map(_._2)
 
-    session.state.copy(products = initialState.products)
+    expression.session.state.copy(products = initialState.products)
 
     result
   }
 
   private def parse(expression: ExpressionState,
-                    rightBindingPower: Int): Option[Node] = {
+                    rightBindingPower: Int = Int.MaxValue): Option[Node] = {
     var step = parselets.get(token(expression.session))
       .flatMap(parselet => parselet.nud.map(nud => {
         next(expression.session)
         (Some(nud(expression)), parselet.lbp)
       }))
-      .getOrElse((operand(expression.session), 0))
+      .getOrElse((operand(expression), 0))
 
     while (step._1.isDefined && rightBindingPower > step._2)
       step = parselets.get(token(expression.session))
