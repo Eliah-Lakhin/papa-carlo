@@ -95,7 +95,7 @@ final class Session(val syntax: Syntax,
 
         issues ::= exclude(firstIssue.range, firstIssue.description)
       } else {
-        if (state.virtualPosition < tokens.length - 1)
+        if (state.virtualPosition < tokens.length)
           issues ::= exclude(
             Bounds.point(state.virtualPosition),
             "code mismatched"

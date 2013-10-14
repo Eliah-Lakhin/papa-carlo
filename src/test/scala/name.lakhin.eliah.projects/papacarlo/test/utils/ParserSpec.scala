@@ -96,9 +96,19 @@ abstract class ParserSpec(parserName: String,
                 case JInt(value) => Some(value.toInt)
                 case _ => None
               }
-              .getOrElse(0)
+              .getOrElse(0),
+
+            independentSteps = settings
+              .get("independentSteps")
+              .exists(_ == JBool(value = true))
           )
       })
+
+  private def constructMonitor(test: Test, constructor: () => Monitor) = {
+    val monitor = constructor()
+    monitor.shortOutput = test.shortOutput
+    monitor
+  }
 
   for (test <- tests) {
     describe(test.testName + " test") {
@@ -106,13 +116,15 @@ abstract class ParserSpec(parserName: String,
       for ((monitorName, (description, monitorConstructor)) <- monitors)
         if (test.monitors.contains(monitorName))
           it("should " + description) {
-            val monitor = monitorConstructor()
-            monitor.shortOutput = test.shortOutput
+            var monitor = constructMonitor(test, monitorConstructor)
 
             var statistics = List.empty[Long]
             var results = List.empty[String]
 
             for (step <- 0 until test.steps) {
+              if (test.independentSteps)
+                monitor = constructMonitor(test, monitorConstructor)
+
               monitor.prepare()
               statistics ::= monitor.input(test.inputs.getOrElse(step, ""))
               val result = monitor.getResult

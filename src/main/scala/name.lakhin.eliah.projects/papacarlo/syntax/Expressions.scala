@@ -7,16 +7,15 @@ object Expressions {
   def infix(rule: ExpressionRule,
             operator: String,
             precedence: Int,
-            rightAssociativity: Boolean = true) {
-    val leftBindingPower = precedence * 10
+            rightAssociativity: Boolean = false) {
+    val leftBindingPower = Int.MaxValue - precedence * 10
     val rightBindingPower =
-      leftBindingPower + (if (rightAssociativity) 1 else 0)
+      leftBindingPower - (if (rightAssociativity) 1 else 0)
 
     rule.parselet(operator)
       .leftBindingPower(leftBindingPower)
       .leftDenotation {
-        (expression, left) =>
-          val operatorReference = expression.currentTokenReference
+        (expression, left, operatorReference) =>
           val node = new Node(operator, operatorReference, operatorReference)
 
           node.branches += "left" -> List(left)
@@ -30,10 +29,9 @@ object Expressions {
 
   def postfix(rule: ExpressionRule, operator: String, precedence: Int) {
     rule.parselet(operator)
-      .leftBindingPower(precedence * 10)
+      .leftBindingPower(Int.MaxValue - precedence * 10)
       .leftDenotation {
-        (expression, left) =>
-          val operatorReference = expression.currentTokenReference
+        (expression, left, operatorReference) =>
           val node = new Node(operator, operatorReference, operatorReference)
           node.branches += "operand" -> List(left)
           node
@@ -41,11 +39,10 @@ object Expressions {
   }
 
   def prefix(rule: ExpressionRule, operator: String, precedence: Int) {
-    val power = precedence * 10
+    val power = Int.MaxValue - precedence * 10
 
     rule.parselet(operator).nullDenotation {
-      expression =>
-        val operatorReference = expression.currentTokenReference
+      (expression, operatorReference) =>
         val node = new Node(operator, operatorReference, operatorReference)
         for (right <- expression.parseRight(power))
           node.branches += "operand" -> List(right)
@@ -55,7 +52,7 @@ object Expressions {
 
   def group(rule: ExpressionRule, open: String, close: String) {
     rule.parselet(open).nullDenotation {
-      expression =>
+      (expression, _) =>
         val result = expression.parseRight()
 
         expression.consume(")")

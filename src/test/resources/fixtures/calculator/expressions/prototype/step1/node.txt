@@ -1,0 +1,140 @@
+ > create:
+number:2
+1 - 2 / 3 * 4 / 5 + 6 + 7% + <<<8>>>
+
+
+ > create:
+number:3
+1 - 2 / 3 * 4 / 5 + 6 + <<<7>>>% + 8
+
+
+ > create:
+%:4
+1 - 2 / 3 * 4 / 5 + 6 + 7<<<%>>> + 8
+
+
+ > create:
+number:5
+1 - 2 / 3 * 4 / 5 + <<<6>>> + 7% + 8
+
+
+ > create:
+number:6
+1 - 2 / 3 * 4 / <<<5>>> + 6 + 7% + 8
+
+
+ > create:
+number:7
+1 - 2 / 3 * <<<4>>> / 5 + 6 + 7% + 8
+
+
+ > create:
+number:8
+1 - 2 / <<<3>>> * 4 / 5 + 6 + 7% + 8
+
+
+ > create:
+*:9
+1 - 2 / 3 <<<*>>> 4 / 5 + 6 + 7% + 8
+
+
+ > create:
+/:10
+1 - 2 / 3 * 4 <<</>>> 5 + 6 + 7% + 8
+
+
+ > create:
+number:11
+1 - <<<2>>> / 3 * 4 / 5 + 6 + 7% + 8
+
+
+ > create:
+/:12
+1 - 2 <<</>>> 3 * 4 / 5 + 6 + 7% + 8
+
+
+ > create:
+number:13
+<<<1>>> - 2 / 3 * 4 / 5 + 6 + 7% + 8
+
+
+ > create:
+-:14
+1 <<<->>> 2 / 3 * 4 / 5 + 6 + 7% + 8
+
+
+ > create:
++:15
+1 - 2 / 3 * 4 / 5 <<<+>>> 6 + 7% + 8
+
+
+ > create:
++:16
+1 - 2 / 3 * 4 / 5 + 6 <<<+>>> 7% + 8
+
+
+ > create:
++:17
+1 - 2 / 3 * 4 / 5 + 6 + 7% <<<+>>> 8
+
+
+ > merge:
+expression 1 {
+  tree:
+    + 17 {
+      left:
+        + 16 {
+          left:
+            + 15 {
+              left:
+                - 14 {
+                  left:
+                    number 13 {
+                      value: 1
+                    }
+                  right:
+                    / 12 {
+                      left:
+                        number 11 {
+                          value: 2
+                        }
+                      right:
+                        / 10 {
+                          left:
+                            * 9 {
+                              left:
+                                number 8 {
+                                  value: 3
+                                }
+                              right:
+                                number 7 {
+                                  value: 4
+                                }
+                            }
+                          right:
+                            number 6 {
+                              value: 5
+                            }
+                        }
+                    }
+                }
+              right:
+                number 5 {
+                  value: 6
+                }
+            }
+          right:
+            % 4 {
+              operand:
+                number 3 {
+                  value: 7
+                }
+            }
+        }
+      right:
+        number 2 {
+          value: 8
+        }
+    }
+}
+

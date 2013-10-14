@@ -21,7 +21,8 @@ final case class Test(parserName: String,
                       steps: Int,
                       monitors: Set[String],
                       shortOutput: Boolean,
-                      outputFrom: Int) {
+                      outputFrom: Int,
+                      independentSteps: Boolean) {
   val inputs = read("input")
 
   val prototypes = monitors.map(name => name -> read("prototype", name)).toMap

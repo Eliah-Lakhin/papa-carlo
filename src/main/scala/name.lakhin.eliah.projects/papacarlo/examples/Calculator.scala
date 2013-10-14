@@ -14,6 +14,11 @@ object Calculator {
     import Matcher._
 
     tokenCategory(
+      "whitespace",
+      oneOrMore(anyOf(" \t\f\n"))
+    ).skip
+
+    tokenCategory(
       "number",
       choice(
         chunk("0"),
@@ -42,13 +47,13 @@ object Calculator {
       )
 
       group(rule, "(", ")")
-      postfix(rule, "%", 3)
-      prefix(rule, "+", 4)
-      prefix(rule, "-", 4)
-      infix(rule, "*", 5)
-      infix(rule, "/", 5, rightAssociativity = true)
-      infix(rule, "+", 6)
-      infix(rule, "-", 6)
+      postfix(rule, "%", 1)
+      prefix(rule, "+", 2)
+      prefix(rule, "-", 2)
+      infix(rule, "*", 3)
+      infix(rule, "/", 3, rightAssociativity = true)
+      infix(rule, "+", 4)
+      infix(rule, "-", 4)
 
       rule
     }

@@ -16,15 +16,15 @@
 package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
 
+import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import name.lakhin.eliah.projects.papacarlo.syntax.{Node, Session, Rule}
 import name.lakhin.eliah.projects.papacarlo.syntax.Result._
-
 
 final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
   final class ExpressionState(private[ExpressionRule] val session: Session) {
     private[ExpressionRule] var issues: Boolean = false
 
-    def parseRight(rightBindingPower: Int = Int.MaxValue) =
+    def parseRight(rightBindingPower: Int = 0) =
       ExpressionRule.this.parse(this, rightBindingPower)
 
     def placeholder = {
@@ -32,9 +32,6 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
         .relativeIndexOf(session.state.virtualPosition))
       new Node(RecoveryRule.PlaceholderKind, place, place)
     }
-
-    def currentTokenReference =
-      session.reference(session.relativeIndexOf(session.state.virtualPosition))
 
     def consume(expectedToken: String) = {
       val currentPosition = session.state.virtualPosition
@@ -46,10 +43,10 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
         .getOrElse(TokenRule.EndOfFragmentKind)
 
       if (expectedToken == actualKind) {
-        val reference = currentTokenReference
+        val tokenReference = reference(session)
         session.state = session.state
           .copy(virtualPosition = currentPosition + 1)
-        Some(reference)
+        Some(tokenReference)
       } else {
         issues = true
         session.state = session.state
@@ -61,9 +58,10 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
 
   final class Parselet {
     private[ExpressionRule] var lbp: Int = 0
-    private[ExpressionRule] var nud = Option.empty[ExpressionState => Node]
+    private[ExpressionRule] var nud =
+      Option.empty[(ExpressionState, TokenReference) => Node]
     private[ExpressionRule] var led =
-      Option.empty[(ExpressionState, Node) => Node]
+      Option.empty[(ExpressionState, Node, TokenReference) => Node]
 
     def leftBindingPower(lbp: Int) = {
       this.lbp = lbp
@@ -71,13 +69,15 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
       this
     }
 
-    def nullDenotation(procedure: ExpressionState => Node) = {
+    def nullDenotation(procedure: (ExpressionState,
+      TokenReference) => Node) = {
       this.nud = Some(procedure)
 
       this
     }
 
-    def leftDenotation(procedure: (ExpressionState, Node) => Node) = {
+    def leftDenotation(procedure: (ExpressionState, Node,
+      TokenReference) => Node) = {
       this.led = Some(procedure)
 
       this
@@ -117,9 +117,16 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
       .map(_.kind)
       .getOrElse(TokenRule.EndOfFragmentKind)
 
-  private def next(session: Session) {
+  def reference(session: Session) =
+    session.reference(session.relativeIndexOf(session.state.virtualPosition))
+
+  private def next(session: Session) = {
+    val result = reference(session)
+
     session.state = session.state.copy(virtualPosition =
       session.state.virtualPosition + 1)
+
+    result
   }
 
   private def operand(expression: ExpressionState) = {
@@ -143,22 +150,28 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
   }
 
   private def parse(expression: ExpressionState,
-                    rightBindingPower: Int = Int.MaxValue): Option[Node] = {
-    var step = parselets.get(token(expression.session))
+                    rightBindingPower: Int = 0): Option[Node] =
+    parselets.get(token(expression.session))
       .flatMap(parselet => parselet.nud.map(nud => {
-        next(expression.session)
-        (Some(nud(expression)), 0)
+        val operatorReference = next(expression.session)
+        Some(nud(expression, operatorReference))
       }))
-      .getOrElse((operand(expression), 0))
+      .getOrElse(operand(expression))
+      .map {
+        first =>
+          var left = first
+          var finished = false
 
-    while (step._1.isDefined && rightBindingPower > step._2)
-      step = parselets.get(token(expression.session))
-      .flatMap(parselet => parselet.led.map(led => {
-        next(expression.session)
-        (step._1.map(left => led(expression, left)), parselet.lbp)
-      }))
-      .getOrElse(step.copy(_2 = Int.MaxValue))
+          while (!finished) {
+            finished = true
 
-    step._1
-  }
+            for (parselet <- parselets.get(token(expression.session));
+                 led <- parselet.led if rightBindingPower < parselet.lbp) {
+              left = led(expression, left, next(expression.session))
+              finished = false
+            }
+          }
+
+          left
+      }
 }
