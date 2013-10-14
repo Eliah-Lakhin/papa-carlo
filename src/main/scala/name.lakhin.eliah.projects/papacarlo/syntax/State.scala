@@ -21,4 +21,10 @@ import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 final case class State(virtualPosition: Int = 0,
                        issues: List[Issue] = Nil,
                        products: List[(String, Node)] = Nil,
-                       captures: List[(String, Bounds)] = Nil)
+                       captures: List[(String, Bounds)] = Nil) {
+  def issue(description: String) =
+    copy(issues = Issue(Bounds.cursor(virtualPosition), description) :: issues)
+
+  def issue(range: Bounds, description: String) =
+    copy(issues = Issue(range, description) :: issues)
+}

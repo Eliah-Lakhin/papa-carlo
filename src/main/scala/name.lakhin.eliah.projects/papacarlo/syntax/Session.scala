@@ -61,7 +61,7 @@ final class Session(val syntax: Syntax,
         cache.ready)
       .map(_.node)
 
-  def parse(ruleName: String) = {
+  private[Cache] def parse(ruleName: String) = {
     state = State()
     packrat = Map.empty
     sourceTokens.zipWithIndex.filter(!_._1.isSkippable).unzip match {
@@ -77,7 +77,7 @@ final class Session(val syntax: Syntax,
       state = State()
       val result = ReferentialRule(ruleName, Some("result"))(this)
 
-      if (result == InterpretationResult.Failed) {
+      if (result == Result.Failed) {
         var firstIssue = state.issues.foldLeft(Issue(
           Bounds.cursor(tokens.length),
           "code mismatched"

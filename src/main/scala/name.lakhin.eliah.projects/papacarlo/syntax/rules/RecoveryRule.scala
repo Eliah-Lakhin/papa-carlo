@@ -18,7 +18,7 @@ package papacarlo.syntax.rules
 
 import name.lakhin.eliah.projects.papacarlo.syntax.{Issue, Session, Rule}
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
-import name.lakhin.eliah.projects.papacarlo.syntax.InterpretationResult._
+import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class RecoveryRule(rule: Rule,
                               exception: String) extends Rule {

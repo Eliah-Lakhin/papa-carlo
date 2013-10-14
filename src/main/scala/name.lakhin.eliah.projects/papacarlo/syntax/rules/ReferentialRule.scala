@@ -18,7 +18,7 @@ package papacarlo.syntax.rules
 
 import name.lakhin.eliah.projects.papacarlo.syntax._
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
-import name.lakhin.eliah.projects.papacarlo.syntax.InterpretationResult._
+import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class ReferentialRule(name: String,
                                  tag: Option[String] = None)
@@ -86,7 +86,7 @@ final case class ReferentialRule(name: String,
               session.relativeIndexOf(session.state.virtualPosition - 1)
             )
 
-            val node = new Node(rule.productKind, begin, end)
+            var node = new Node(rule.productKind, begin, end)
 
             node.cachable = rule.cachable
             node.branches =
@@ -97,7 +97,7 @@ final case class ReferentialRule(name: String,
                 .mapValues(_.map(_._2.iterator
                   .map(session.reference)).flatten)
 
-            for (interceptor <- rule.interceptor) interceptor(node)
+            for (interceptor <- rule.interceptor) node = interceptor(node)
 
             session.state = initialState.copy(
               virtualPosition = session.state.virtualPosition,

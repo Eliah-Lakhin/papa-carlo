@@ -17,7 +17,7 @@ package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
 
 import name.lakhin.eliah.projects.papacarlo.syntax.{Rule, Session}
-import name.lakhin.eliah.projects.papacarlo.syntax.InterpretationResult._
+import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class ChoiceRule(choices: List[Rule]) extends Rule {
   def apply(session: Session): Int = {

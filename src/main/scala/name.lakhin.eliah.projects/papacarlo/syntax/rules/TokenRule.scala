@@ -18,7 +18,7 @@ package papacarlo.syntax.rules
 
 import name.lakhin.eliah.projects.papacarlo.syntax.{Issue, Rule, Session}
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
-import name.lakhin.eliah.projects.papacarlo.syntax.InterpretationResult._
+import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class TokenRule(kind: String,
                            matchUntil: Boolean = false) extends Rule {
@@ -30,19 +30,21 @@ final case class TokenRule(kind: String,
     }
 
     val actualKind = session.tokens
-      .lift(index)
-      .map(_.kind)
-      .getOrElse("end of fragment")
+      .lift(index).map(_.kind).getOrElse(TokenRule.EndOfFragmentKind)
 
     if (actualKind == kind) {
       session.state = session.state.copy(virtualPosition = index + 1)
       Successful
     } else {
-      session.state = session.state.copy(issues = Issue(
+      session.state = session.state.issue(
         Bounds(session.state.virtualPosition, index + 1),
         kind + " expected, but " + actualKind  + " found"
-      ) :: session.state.issues)
+      )
       Failed
     }
   }
+}
+
+object TokenRule {
+  val EndOfFragmentKind = "end of fragment"
 }
