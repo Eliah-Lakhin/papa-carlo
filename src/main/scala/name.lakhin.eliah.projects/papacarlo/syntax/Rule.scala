@@ -46,11 +46,7 @@ object Rule {
       rule.copy(element = branch(tag, element))
 
     case RecoveryRule(rule: Rule, exception, recoveryBranch) =>
-      RecoveryRule(
-        branch(tag, rule),
-        exception,
-        recoveryBranch.map(_.copy(_1 = tag))
-      )
+      RecoveryRule(branch(tag, rule), exception, Some(tag))
 
     case NamedRule(label: String, rule: Rule) =>
       NamedRule(label, branch(tag, rule))
@@ -89,5 +85,7 @@ object Rule {
   def recover(rule: Rule, exception: String) = RecoveryRule(rule, exception)
 
   def recover(rule: Rule, nodeTag: String, exception: String) =
-    RecoveryRule(rule, exception, Some(nodeTag -> "placeholder"))
+    RecoveryRule(rule, exception, Some(nodeTag))
+
+  def expression(tag: String, atom: Rule) = ExpressionRule(tag, atom)
 }

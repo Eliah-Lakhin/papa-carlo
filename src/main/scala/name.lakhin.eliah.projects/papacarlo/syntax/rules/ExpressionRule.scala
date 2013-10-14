@@ -21,19 +21,49 @@ import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 
 final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
-
-  final case class ExpressionState(
-    private[ExpressionRule] val session: Session,
+  final class ExpressionState(private[ExpressionRule] val session: Session) {
     private[ExpressionRule] var issues: Boolean = false
-  )
+
+    def parseRight(rightBindingPower: Int = Int.MaxValue) =
+      ExpressionRule.this.parse(this, rightBindingPower)
+
+    def placeholder = {
+      val place = session.reference(session
+        .relativeIndexOf(session.state.virtualPosition))
+      new Node(RecoveryRule.PlaceholderKind, place, place)
+    }
+
+    def currentTokenReference =
+      session.reference(session.relativeIndexOf(session.state.virtualPosition))
+
+    def consume(expectedToken: String) = {
+      val currentPosition = session.state.virtualPosition
+
+      val actualKind = session
+        .tokens
+        .lift(currentPosition)
+        .map(_.kind)
+        .getOrElse(TokenRule.EndOfFragmentKind)
+
+      if (expectedToken == actualKind) {
+        val reference = currentTokenReference
+        session.state = session.state
+          .copy(virtualPosition = currentPosition + 1)
+        Some(reference)
+      } else {
+        issues = true
+        session.state = session.state
+          .issue(expectedToken + " expected, but " + actualKind  + " found")
+        None
+      }
+    }
+  }
 
   final class Parselet {
     private[ExpressionRule] var lbp: Int = 0
     private[ExpressionRule] var nud = Option.empty[ExpressionState => Node]
     private[ExpressionRule] var led =
       Option.empty[(ExpressionState, Node) => Node]
-
-    private var partParsers = Map.empty[String, TokenRule]
 
     def leftBindingPower(lbp: Int) = {
       this.lbp = lbp
@@ -52,42 +82,12 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
 
       this
     }
-
-    def parts(parts: String*) = {
-      this.partParsers ++=
-        parts.map(token => token -> new TokenRule(token))
-
-      this
-    }
-
-    def parseRight(expression: ExpressionState, rightBindingPower: Int) =
-      ExpressionRule.this.parse(expression, rightBindingPower)
-
-    def currentTokenReference(expression: ExpressionState) =
-      expression.session.reference(expression.session
-        .relativeIndexOf(expression.session.state.virtualPosition))
-
-    def consume(expression: ExpressionState, expectedToken: String) = {
-      val currentPosition = expression.session.state.virtualPosition
-
-      partParsers.get(expectedToken)
-        .map(_(expression.session))
-        .flatMap(result => {
-          if (result != Successful) expression.issues = true
-
-          if (result != Failed)
-            Some(expression.session.reference(expression.session
-              .relativeIndexOf(currentPosition)))
-          else
-            None
-        })
-    }
   }
 
   private var parselets = Map.empty[String, Parselet]
 
   def apply(session: Session) = {
-    val state = ExpressionState(session)
+    val state = new ExpressionState(session)
 
     parse(state) match {
       case Some(result) =>
@@ -133,7 +133,11 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
         initialState.products.length)
       .map(_._2)
 
-    expression.session.state.copy(products = initialState.products)
+    expression.session.state =
+      if (result.isDefined)
+        expression.session.state.copy(products = initialState.products)
+      else
+        initialState.copy(issues = expression.session.state.issues)
 
     result
   }

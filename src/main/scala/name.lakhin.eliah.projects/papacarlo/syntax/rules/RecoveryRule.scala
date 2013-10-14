@@ -22,7 +22,7 @@ import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class RecoveryRule(rule: Rule,
                               exception: String,
-                              branch: Option[(String, String)] = None)
+                              branch: Option[String] = None)
   extends Rule {
 
   def apply(session: Session) = {
@@ -31,7 +31,7 @@ final case class RecoveryRule(rule: Rule,
 
     if (result == Failed) {
       branch match {
-        case Some((tag, kind)) =>
+        case Some(tag) =>
           val place = session.reference(session
             .relativeIndexOf(initialState.virtualPosition))
 
@@ -41,8 +41,10 @@ final case class RecoveryRule(rule: Rule,
                 Bounds.cursor(initialState.virtualPosition),
                 exception
               ) :: initialState.issues,
-            products = (tag, new Node(kind, place, place)) ::
-              initialState.products
+            products = (
+              tag,
+              new Node(RecoveryRule.PlaceholderKind, place, place)
+            ) :: initialState.products
           )
 
         case None => session.state = initialState.issue(exception)
@@ -52,4 +54,8 @@ final case class RecoveryRule(rule: Rule,
 
     result
   }
+}
+
+object RecoveryRule {
+  val PlaceholderKind = "placeholder"
 }
