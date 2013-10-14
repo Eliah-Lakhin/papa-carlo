@@ -147,7 +147,7 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
     var step = parselets.get(token(expression.session))
       .flatMap(parselet => parselet.nud.map(nud => {
         next(expression.session)
-        (Some(nud(expression)), parselet.lbp)
+        (Some(nud(expression)), 0)
       }))
       .getOrElse((operand(expression), 0))
 

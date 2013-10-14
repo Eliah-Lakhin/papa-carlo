@@ -43,28 +43,24 @@ object Expressions {
   def prefix(rule: ExpressionRule, operator: String, precedence: Int) {
     val power = precedence * 10
 
-    rule.parselet(operator)
-      .leftBindingPower(power)
-      .nullDenotation {
-        expression =>
-          val operatorReference = expression.currentTokenReference
-          val node = new Node(operator, operatorReference, operatorReference)
-          for (right <- expression.parseRight(power))
-            node.branches += "operand" -> List(right)
-          node
-      }
+    rule.parselet(operator).nullDenotation {
+      expression =>
+        val operatorReference = expression.currentTokenReference
+        val node = new Node(operator, operatorReference, operatorReference)
+        for (right <- expression.parseRight(power))
+          node.branches += "operand" -> List(right)
+        node
+    }
   }
 
   def group(rule: ExpressionRule, open: String, close: String) {
-    rule.parselet(open)
-      .leftBindingPower(0)
-      .nullDenotation {
-        expression =>
-          val result = expression.parseRight()
+    rule.parselet(open).nullDenotation {
+      expression =>
+        val result = expression.parseRight()
 
-          expression.consume(")")
+        expression.consume(")")
 
-          result.getOrElse(expression.placeholder)
-      }
+        result.getOrElse(expression.placeholder)
+    }
   }
 }
