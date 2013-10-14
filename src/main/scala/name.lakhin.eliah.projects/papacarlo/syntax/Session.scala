@@ -61,7 +61,7 @@ final class Session(val syntax: Syntax,
         cache.ready)
       .map(_.node)
 
-  private[Cache] def parse(ruleName: String) = {
+  private[syntax] def parse(ruleName: String) = {
     state = State()
     packrat = Map.empty
     sourceTokens.zipWithIndex.filter(!_._1.isSkippable).unzip match {

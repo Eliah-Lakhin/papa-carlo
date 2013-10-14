@@ -16,22 +16,37 @@
 package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
 
-import name.lakhin.eliah.projects.papacarlo.syntax.{Issue, Session, Rule}
+import name.lakhin.eliah.projects.papacarlo.syntax.{Node, Issue, Session, Rule}
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class RecoveryRule(rule: Rule,
-                              exception: String) extends Rule {
+                              exception: String,
+                              branch: Option[(String, String)] = None)
+  extends Rule {
+
   def apply(session: Session) = {
     val initialState = session.state
     var result = rule(session)
 
     if (result == Failed) {
-      session.state = initialState.copy(issues =
-        Issue(
-          Bounds.cursor(initialState.virtualPosition),
-          exception
-        ) :: initialState.issues)
+      branch match {
+        case Some((tag, kind)) =>
+          val place = session.reference(session
+            .relativeIndexOf(initialState.virtualPosition))
+
+          session.state = initialState.copy(
+            issues =
+              Issue(
+                Bounds.cursor(initialState.virtualPosition),
+                exception
+              ) :: initialState.issues,
+            products = (tag, new Node(kind, place, place)) ::
+              initialState.products
+          )
+
+        case None => session.state = initialState.issue(exception)
+      }
       result = Recoverable
     }
 
