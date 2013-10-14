@@ -41,10 +41,8 @@ object Calculator {
     import Expressions._
 
     mainRule("expression") {
-      val rule = expression(
-        "tree",
-        branch("operand", recover(number, "operand required"))
-      )
+      val rule =
+        expression(branch("operand", recover(number, "operand required")))
 
       group(rule, "(", ")")
       postfix(rule, "%", 1)

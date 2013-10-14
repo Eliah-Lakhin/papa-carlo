@@ -88,4 +88,6 @@ object Rule {
     RecoveryRule(rule, exception, Some(nodeTag))
 
   def expression(tag: String, atom: Rule) = ExpressionRule(tag, atom)
+
+  def expression(atom: Rule) = ExpressionRule("result", atom)
 }

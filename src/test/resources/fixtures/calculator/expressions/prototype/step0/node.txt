@@ -18,30 +18,22 @@ number:4
 1 <<<+>>> 2 + 3
 
 
- > create:
-+:6
-1 + 2 <<<+>>> 3
-
-
  > merge:
-expression 1 {
-  tree:
-    + 6 {
++ 1 {
+  left:
+    + 5 {
       left:
-        + 5 {
-          left:
-            number 4 {
-              value: 1
-            }
-          right:
-            number 3 {
-              value: 2
-            }
+        number 4 {
+          value: 1
         }
       right:
-        number 2 {
-          value: 3
+        number 3 {
+          value: 2
         }
+    }
+  right:
+    number 2 {
+      value: 3
     }
 }
 

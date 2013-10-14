@@ -83,74 +83,66 @@ number:15
 1 - -2 / 3 * +4 / 5 + 6 <<<+>>> 7% + 8
 
 
- > create:
-+:19
-1 - -2 / 3 * +4 / 5 + 6 + 7% <<<+>>> 8
-
-
  > merge:
-expression 1 {
-  tree:
-    + 19 {
++ 1 {
+  left:
+    + 18 {
       left:
-        + 18 {
+        + 17 {
           left:
-            + 17 {
+            - 16 {
               left:
-                - 16 {
+                number 15 {
+                  value: 1
+                }
+              right:
+                / 14 {
                   left:
-                    number 15 {
-                      value: 1
+                    - 13 {
+                      operand:
+                        number 12 {
+                          value: 2
+                        }
                     }
                   right:
-                    / 14 {
+                    / 11 {
                       left:
-                        - 13 {
-                          operand:
-                            number 12 {
-                              value: 2
+                        * 10 {
+                          left:
+                            number 9 {
+                              value: 3
+                            }
+                          right:
+                            + 8 {
+                              operand:
+                                number 7 {
+                                  value: 4
+                                }
                             }
                         }
                       right:
-                        / 11 {
-                          left:
-                            * 10 {
-                              left:
-                                number 9 {
-                                  value: 3
-                                }
-                              right:
-                                + 8 {
-                                  operand:
-                                    number 7 {
-                                      value: 4
-                                    }
-                                }
-                            }
-                          right:
-                            number 6 {
-                              value: 5
-                            }
+                        number 6 {
+                          value: 5
                         }
                     }
                 }
-              right:
-                number 5 {
-                  value: 6
-                }
             }
           right:
-            % 4 {
-              operand:
-                number 3 {
-                  value: 7
-                }
+            number 5 {
+              value: 6
             }
         }
       right:
-        number 2 {
-          value: 8
+        % 4 {
+          operand:
+            number 3 {
+              value: 7
+            }
         }
+    }
+  right:
+    number 2 {
+      value: 8
     }
 }
 
