@@ -3,5 +3,10 @@
         "steps": 3,
         "independentSteps": true,
         "monitors": ["node", "error", "token"]
+    },
+    "recovery": {
+        "steps": 2,
+        "independentSteps": true,
+        "monitors": ["node", "error", "token"]
     }
 }

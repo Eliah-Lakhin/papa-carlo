@@ -1,0 +1,64 @@
+ > create:
+number:2
+1 + 2 * (3 - <<<4>>>
+
+
+ > create:
+number:3
+1 + 2 * (<<<3>>> - 4
+
+
+ > create:
+-:4
+1 + 2 * (3 <<<->>> 4
+
+
+ > create:
+number:5
+1 + <<<2>>> * (3 - 4
+
+
+ > create:
+*:6
+1 + 2 <<<*>>> (3 - 4
+
+
+ > create:
+number:7
+<<<1>>> + 2 * (3 - 4
+
+
+ > create:
++:8
+1 <<<+>>> 2 * (3 - 4
+
+
+ > merge:
+expression 1 {
+  tree:
+    + 8 {
+      left:
+        number 7 {
+          value: 1
+        }
+      right:
+        * 6 {
+          left:
+            number 5 {
+              value: 2
+            }
+          right:
+            - 4 {
+              left:
+                number 3 {
+                  value: 3
+                }
+              right:
+                number 2 {
+                  value: 4
+                }
+            }
+        }
+    }
+}
+
