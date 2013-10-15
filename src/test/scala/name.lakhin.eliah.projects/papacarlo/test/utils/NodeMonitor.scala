@@ -16,6 +16,8 @@
 package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
+import name.lakhin.eliah.projects.papacarlo.syntax.rules.RecoveryRule
+import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
 import name.lakhin.eliah.projects.papacarlo.syntax.Node
 
@@ -40,7 +42,15 @@ final class NodeMonitor(lexerConstructor: () => Lexer,
   private def nodeInfo(node: Node) =
     node.toString + (
       if (shortOutput) " " + lexer.rangeToString(node.getRange)
-      else "\n" + lexer.highlight(node.getRange, Some(10))
+      else {
+        var range = node.getRange
+
+        if (node.getKind == RecoveryRule.PlaceholderKind) {
+          range = Bounds.cursor(range.from)
+        }
+
+        "\n" + lexer.highlight(range, Some(10))
+      }
     )
 
   def getResult = unionLog(nodeLog)

@@ -16,7 +16,7 @@
 package name.lakhin.eliah.projects
 package papacarlo.syntax
 
-object InterpretationResult {
+object Result {
   val Successful = 1
   val Recoverable = 0
   val Failed = -1

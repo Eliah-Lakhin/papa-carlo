@@ -20,7 +20,7 @@ import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
 import name.lakhin.eliah.projects.papacarlo.syntax.Cache
 
 final class CacheMonitor(lexerConstructor: () => Lexer,
-                             syntaxConstructor: Lexer => Syntax)
+                         syntaxConstructor: Lexer => Syntax)
   extends SyntaxMonitor(lexerConstructor, syntaxConstructor) {
 
   private var cacheLog = List.empty[(Symbol, String)]

@@ -1,6 +1,18 @@
 Development history
 ===================
 
+0.3.0
+-----
+_2013-10-15_
+
+ - Expression parsing rule based on Pratt's algorithm implemented.
+ - Several parslet constructors for Expression parser implemented.
+ - Calculator parser example implemented. As well as appropriate functional
+   tests.
+ - Minor improvements:
+    - Avoid rule construction for simple rule nesting cases.
+    - Some identifiers were renamed.
+
 0.2.0
 -----
 _2013-10-07_

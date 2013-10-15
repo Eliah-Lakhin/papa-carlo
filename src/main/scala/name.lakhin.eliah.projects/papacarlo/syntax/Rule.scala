@@ -45,8 +45,8 @@ object Rule {
     case rule@RepetitionRule(element, _, _, _) =>
       rule.copy(element = branch(tag, element))
 
-    case RecoveryRule(rule: Rule, exception) =>
-      RecoveryRule(branch(tag, rule), exception)
+    case RecoveryRule(rule: Rule, exception, recoveryBranch) =>
+      RecoveryRule(branch(tag, rule), exception, Some(tag))
 
     case NamedRule(label: String, rule: Rule) =>
       NamedRule(label, branch(tag, rule))
@@ -82,8 +82,12 @@ object Rule {
 
   def choice(cases: Rule*) = ChoiceRule(cases.toList)
 
-  def recover(rule: Rule, exception: String) = rule match {
-    case RecoveryRule(rule: Rule, _) => RecoveryRule(rule, exception)
-    case _ => RecoveryRule(rule, exception)
-  }
+  def recover(rule: Rule, exception: String) = RecoveryRule(rule, exception)
+
+  def recover(rule: Rule, nodeTag: String, exception: String) =
+    RecoveryRule(rule, exception, Some(nodeTag))
+
+  def expression(tag: String, atom: Rule) = ExpressionRule(tag, atom)
+
+  def expression(atom: Rule) = ExpressionRule("result", atom)
 }

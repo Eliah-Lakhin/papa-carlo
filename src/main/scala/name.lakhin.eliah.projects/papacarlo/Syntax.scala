@@ -25,11 +25,11 @@ final class Syntax(val lexer: Lexer) {
 
   final class RuleDefinition(val productKind: String,
                              bodyInitializer: => Rule,
-                             val interceptor: Option[Node => Any] = None,
+                             val interceptor: Option[Node => Node] = None,
                              val cachable: Boolean = false) {
     lazy val body = bodyInitializer
 
-    private[Syntax] def copy(interceptor: Option[Node => Any] = interceptor,
+    private[Syntax] def copy(interceptor: Option[Node => Node] = interceptor,
                              cachable: Boolean = cachable) =
       new RuleDefinition(productKind, bodyInitializer, interceptor, cachable)
   }
@@ -94,7 +94,7 @@ final class Syntax(val lexer: Lexer) {
       }
   }
 
-  def intercept(ref: Rule)(interceptor: Node => Any) {
+  def intercept(ref: Rule)(interceptor: Node => Node) {
     ref match {
       case NamedRule(_, rule: Rule) => intercept(rule)(interceptor)
 

@@ -18,7 +18,7 @@ package papacarlo.syntax.rules
 
 import name.lakhin.eliah.projects.papacarlo.syntax._
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
-import name.lakhin.eliah.projects.papacarlo.syntax.InterpretationResult._
+import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class ReferentialRule(name: String,
                                  tag: Option[String] = None)
@@ -79,25 +79,40 @@ final case class ReferentialRule(name: String,
           result = rule.body(session)
 
           if (result != Failed) {
-            val begin = session.reference(
-              session.relativeIndexOf(initialState.virtualPosition)
-            )
-            val end = session.reference(
-              session.relativeIndexOf(session.state.virtualPosition - 1)
-            )
+            var node =
+              (if (!rule.cachable
+                && session.state.captures.isEmpty
+                && session.state.products.size == 1)
+                session.state.products
+                  .headOption
+                  .flatMap {
+                    product =>
+                      if (product._1 == "result") Some(product._2)
+                      else None
+                  }
+              else None).getOrElse {
+                val begin = session.reference(
+                  session.relativeIndexOf(initialState.virtualPosition)
+                )
+                val end = session.reference(
+                  session.relativeIndexOf(session.state.virtualPosition - 1)
+                )
 
-            val node = new Node(rule.productKind, begin, end)
+                val node = new Node(rule.productKind, begin, end)
 
-            node.cachable = rule.cachable
-            node.branches =
-              session.state.products.groupBy(_._1)
-                .mapValues(_.map(_._2).reverse)
-            node.references =
-              session.state.captures.groupBy(_._1)
-                .mapValues(_.map(_._2.iterator
-                  .map(session.reference)).flatten)
+                node.cachable = rule.cachable
+                node.branches =
+                  session.state.products.groupBy(_._1)
+                    .mapValues(_.map(_._2).reverse)
+                node.references =
+                  session.state.captures.groupBy(_._1)
+                    .mapValues(_.map(_._2.iterator
+                      .map(session.reference)).flatten)
 
-            for (interceptor <- rule.interceptor) interceptor(node)
+                node
+              }
+
+            for (interceptor <- rule.interceptor) node = interceptor(node)
 
             session.state = initialState.copy(
               virtualPosition = session.state.virtualPosition,

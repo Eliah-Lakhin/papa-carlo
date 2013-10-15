@@ -1,0 +1,39 @@
+ > create:
+number:2
+1 + 2 + <<<3>>>
+
+
+ > create:
+number:3
+1 + <<<2>>> + 3
+
+
+ > create:
+number:4
+<<<1>>> + 2 + 3
+
+
+ > create:
++:5
+1 <<<+>>> 2 + 3
+
+
+ > merge:
++ 1 {
+  left:
+    + 5 {
+      left:
+        number 4 {
+          value: 1
+        }
+      right:
+        number 3 {
+          value: 2
+        }
+    }
+  right:
+    number 2 {
+      value: 3
+    }
+}
+

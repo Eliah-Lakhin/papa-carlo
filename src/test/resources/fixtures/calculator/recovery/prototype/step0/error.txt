@@ -1,0 +1,2 @@
+ > operand required:
+1 * <<<>>>* 3

@@ -22,8 +22,12 @@ This is a list of main Papa Carlo's features provided out of the box:
  * Error-recovery mechanism.
    The parser can build Parse Tree even if the source code contains syntax
    errors.
- * Syntax definition directly in the Scala code using DSL based on
-   [PEG](http://en.wikipedia.org/wiki/Parsing_expression_grammar) grammar.
+ * Syntax definition directly in the Scala code using library's API.
+ * Recursive-descendant parsing based on
+   [PEG](http://en.wikipedia.org/wiki/Parsing_expression_grammar) grammars.
+ * Expression parsing with
+   [Pratt algorithm](http://en.wikipedia.org/wiki/Pratt_parser) and prepared
+   primitives.
 
 
 Development plan
@@ -42,9 +46,8 @@ Here is a To-Do list:
  - ~~Functional tests for Json parser.~~
  - ~~Publish alpha version ready to use.~~
  - ~~Additional functional tests for complicated fragmentation cases.~~
- - Support of [Pratt grammar](http://en.wikipedia.org/wiki/Pratt_parser).
- - Example of Lisp parser/interpreter.
- - Functional tests for Lisp example.
+ - ~~Support of [Pratt grammar](http://en.wikipedia.org/wiki/Pratt_parser).~~
+ - ~~Example of Calculator parser and appropriate functional tests.~~
  - Library documentation and tutorials.
 
 I use [Semantic Version policy](http://semver.org/) in naming project's

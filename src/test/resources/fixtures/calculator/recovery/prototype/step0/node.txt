@@ -1,0 +1,38 @@
+ > create:
+number:2
+1 * * <<<3>>>
+
+
+ > create:
+placeholder:3
+1 * <<<>>>* 3
+
+
+ > create:
+number:4
+<<<1>>> * * 3
+
+
+ > create:
+*:5
+1 <<<*>>> * 3
+
+
+ > merge:
+* 1 {
+  left:
+    * 5 {
+      left:
+        number 4 {
+          value: 1
+        }
+      right:
+        placeholder 3 {
+        }
+    }
+  right:
+    number 2 {
+      value: 3
+    }
+}
+
