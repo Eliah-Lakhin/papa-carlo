@@ -51,18 +51,27 @@ to use. Source code is covered by a number of functional
 [tests](https://github.com/Eliah-Lakhin/papa-carlo/tree/master/src/test).
 
 Before the project becomes in stable stage, ready to use in production it must
-pass a "trial by combat". I am going to use it in my another project of
-source-to-source compiler of the Malvina programming language with static
+pass a "trial by combat". My another project includes two components that will
+be built on top of Papa Carlo:
+ * Compiler of the general purpose programming language Malvina with static
+   type system.
+ * Web-based Integrated Development Environment for this language. With deep
+   code syntax/semantic analysis and manipulation features.
 
-So at this moment the most important
-parts required to build full-feature parsers are done and tested. But there are
-still a number of things that should be done before it will become Beta and
-Final. During this process library's public API may be changed many times.
+I hope these two projects could become a proof of readiness the library to use
+in production.
+
+Meanwhile if you decide to use the library in your project right now, I will
+gladly assist you. Please, feel free to contact me by email/jabber
+eliah.lakhin [at] gmail.com.
+
+
+Current version
+---------------
+The current version of the library is **0.3.0**.
 
 I use [Semantic Version policy](http://semver.org/) in naming project's
 versions. So the first stable release version will be "1.0.0".
-
-The current vesrions is **0.3.0**.
 
 Please see change log for details:
 [CHANGES](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/CHANGES.md)
