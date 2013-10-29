@@ -87,7 +87,7 @@ How to build and test
 License
 -------
 
-Please read [LICENSE](https://github.com/Eliah-Lakhin/papa-carlo/LICENSE) for
+Please read [LICENSE](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/LICENSE) for
 licensing details.
 
 
