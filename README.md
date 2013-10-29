@@ -13,9 +13,9 @@ terminal-based like Vim and Emacs.
 
 The core feature of the parsers made with Papa Carlo is utilizing incremental
 parsing approach. That means the parser doesn't need to parse again the whole
-source code when the user makes small changes to it. As a result it makes
-possible to do a lot of small changes in the source code in real time having
-actual Parse Tree without performance penalties.
+source code when the user makes small changes to it. Thus user can continuously
+edit source code with thousands lines in real time. And the parser keeps Parse
+Tree in touch with the source code permanently without performance penalties.
 
 This is a list of main Papa Carlo's features provided out of the box:
  * Incremental parsing.
@@ -29,29 +29,40 @@ This is a list of main Papa Carlo's features provided out of the box:
    [Pratt algorithm](http://en.wikipedia.org/wiki/Pratt_parser) and prepared
    primitives.
 
+Example parsers:
+ * [JSON parser](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Json.scala).
+ * [Calculator parser](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Calculator.scala).
+
+Additional information can be found
+[here](https://github.com/Eliah-Lakhin/papa-carlo/wiki/What-is-it-about).
+
+
+How to learn
+------------
+
+There is a [wiki](https://github.com/Eliah-Lakhin/papa-carlo/wiki) with
+detailed Tutorial.
+
 
 Development plan
 ----------------
-Currently the project is in Alpha stage. So at this moment the most important
+Currently the project is in Beta stage. All planned features are done and ready
+to use. Source code is covered by a number of functional
+[tests](https://github.com/Eliah-Lakhin/papa-carlo/tree/master/src/test).
+
+Before the project becomes in stable stage, ready to use in production it must
+pass a "trial by combat". I am going to use it in my another project of
+source-to-source compiler of the Malvina programming language with static
+
+So at this moment the most important
 parts required to build full-feature parsers are done and tested. But there are
 still a number of things that should be done before it will become Beta and
 Final. During this process library's public API may be changed many times.
 
-Here is a To-Do list:
-
- - ~~Lexical parser combinator.~~
- - ~~Fragment controller.~~
- - ~~Syntax parser combinator.~~
- - ~~Example of JSON parser.~~
- - ~~Functional tests for Json parser.~~
- - ~~Publish alpha version ready to use.~~
- - ~~Additional functional tests for complicated fragmentation cases.~~
- - ~~Support of [Pratt grammar](http://en.wikipedia.org/wiki/Pratt_parser).~~
- - ~~Example of Calculator parser and appropriate functional tests.~~
- - Library documentation and tutorials.
-
 I use [Semantic Version policy](http://semver.org/) in naming project's
-versions. So the Final and ready to use version will be "1.0.0".
+versions. So the first stable release version will be "1.0.0".
+
+The current vesrions is **0.3.0**.
 
 Please see change log for details:
 [CHANGES](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/CHANGES.md)
