@@ -40,8 +40,14 @@ Additional information can be found
 How to learn
 ------------
 
-There is a [wiki](https://github.com/Eliah-Lakhin/papa-carlo/wiki) with
-detailed Tutorial.
+There is detailed tutorial on the project's website:
+[http://lakhin.com/projects/papa-carlo/](http://lakhin.com/projects/papa-carlo/).
+
+---
+
+The tutorial is generated based mostly on the materials in wiki:
+[wiki](https://github.com/Eliah-Lakhin/papa-carlo/wiki). The wiki is open for
+read/write access to everyone. And contribution is very welcome.
 
 
 Development plan
