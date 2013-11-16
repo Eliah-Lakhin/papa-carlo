@@ -23,7 +23,7 @@ This is a list of main Papa Carlo's features provided out of the box:
    The parser can build Parse Tree even if the source code contains syntax
    errors.
  * Syntax definition directly in the Scala code using library's API.
- * Recursive-descendant parsing based on
+ * Recursive descent parsing based on
    [PEG](http://en.wikipedia.org/wiki/Parsing_expression_grammar) grammars.
  * Expression parsing with
    [Pratt algorithm](http://en.wikipedia.org/wiki/Pratt_parser) and prepared
@@ -33,8 +33,10 @@ Example parsers:
  * [JSON parser](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Json.scala).
  * [Calculator parser](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Calculator.scala).
 
-Additional information can be found
-[here](https://github.com/Eliah-Lakhin/papa-carlo/wiki/What-is-it-about).
+Additional information:
+ * [Problem description](https://github.com/Eliah-Lakhin/papa-carlo/wiki/What-is-it-about).
+ * [Introduction blog post in English](http://lakhin.com/blog/15.11.2013-handy-incremental-parser/).
+ * [Article on Habrahabr in Russian](http://lakhin.com/blog/15.11.2013-handy-incremental-parser/).
 
 
 How to learn
@@ -45,7 +47,7 @@ There is detailed tutorial on the project's website:
 
 ---
 
-The tutorial is generated based mostly on the materials in wiki:
+The tutorial is generated based mostly on materials from the
 [wiki](https://github.com/Eliah-Lakhin/papa-carlo/wiki). The wiki is open for
 read/write access to everyone. And contribution is very welcome.
 
