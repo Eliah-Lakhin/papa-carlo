@@ -34,9 +34,8 @@ Example parsers:
  * [Calculator parser](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Calculator.scala).
 
 Additional information:
+ * [Introduction blog post](http://lakhin.com/blog/15.11.2013-handy-incremental-parser/).
  * [Problem description](https://github.com/Eliah-Lakhin/papa-carlo/wiki/What-is-it-about).
- * [Introduction blog post in English](http://lakhin.com/blog/15.11.2013-handy-incremental-parser/).
- * [Article on Habrahabr in Russian](http://lakhin.com/blog/15.11.2013-handy-incremental-parser/).
 
 
 How to learn
