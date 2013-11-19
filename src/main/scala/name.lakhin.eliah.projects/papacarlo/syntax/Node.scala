@@ -26,6 +26,7 @@ final class Node(private[syntax] var kind: String,
   private[syntax] var branches = Map.empty[String, List[Node]]
   private[syntax] var references = Map.empty[String, List[TokenReference]]
   private[syntax] var cachable = false
+  private[syntax] var parent = Option.empty[Node]
 
   val onChange = new Signal[Node]
   val onRemove = new Signal[Node]
@@ -50,6 +51,8 @@ final class Node(private[syntax] var kind: String,
   def getBranch(tag: String) = getBranches(tag).headOption
 
   def hasBranch(tag: String) = branches.contains(tag)
+
+  def getParent = parent
 
   def getValue(tag: String) =
     references.lift(tag).map(_.map(_.token.value).mkString).getOrElse("")
@@ -79,9 +82,11 @@ final class Node(private[syntax] var kind: String,
 
     var unregistered = List.empty[Node]
     var registered = Set.empty[Int]
-    replacement.visitBranches(newDescendant => {
+    replacement.visitBranches((parent, newDescendant) => {
       if (newDescendant.bound) registered += newDescendant.id
       else unregistered ::= newDescendant
+
+      newDescendant.parent = Some(parent)
     })
 
     reverseVisitBranches(oldDescendant => {
@@ -101,9 +106,9 @@ final class Node(private[syntax] var kind: String,
     unregistered
   }
 
-  private def visitBranches(enter: Node => Any) {
+  private def visitBranches(enter: (Node, Node) => Any) {
     for (branch <- branches.map(_._2).flatten) {
-      enter(branch)
+      enter(this, branch)
       branch.visitBranches(enter)
     }
   }
