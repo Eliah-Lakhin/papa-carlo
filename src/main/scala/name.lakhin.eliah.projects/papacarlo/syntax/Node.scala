@@ -82,7 +82,7 @@ final class Node(private[syntax] var kind: String,
 
     var unregistered = List.empty[Node]
     var registered = Set.empty[Int]
-    replacement.visitBranches((parent, newDescendant) => {
+    replacement.visitBranches(this, (parent, newDescendant) => {
       if (newDescendant.bound) registered += newDescendant.id
       else unregistered ::= newDescendant
 
@@ -96,7 +96,7 @@ final class Node(private[syntax] var kind: String,
 
     branches = replacement.branches
 
-    for (descendant <- unregistered)
+    for (descendant <- unregistered.reverseIterator)
       registry.add {
         id =>
           descendant.id = id
@@ -106,10 +106,10 @@ final class Node(private[syntax] var kind: String,
     unregistered
   }
 
-  private def visitBranches(enter: (Node, Node) => Any) {
+  private def visitBranches(current: Node, enter: (Node, Node) => Any) {
     for (branch <- branches.map(_._2).flatten) {
-      enter(this, branch)
-      branch.visitBranches(enter)
+      enter(current, branch)
+      branch.visitBranches(branch, enter)
     }
   }
 
@@ -136,6 +136,8 @@ final class Node(private[syntax] var kind: String,
     val result = new StringBuilder
 
     result ++= prefix + kind + " " + id
+
+    result ++= parent.map(" >> " + _.id).getOrElse("")
 
     if (cachable) result ++= "\n" + prefix + "cachable"
 

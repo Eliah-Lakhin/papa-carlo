@@ -1,5 +1,5 @@
  > remove:
-string:10
+string:11
 {
   "key 1": <<<"hello world">>>,
   "key 2": ["array value 1", "array value 2"]
@@ -7,7 +7,7 @@ string:10
 
 
  > remove:
-entry:11
+entry:10
 {
   <<<"key 1": "hello world">>>,
   "key 2": ["array value 1", "array value 2"]
@@ -15,39 +15,15 @@ entry:11
 
 
  > create:
-string:12
+entry:12
 {
-  "key 1": "hello world",
-  "key 2": ["array value 1", <<<"array value 2">>>]
+  <<<"key 1": "hello world">>>,
+  "key 2": ["array value 1", "array value 2"]
 }
 
 
  > create:
 string:13
-{
-  "key 1": "hello world",
-  "key 2": [<<<"array value 1">>>, "array value 2"]
-}
-
-
- > create:
-array:14 cachable
-{
-  "key 1": "hello world",
-  "key 2": <<<["array value 1", "array value 2"]>>>
-}
-
-
- > create:
-entry:15
-{
-  "key 1": "hello world",
-  <<<"key 2": ["array value 1", "array value 2"]>>>
-}
-
-
- > create:
-string:16
 {
   "key 1": <<<"hello world">>>,
   "key 2": ["array value 1", "array value 2"]
@@ -55,35 +31,59 @@ string:16
 
 
  > create:
-entry:17
+entry:14
 {
-  <<<"key 1": "hello world">>>,
-  "key 2": ["array value 1", "array value 2"]
+  "key 1": "hello world",
+  <<<"key 2": ["array value 1", "array value 2"]>>>
+}
+
+
+ > create:
+array:15 cachable
+{
+  "key 1": "hello world",
+  "key 2": <<<["array value 1", "array value 2"]>>>
+}
+
+
+ > create:
+string:16
+{
+  "key 1": "hello world",
+  "key 2": [<<<"array value 1">>>, "array value 2"]
+}
+
+
+ > create:
+string:17
+{
+  "key 1": "hello world",
+  "key 2": ["array value 1", <<<"array value 2">>>]
 }
 
 
  > merge:
 object 1 {
   entry:
-    entry 17 {
+    entry 12 >> 1 {
       key: "key 1"
       value:
-        string 16 {
+        string 13 >> 12 {
           value: "hello world"
         }
     }
   entry:
-    entry 15 {
+    entry 14 >> 1 {
       key: "key 2"
       value:
-        array 14
+        array 15 >> 14
         cachable {
           value:
-            string 13 {
+            string 16 >> 15 {
               value: "array value 1"
             }
           value:
-            string 12 {
+            string 17 >> 15 {
               value: "array value 2"
             }
         }

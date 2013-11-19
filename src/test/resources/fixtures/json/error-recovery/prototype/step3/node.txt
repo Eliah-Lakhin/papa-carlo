@@ -1,24 +1,24 @@
  > create:
-string:2
+entry:2
 {
-  "key 1": <<<"hello world">>>
+  <<<"key 1": "hello world">>>
 }
 
 
  > create:
-entry:3
+string:3
 {
-  <<<"key 1": "hello world">>>
+  "key 1": <<<"hello world">>>
 }
 
 
  > merge:
 object 1 {
   entry:
-    entry 3 {
+    entry 2 >> 1 {
       key: "key 1"
       value:
-        string 2 {
+        string 3 >> 2 {
           value: "hello world"
         }
     }

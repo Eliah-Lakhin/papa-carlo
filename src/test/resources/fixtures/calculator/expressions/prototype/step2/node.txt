@@ -1,54 +1,54 @@
  > create:
-number:2
-(1 + 2) * ((3) + <<<4>>>)
++:2
+(1 <<<+>>> 2) * ((3) + 4)
 
 
  > create:
 number:3
-(1 + 2) * ((<<<3>>>) + 4)
-
-
- > create:
-+:4
-(1 + 2) * ((3) <<<+>>> 4)
-
-
- > create:
-number:5
-(1 + <<<2>>>) * ((3) + 4)
-
-
- > create:
-number:6
 (<<<1>>> + 2) * ((3) + 4)
 
 
  > create:
-+:7
-(1 <<<+>>> 2) * ((3) + 4)
+number:4
+(1 + <<<2>>>) * ((3) + 4)
+
+
+ > create:
++:5
+(1 + 2) * ((3) <<<+>>> 4)
+
+
+ > create:
+number:6
+(1 + 2) * ((<<<3>>>) + 4)
+
+
+ > create:
+number:7
+(1 + 2) * ((3) + <<<4>>>)
 
 
  > merge:
 * 1 {
   left:
-    + 7 {
+    + 2 >> 1 {
       left:
-        number 6 {
+        number 3 >> 2 {
           value: 1
         }
       right:
-        number 5 {
+        number 4 >> 2 {
           value: 2
         }
     }
   right:
-    + 4 {
+    + 5 >> 1 {
       left:
-        number 3 {
+        number 6 >> 5 {
           value: 3
         }
       right:
-        number 2 {
+        number 7 >> 5 {
           value: 4
         }
     }
