@@ -31,8 +31,7 @@ final class Node(private[syntax] var kind: String,
   val onChange = new Signal[Node]
   val onRemove = new Signal[Node]
 
-  private val reflection =
-    (reference: TokenReference) => { onChange.trigger(this) }
+  private val reflection = (reference: TokenReference) => update()
 
   def bound = id != Node.Unbound
 
@@ -62,6 +61,11 @@ final class Node(private[syntax] var kind: String,
   def range = Bounds(begin.index, end.index + 1)
 
   def getCachable = cachable
+
+  def update(ancestor: Boolean = false) {
+    if (onChange.nonEmpty && !ancestor) onChange.trigger(this)
+    else for (parent <- parent) parent.update(ancestor)
+  }
 
   private[syntax] def remove(registry: Registry[Node]) {
     if (bound) {
