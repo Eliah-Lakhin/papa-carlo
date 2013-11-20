@@ -20,24 +20,24 @@ import scala.io.Source
 import java.io.{FileWriter, File}
 import net.liftweb.json.{NoTypeHints, Serialization}
 
-object Resources {
+final class Resources(inputBase: String = Resources.DefaultResourceBase,
+                      outputBase: String = Resources.DefaultResourceBase) {
   private implicit val formats = Serialization.formats(NoTypeHints)
-  private val resourceBase = "/fixtures/"
 
   def exist(category: String, name: String) =
-    getClass.getResource(resourceBase + fileName(category, name)) != null
+    getClass.getResource(inputBase + fileName(category, name)) != null
 
   def input(category: String, name: String) =
     try {
       Source.fromURL(getClass
-        .getResource(resourceBase + fileName(category, name))).mkString
+        .getResource(inputBase + fileName(category, name))).mkString
     } catch {
       case _: RuntimeException => ""
     }
 
   def update(category: String, name: String, content: String) {
     try {
-      val resource = getClass.getResource(resourceBase)
+      val resource = getClass.getResource(outputBase)
 
       if (resource.getProtocol == "file") {
         val file = new File(resource.getPath + fileName(category, name))
@@ -64,4 +64,8 @@ object Resources {
     Serialization.read[A](input(category, name))
 
   private def fileName(category: String, name: String) = category + "/" + name
+}
+
+object Resources {
+  val DefaultResourceBase = "/fixtures/"
 }
