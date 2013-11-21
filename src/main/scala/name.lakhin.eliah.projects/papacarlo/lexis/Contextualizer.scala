@@ -67,10 +67,10 @@ final class Contextualizer {
     pairs :+= result
     stateMachineCache = None
 
-    if (open == Token.lineBreak & close != Token.lineBreak)
+    if (open == Token.LineBreakKind & close != Token.LineBreakKind)
       lineCutTokens += close
 
-    if (open != Token.lineBreak & close == Token.lineBreak)
+    if (open != Token.LineBreakKind & close == Token.LineBreakKind)
       lineCutTokens += open
 
     result
