@@ -22,8 +22,12 @@ import net.liftweb.json.JsonAST._
 
 abstract class ParserSpec(parserName: String,
                           lexerConstructor: () => Lexer,
-                          syntaxConstructor: Lexer => Syntax)
+                          syntaxConstructor: Lexer => Syntax,
+                          inputBase: String = Resources.DefaultResourceBase,
+                          outputBase: String = Resources.DefaultResourceBase)
   extends FunSpec {
+
+  private val resources = new Resources(inputBase, outputBase)
 
   private val monitors:
     Map[String, (String, () => Monitor)] = Map(
@@ -55,10 +59,12 @@ abstract class ParserSpec(parserName: String,
     )
 
   private val tests =
-    Resources.json[Map[String, Map[String, JValue]]](parserName, "config.json")
+    resources.json[Map[String, Map[String, JValue]]](parserName, "config.json")
       .map({
         case (testName, settings) =>
           Test(
+            resources = resources,
+
             parserName = parserName,
 
             testName = testName,
@@ -70,7 +76,7 @@ abstract class ParserSpec(parserName: String,
                 case _ => None
               }
               .getOrElse((0 until 100)
-                .find(step => !Resources.exist(
+                .find(step => !resources.exist(
                   parserName + "/" + testName + "/input",
                   "step" + step + ".txt"
                 ))
@@ -133,7 +139,7 @@ abstract class ParserSpec(parserName: String,
               results ::= result
             }
 
-            Resources.update(
+            resources.update(
               parserName + "/" + test.testName + "/statistics",
               monitorName + ".txt",
               statistics.reverse.zipWithIndex.map {

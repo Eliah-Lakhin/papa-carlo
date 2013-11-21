@@ -1,5 +1,5 @@
  > remove:
-string:4
+string:5
 {
   "key 1": <<<"hello world">>>,
   ["array value 1"
@@ -7,7 +7,7 @@ string:4
 
 
  > remove:
-entry:5
+entry:4
 {
   <<<"key 1": "hello world">>>,
   ["array value 1"
@@ -15,17 +15,17 @@ entry:5
 
 
  > create:
-string:6
+entry:6
+{
+  <<<"key 1": "hello world">>>,
+  ["array value 1"
+}
+
+
+ > create:
+string:7
 {
   "key 1": <<<"hello world">>>,
-  ["array value 1"
-}
-
-
- > create:
-entry:7
-{
-  <<<"key 1": "hello world">>>,
   ["array value 1"
 }
 
@@ -33,10 +33,10 @@ entry:7
  > merge:
 object 1 {
   entry:
-    entry 7 {
+    entry 6 >> 1 {
       key: "key 1"
       value:
-        string 6 {
+        string 7 >> 6 {
           value: "hello world"
         }
     }

@@ -1,5 +1,5 @@
  > remove:
-string:47
+string:43
 {
   "key 1": <<<"hello world">>>,
   "key 1.1": "value 1.1"
@@ -9,7 +9,7 @@ string:47
 
 
  > remove:
-entry:48
+entry:42
 {
   <<<"key 1": "hello world">>>,
   "key 1.1": "value 1.1"
@@ -29,7 +29,7 @@ string:45
 
 
  > remove:
-entry:46
+entry:44
 {
   "key 1": "hello world",
   <<<"key 1.1": "value 1.1">>>
@@ -39,7 +39,7 @@ entry:46
 
 
  > remove:
-entry:44
+entry:46
 {
   "key 1": "hello world",
   "key 1.1": "value 1.1"
@@ -49,7 +49,7 @@ entry:44
 
 
  > remove:
-number:42
+number:48
 {
   "key 1": "hello world",
   "key 1.1": "value 1.1"
@@ -59,7 +59,7 @@ number:42
 
 
  > remove:
-entry:43
+entry:47
 {
   "key 1": "hello world",
   "key 1.1": "value 1.1"
@@ -69,22 +69,22 @@ entry:43
 
 
  > create:
-number:49
+entry:49
 {
-  "key 1": "hello world",
+  <<<"key 1": "hello world">>>,
   "key 1.1": "value 1.1"
   "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": <<<100>>>
+  "key 3": 100
 }
 
 
  > create:
-entry:50
+string:50
 {
-  "key 1": "hello world",
+  "key 1": <<<"hello world">>>,
   "key 1.1": "value 1.1"
   "key 2": ["array value 1", "array value 2", "array value 3"],
-  <<<"key 3": 100>>>
+  "key 3": 100
 }
 
 
@@ -92,8 +92,8 @@ entry:50
 entry:51
 {
   "key 1": "hello world",
-  "key 1.1": "value 1.1"
-  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
+  <<<"key 1.1": "value 1.1">>>
+  "key 2": ["array value 1", "array value 2", "array value 3"],
   "key 3": 100
 }
 
@@ -112,75 +112,75 @@ string:52
 entry:53
 {
   "key 1": "hello world",
-  <<<"key 1.1": "value 1.1">>>
-  "key 2": ["array value 1", "array value 2", "array value 3"],
+  "key 1.1": "value 1.1"
+  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
   "key 3": 100
 }
 
 
  > create:
-string:54
+entry:54
 {
-  "key 1": <<<"hello world">>>,
+  "key 1": "hello world",
   "key 1.1": "value 1.1"
   "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": 100
+  <<<"key 3": 100>>>
 }
 
 
  > create:
-entry:55
+number:55
 {
-  <<<"key 1": "hello world">>>,
+  "key 1": "hello world",
   "key 1.1": "value 1.1"
   "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": 100
+  "key 3": <<<100>>>
 }
 
 
  > merge:
 object 1 {
   entry:
-    entry 55 {
+    entry 49 >> 1 {
       key: "key 1"
       value:
-        string 54 {
+        string 50 >> 49 {
           value: "hello world"
         }
     }
   entry:
-    entry 53 {
+    entry 51 >> 1 {
       key: "key 1.1"
       value:
-        string 52 {
+        string 52 >> 51 {
           value: "value 1.1"
         }
     }
   entry:
-    entry 51 {
+    entry 53 >> 1 {
       key: "key 2"
       value:
-        array 31
+        array 33 >> 53
         cachable {
           value:
-            string 30 {
+            string 34 >> 33 {
               value: "array value 1"
             }
           value:
-            string 29 {
+            string 35 >> 33 {
               value: "array value 2"
             }
           value:
-            string 28 {
+            string 36 >> 33 {
               value: "array value 3"
             }
         }
     }
   entry:
-    entry 50 {
+    entry 54 >> 1 {
       key: "key 3"
       value:
-        number 49 {
+        number 55 >> 54 {
           value: 100
         }
     }

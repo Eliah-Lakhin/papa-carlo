@@ -20,6 +20,10 @@ import name.lakhin.eliah.projects.papacarlo.syntax.rules._
 
 abstract class Rule {
   def apply(session: Session): Int
+
+  def recover = RecoveryRule(this)
+
+  def recover(description: String) = RecoveryRule(this, Some(description))
 }
 
 object Rule {
@@ -82,10 +86,11 @@ object Rule {
 
   def choice(cases: Rule*) = ChoiceRule(cases.toList)
 
-  def recover(rule: Rule, exception: String) = RecoveryRule(rule, exception)
+  def recover(rule: Rule, exception: String) =
+    RecoveryRule(rule, Some(exception))
 
   def recover(rule: Rule, nodeTag: String, exception: String) =
-    RecoveryRule(rule, exception, Some(nodeTag))
+    RecoveryRule(rule, Some(exception), Some(nodeTag))
 
   def expression(tag: String, atom: Rule) = ExpressionRule(tag, atom)
 

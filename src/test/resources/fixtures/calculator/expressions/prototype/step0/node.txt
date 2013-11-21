@@ -1,38 +1,38 @@
  > create:
-number:2
-1 + 2 + <<<3>>>
++:2
+1 <<<+>>> 2 + 3
 
 
  > create:
 number:3
-1 + <<<2>>> + 3
-
-
- > create:
-number:4
 <<<1>>> + 2 + 3
 
 
  > create:
-+:5
-1 <<<+>>> 2 + 3
+number:4
+1 + <<<2>>> + 3
+
+
+ > create:
+number:5
+1 + 2 + <<<3>>>
 
 
  > merge:
 + 1 {
   left:
-    + 5 {
+    + 2 >> 1 {
       left:
-        number 4 {
+        number 3 >> 2 {
           value: 1
         }
       right:
-        number 3 {
+        number 4 >> 2 {
           value: 2
         }
     }
   right:
-    number 2 {
+    number 5 >> 1 {
       value: 3
     }
 }

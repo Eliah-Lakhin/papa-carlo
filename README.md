@@ -75,7 +75,7 @@ eliah.lakhin [at] gmail.com.
 
 Current version
 ---------------
-The current version of the library is **0.3.0**.
+The current version of the library is **0.4.0**.
 
 I use [Semantic Version policy](http://semver.org/) in naming project's
 versions. So the first stable release version will be "1.0.0".
@@ -86,7 +86,7 @@ Please see change log for details:
 
 How to build and test
 ---------------------
-1. Install [Simple Build Tools](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html#installing-sbt)
+1. Install [Simple ProjectBuildConfig Tools](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html#installing-sbt)
 2. From the project's root dir type "sbt test" to compile the project and run
    tests
 

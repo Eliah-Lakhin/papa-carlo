@@ -26,12 +26,12 @@ final class Node(private[syntax] var kind: String,
   private[syntax] var branches = Map.empty[String, List[Node]]
   private[syntax] var references = Map.empty[String, List[TokenReference]]
   private[syntax] var cachable = false
+  private[syntax] var parent = Option.empty[Node]
 
   val onChange = new Signal[Node]
   val onRemove = new Signal[Node]
 
-  private val reflection =
-    (reference: TokenReference) => { onChange.trigger(this) }
+  private val reflection = (reference: TokenReference) => update()
 
   def bound = id != Node.Unbound
 
@@ -51,6 +51,8 @@ final class Node(private[syntax] var kind: String,
 
   def hasBranch(tag: String) = branches.contains(tag)
 
+  def getParent = parent
+
   def getValue(tag: String) =
     references.lift(tag).map(_.map(_.token.value).mkString).getOrElse("")
 
@@ -59,6 +61,11 @@ final class Node(private[syntax] var kind: String,
   def range = Bounds(begin.index, end.index + 1)
 
   def getCachable = cachable
+
+  def update(ancestor: Boolean = false) {
+    if (onChange.nonEmpty && !ancestor) onChange.trigger(this)
+    else for (parent <- parent) parent.update(ancestor)
+  }
 
   private[syntax] def remove(registry: Registry[Node]) {
     if (bound) {
@@ -79,9 +86,11 @@ final class Node(private[syntax] var kind: String,
 
     var unregistered = List.empty[Node]
     var registered = Set.empty[Int]
-    replacement.visitBranches(newDescendant => {
+    replacement.visitBranches(this, (parent, newDescendant) => {
       if (newDescendant.bound) registered += newDescendant.id
       else unregistered ::= newDescendant
+
+      newDescendant.parent = Some(parent)
     })
 
     reverseVisitBranches(oldDescendant => {
@@ -91,7 +100,7 @@ final class Node(private[syntax] var kind: String,
 
     branches = replacement.branches
 
-    for (descendant <- unregistered)
+    for (descendant <- unregistered.reverseIterator)
       registry.add {
         id =>
           descendant.id = id
@@ -101,10 +110,10 @@ final class Node(private[syntax] var kind: String,
     unregistered
   }
 
-  private def visitBranches(enter: Node => Any) {
+  private def visitBranches(current: Node, enter: (Node, Node) => Any) {
     for (branch <- branches.map(_._2).flatten) {
-      enter(branch)
-      branch.visitBranches(enter)
+      enter(current, branch)
+      branch.visitBranches(branch, enter)
     }
   }
 
@@ -131,6 +140,8 @@ final class Node(private[syntax] var kind: String,
     val result = new StringBuilder
 
     result ++= prefix + kind + " " + id
+
+    result ++= parent.map(" >> " + _.id).getOrElse("")
 
     if (cachable) result ++= "\n" + prefix + "cachable"
 

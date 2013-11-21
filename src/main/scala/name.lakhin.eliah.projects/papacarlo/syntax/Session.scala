@@ -121,7 +121,9 @@ final class Session(val syntax: Syntax,
             for (issue <- list.sortBy(_.range.from))
               result.headOption match {
                 case Some(current) =>
-                  if (current.range.until < issue.range.from) result ::= issue
+                  if ((current.range.until < issue.range.from) &&
+                    (virtualIndexOf(current.range.until) <
+                      virtualIndexOf(issue.range.from))) result ::= issue
                   else result = current
                     .copy(range = current.range.union(issue.range)) ::
                       result.tail

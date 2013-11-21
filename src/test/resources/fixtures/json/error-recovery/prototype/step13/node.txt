@@ -1,5 +1,5 @@
  > remove:
-string:35
+string:29
 {
   "key 1": <<<"hello world">>>,
   "key 1.1": "value 1.1",
@@ -8,7 +8,7 @@ string:35
 
 
  > remove:
-entry:36
+entry:28
 {
   <<<"key 1": "hello world">>>,
   "key 1.1": "value 1.1",
@@ -17,7 +17,7 @@ entry:36
 
 
  > remove:
-string:33
+string:31
 {
   "key 1": "hello world",
   "key 1.1": <<<"value 1.1">>>,
@@ -26,7 +26,7 @@ string:33
 
 
  > remove:
-entry:34
+entry:30
 {
   "key 1": "hello world",
   <<<"key 1.1": "value 1.1">>>,
@@ -46,17 +46,17 @@ entry:32
  > create:
 entry:37
 {
-  "key 1": "hello world",
+  <<<"key 1": "hello world">>>,
   "key 1.1": "value 1.1",
-  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
+  "key 2": ["array value 1", "array value 2", "array value 3"],
 }
 
 
  > create:
 string:38
 {
-  "key 1": "hello world",
-  "key 1.1": <<<"value 1.1">>>,
+  "key 1": <<<"hello world">>>,
+  "key 1.1": "value 1.1",
   "key 2": ["array value 1", "array value 2", "array value 3"],
 }
 
@@ -73,8 +73,8 @@ entry:39
  > create:
 string:40
 {
-  "key 1": <<<"hello world">>>,
-  "key 1.1": "value 1.1",
+  "key 1": "hello world",
+  "key 1.1": <<<"value 1.1">>>,
   "key 2": ["array value 1", "array value 2", "array value 3"],
 }
 
@@ -82,46 +82,46 @@ string:40
  > create:
 entry:41
 {
-  <<<"key 1": "hello world">>>,
+  "key 1": "hello world",
   "key 1.1": "value 1.1",
-  "key 2": ["array value 1", "array value 2", "array value 3"],
+  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
 }
 
 
  > merge:
 object 1 {
   entry:
-    entry 41 {
+    entry 37 >> 1 {
       key: "key 1"
       value:
-        string 40 {
+        string 38 >> 37 {
           value: "hello world"
         }
     }
   entry:
-    entry 39 {
+    entry 39 >> 1 {
       key: "key 1.1"
       value:
-        string 38 {
+        string 40 >> 39 {
           value: "value 1.1"
         }
     }
   entry:
-    entry 37 {
+    entry 41 >> 1 {
       key: "key 2"
       value:
-        array 31
+        array 33 >> 41
         cachable {
           value:
-            string 30 {
+            string 34 >> 33 {
               value: [
             }
           value:
-            string 29 {
+            string 35 >> 33 {
               value:  
             }
           value:
-            string 28 {
+            string 36 >> 33 {
               value:  
             }
         }

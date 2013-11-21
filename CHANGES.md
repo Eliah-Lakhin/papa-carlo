@@ -1,6 +1,18 @@
 Development history
 ===================
 
+0.4.0
+-----
+_2013-11-21_
+
+ - AST improvements:
+   - Node's reference to it's parent.
+   - Update event propagation up to root.
+   - Node numeration order bug fixed.
+ - Error recovery minor improvements.
+ - SBT configuration major improvement.
+ - Artifacts can be published to Sonatype.
+
 0.3.0
 -----
 _2013-10-15_
@@ -37,4 +49,4 @@ http://www.apache.org/licenses/LICENSE-2.0.txt
 
 Last commit in the private repository where the "Papa Carlo" was
 derived from is:
-Eliah-Lakhin/malvina-prototype-new@d1d863f227e79ee27c4d69fdce1eb8c5146dacd4
+Eliah-Lakhin/malvina-prototype-b@d1d863f227e79ee27c4d69fdce1eb8c5146dacd4

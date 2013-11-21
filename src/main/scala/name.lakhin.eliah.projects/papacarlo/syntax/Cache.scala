@@ -56,6 +56,7 @@ final class Cache(syntax: Syntax,
                 new Cache(syntax, descendantFragment, descendant)
 
       syntax.onNodeMerge.trigger(node)
+      node.update()
     }
   }
 

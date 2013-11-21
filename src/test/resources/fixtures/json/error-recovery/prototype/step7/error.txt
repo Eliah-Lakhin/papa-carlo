@@ -1,26 +1,5 @@
  > code mismatched:
 {
-  "key 1": "hello world",
-  key2: ["array value 1", <<<"array value 2"]>>>
-}
-
-
- > code mismatched:
-{
-  "key 1": "hello world",
-  key2: <<<["array value 1",>>> "array value 2"]
-}
-
-
- > code mismatched:
-{
-  "key 1": "hello world",
-  <<<key2:>>> ["array value 1", "array value 2"]
-}
-
-
- > code mismatched:
-{
-  "key 1": "hello world"<<<,>>>
-  key2: ["array value 1", "array value 2"]
+  "key 1": "hello world"<<<,
+  key2: ["array value 1", "array value 2"]>>>
 }

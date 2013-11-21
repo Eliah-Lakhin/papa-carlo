@@ -19,6 +19,10 @@ package papacarlo.utils
 final class Signal[T] {
   private var slots = List.empty[T => Any]
 
+  def isEmpty = slots.isEmpty
+
+  def nonEmpty = slots.nonEmpty
+
   def bind(slot: T => Any) {
     slots ::= slot
   }

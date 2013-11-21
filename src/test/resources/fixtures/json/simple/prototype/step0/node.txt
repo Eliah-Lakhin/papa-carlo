@@ -1,125 +1,15 @@
  > create:
-null:2
+entry:2
 {
-  "key 1": "value 1",
+  <<<"key 1": "value 1">>>,
   "key 2": "value 2",
   "key 3": ["array element", 2.6e-2, true, false],
-  "key 4": {"subkey": <<<null>>>}
-}
-
-
- > create:
-entry:3
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", 2.6e-2, true, false],
-  "key 4": {<<<"subkey": null>>>}
-}
-
-
- > create:
-object:4 cachable
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", 2.6e-2, true, false],
-  "key 4": <<<{"subkey": null}>>>
-}
-
-
- > create:
-entry:5
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", 2.6e-2, true, false],
-  <<<"key 4": {"subkey": null}>>>
-}
-
-
- > create:
-boolean:6
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", 2.6e-2, true, <<<false>>>],
   "key 4": {"subkey": null}
 }
 
 
  > create:
-boolean:7
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", 2.6e-2, <<<true>>>, false],
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-number:8
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", <<<2.6e-2>>>, true, false],
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-string:9
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": [<<<"array element">>>, 2.6e-2, true, false],
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-array:10 cachable
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": <<<["array element", 2.6e-2, true, false]>>>,
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-entry:11
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  <<<"key 3": ["array element", 2.6e-2, true, false]>>>,
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-string:12
-{
-  "key 1": "value 1",
-  "key 2": <<<"value 2">>>,
-  "key 3": ["array element", 2.6e-2, true, false],
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-entry:13
-{
-  "key 1": "value 1",
-  <<<"key 2": "value 2">>>,
-  "key 3": ["array element", 2.6e-2, true, false],
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-string:14
+string:3
 {
   "key 1": <<<"value 1">>>,
   "key 2": "value 2",
@@ -129,68 +19,178 @@ string:14
 
 
  > create:
-entry:15
+entry:4
 {
-  <<<"key 1": "value 1">>>,
-  "key 2": "value 2",
+  "key 1": "value 1",
+  <<<"key 2": "value 2">>>,
   "key 3": ["array element", 2.6e-2, true, false],
   "key 4": {"subkey": null}
+}
+
+
+ > create:
+string:5
+{
+  "key 1": "value 1",
+  "key 2": <<<"value 2">>>,
+  "key 3": ["array element", 2.6e-2, true, false],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+entry:6
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  <<<"key 3": ["array element", 2.6e-2, true, false]>>>,
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+array:7 cachable
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": <<<["array element", 2.6e-2, true, false]>>>,
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+string:8
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": [<<<"array element">>>, 2.6e-2, true, false],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+number:9
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", <<<2.6e-2>>>, true, false],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+boolean:10
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, <<<true>>>, false],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+boolean:11
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, <<<false>>>],
+  "key 4": {"subkey": null}
+}
+
+
+ > create:
+entry:12
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, false],
+  <<<"key 4": {"subkey": null}>>>
+}
+
+
+ > create:
+object:13 cachable
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, false],
+  "key 4": <<<{"subkey": null}>>>
+}
+
+
+ > create:
+entry:14
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, false],
+  "key 4": {<<<"subkey": null>>>}
+}
+
+
+ > create:
+null:15
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, false],
+  "key 4": {"subkey": <<<null>>>}
 }
 
 
  > merge:
 object 1 {
   entry:
-    entry 15 {
+    entry 2 >> 1 {
       key: "key 1"
       value:
-        string 14 {
+        string 3 >> 2 {
           value: "value 1"
         }
     }
   entry:
-    entry 13 {
+    entry 4 >> 1 {
       key: "key 2"
       value:
-        string 12 {
+        string 5 >> 4 {
           value: "value 2"
         }
     }
   entry:
-    entry 11 {
+    entry 6 >> 1 {
       key: "key 3"
       value:
-        array 10
+        array 7 >> 6
         cachable {
           value:
-            string 9 {
+            string 8 >> 7 {
               value: "array element"
             }
           value:
-            number 8 {
+            number 9 >> 7 {
               value: 2.6e-2
             }
           value:
-            boolean 7 {
+            boolean 10 >> 7 {
               value: true
             }
           value:
-            boolean 6 {
+            boolean 11 >> 7 {
               value: false
             }
         }
     }
   entry:
-    entry 5 {
+    entry 12 >> 1 {
       key: "key 4"
       value:
-        object 4
+        object 13 >> 12
         cachable {
           entry:
-            entry 3 {
+            entry 14 >> 13 {
               key: "subkey"
               value:
-                null 2 {
+                null 15 >> 14 {
                 }
             }
         }

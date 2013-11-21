@@ -16,7 +16,8 @@
 package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
-final case class Test(parserName: String,
+final case class Test(resources: Resources,
+                      parserName: String,
                       testName: String,
                       steps: Int,
                       monitors: Set[String],
@@ -32,12 +33,12 @@ final case class Test(parserName: String,
       yield (
         step,
         if (tag.nonEmpty)
-          Resources.input(
+          resources.input(
             parserName + "/" + testName + "/" + dir + "/step" + step,
             tag + ".txt"
           )
         else
-          Resources.input(
+          resources.input(
             parserName + "/" + testName + "/" + dir,
             "step" + step + ".txt"
           )
@@ -45,7 +46,7 @@ final case class Test(parserName: String,
   ).toMap
 
   def write(kind: String, step: Int, value: String) {
-    Resources.update(
+    resources.update(
       parserName + "/" + testName + "/output/step" + step,
       kind + ".txt",
       value

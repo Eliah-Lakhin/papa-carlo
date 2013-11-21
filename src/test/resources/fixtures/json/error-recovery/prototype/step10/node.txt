@@ -1,5 +1,5 @@
  > remove:
-string:13
+string:16
 {
   "key 1": "hello world",
   "key 2": [<<<"array value 1">>>, "array value 2", "array value 3"],
@@ -7,7 +7,7 @@ string:13
 
 
  > remove:
-string:12
+string:17
 {
   "key 1": "hello world",
   "key 2": ["array value 1", <<<"array value 2">>>, "array value 3"],
@@ -18,7 +18,7 @@ string:12
 string:21
 {
   "key 1": "hello world",
-  "key 2": ["array value 1", "array value 2", <<<"array value 3">>>],
+  "key 2": [<<<"array value 1">>>, "array value 2", "array value 3"],
 }
 
 
@@ -34,23 +34,23 @@ string:22
 string:23
 {
   "key 1": "hello world",
-  "key 2": [<<<"array value 1">>>, "array value 2", "array value 3"],
+  "key 2": ["array value 1", "array value 2", <<<"array value 3">>>],
 }
 
 
  > merge:
-array 14
+array 15 >> 20
 cachable {
   value:
-    string 23 {
+    string 21 >> 15 {
       value: "array value 1"
     }
   value:
-    string 22 {
+    string 22 >> 15 {
       value: "array value 2"
     }
   value:
-    string 21 {
+    string 23 >> 15 {
       value: "array value 3"
     }
 }
