@@ -25,13 +25,15 @@ object ProjectBuildConfig extends Build {
         scalaVersion := "2.10.0",
 
         libraryDependencies ++= Seq(
-          "org.scalatest" % "scalatest_2.10" % "2.0.M6-SNAP8" % "test",
-          "net.liftweb" % "lift-json_2.10" % "2.5-RC6" % "test"
+          "org.scalatest" % "scalatest_2.10" % "2.0.M6-SNAP8",
+          "net.liftweb" % "lift-json_2.10" % "2.5-RC6"
         ),
         resolvers ++= Seq(
           "sonatype" at "http://oss.sonatype.org/content/repositories/releases",
           "typesafe" at "http://repo.typesafe.com/typesafe/releases/"
         ),
+
+        testOptions in Test += Tests.Argument("-oD"),
 
         publishMavenStyle := true,
         pomIncludeRepository := { _ => false },
