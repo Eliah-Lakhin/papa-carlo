@@ -21,7 +21,7 @@ import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class RecoveryRule(rule: Rule,
-                              exception: String,
+                              exception: Option[String] = None,
                               branch: Option[String] = None)
   extends Rule {
 
@@ -30,24 +30,31 @@ final case class RecoveryRule(rule: Rule,
     var result = rule(session)
 
     if (result == Failed) {
+      val issues =
+        exception
+          .map {
+            description =>
+              Issue(
+                Bounds.cursor(initialState.virtualPosition),
+                description
+              ) :: initialState.issues
+          }
+          .getOrElse(session.state.issues)
+
       branch match {
         case Some(tag) =>
           val place = session.reference(session
             .relativeIndexOf(initialState.virtualPosition))
 
           session.state = initialState.copy(
-            issues =
-              Issue(
-                Bounds.cursor(initialState.virtualPosition),
-                exception
-              ) :: initialState.issues,
+            issues = issues,
             products = (
               tag,
               new Node(RecoveryRule.PlaceholderKind, place, place)
             ) :: initialState.products
           )
 
-        case None => session.state = initialState.issue(exception)
+        case None => session.state = initialState.copy(issues = issues)
       }
       result = Recoverable
     }
