@@ -22,6 +22,8 @@ abstract class Rule {
   def apply(session: Session): Int
 
   def recover = RecoveryRule(this)
+
+  def recover(description: String) = RecoveryRule(this, Some(description))
 }
 
 object Rule {
