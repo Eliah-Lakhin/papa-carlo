@@ -86,7 +86,7 @@ Please see change log for details:
 
 How to build and test
 ---------------------
-1. Install [Simple Build Tools](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html#installing-sbt)
+1. Install [Simple ProjectBuildConfig Tools](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html#installing-sbt)
 2. From the project's root dir type "sbt test" to compile the project and run
    tests
 
