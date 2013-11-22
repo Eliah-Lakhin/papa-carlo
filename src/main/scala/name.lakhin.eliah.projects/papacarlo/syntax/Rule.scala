@@ -63,6 +63,8 @@ object Rule {
     case _ => NamedRule(label, rule)
   }
 
+  def name(label: String)(body: => Rule): NamedRule = name(label, body)
+
   def optional(rule: Rule) = RepetitionRule(rule, max = Some(1))
 
   def zeroOrMore(rule: Rule) = RepetitionRule(rule)
