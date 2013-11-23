@@ -21,9 +21,11 @@ import name.lakhin.eliah.projects.papacarlo.syntax.rules._
 abstract class Rule {
   def apply(session: Session): Int
 
-  def recover = RecoveryRule(this)
+  def permissive = RecoveryRule(this)
 
-  def recover(description: String) = RecoveryRule(this, Some(description))
+  def permissive(description: String) = RecoveryRule(this, Some(description))
+
+  def required = RequiredRule(this)
 }
 
 object Rule {
