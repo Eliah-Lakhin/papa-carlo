@@ -41,7 +41,7 @@ Getting started
 ##### Using distributed artifacts
 
 1. Install [SBT](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html#installing-sbt).
-2. Add dependency to the project's configuration: `libraryDependencies += "name.lakhin.eliah.projects.papacarlo" %% "papa-carlo" % "<put actual library version here>"`.
+2. Add dependency to the project's configuration: `libraryDependencies += "name.lakhin.eliah.projects.papacarlo" %% "papa-carlo" % "<lib version>"`.
 
 Remote artifact URLs:
 
