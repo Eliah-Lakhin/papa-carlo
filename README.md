@@ -30,6 +30,7 @@ This is a list of the main Papa Carlo's features provided out of the box:
    primitives.
 
 Example parsers:
+
  * [JSON parser](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Json.scala).
  * [Calculator parser](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Calculator.scala).
 
@@ -37,26 +38,24 @@ Example parsers:
 Getting started
 ---------------
 
-##### Using artifacts from the remote repositories
+##### Using distributed artifacts
 
 1. Install [SBT](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html#installing-sbt).
 2. Add dependency to the project's configuration: `libraryDependencies += "name.lakhin.eliah.projects.papacarlo" %% "papa-carlo" % "<put actual library version here>"`.
 
-
-##### Building JAR artifact manually
-
-1. Install [SBT](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html#installing-sbt). Version 0.13.0 is preferable.
-2. Run `sbt test` to compile and run tests.
-3. Run `sbt packageBin` to build JAR package. The JAR package can be found in
-   the `target/` directory.
-
-
-##### Remote artifact URLs
+Remote artifact URLs:
 
  * Release artifacts on Maven Central:
    [http://central.maven.org/maven2/name/lakhin/eliah/projects/papacarlo/](http://central.maven.org/maven2/name/lakhin/eliah/projects/papacarlo/)
  * Snapshot and release artifacts on Sonatype:
    [http://oss.sonatype.org/content/groups/public/name/lakhin/eliah/projects/papacarlo/](http://oss.sonatype.org/content/groups/public/name/lakhin/eliah/projects/papacarlo/papa-carlo_2.10/)
+
+##### Build from sources
+
+1. Install [SBT](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html#installing-sbt). Version 0.13.0 is preferable.
+2. Run `sbt test` to compile and run tests.
+3. Run `sbt packageBin` to build JAR package. The JAR package can be found in
+   the `target/` directory.
 
 
 Documentation
@@ -72,6 +71,7 @@ read/write access to everyone. And contribution is very welcome.
 ##### Another links
 
  * [Introduction blog post](http://lakhin.com/blog/15.11.2013-handy-incremental-parser/).
+ * [Discussion on Reddit](http://www.reddit.com/r/programming/comments/1rfyzx/whats_wrong_with_the_most_programming_language/).
  * [Introduction article on Habrahabr in Russian](http://habrahabr.ru/post/201774/).
  * [Approach brief description on Lambda the Ultimate](http://lambda-the-ultimate.org/node/4840).
 
