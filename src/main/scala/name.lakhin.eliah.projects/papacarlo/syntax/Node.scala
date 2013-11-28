@@ -164,4 +164,17 @@ final class Node(private[syntax] var kind: String,
 
 object Node {
   val Unbound = -1
+
+  def apply(kind: String,
+            begin: TokenReference,
+            end: TokenReference,
+            branches: List[Pair[String, Node]] = Nil,
+            references: List[Pair[String, TokenReference]] = Nil) = {
+    val result = new Node(kind, begin, end)
+
+    result.branches = branches.groupBy(_._1).mapValues(_.map(_._2))
+    result.references = references.groupBy(_._1).mapValues(_.map(_._2))
+
+    result
+  }
 }
