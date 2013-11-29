@@ -1,6 +1,17 @@
 Development history
 ===================
 
+0.4.1
+-----
+_2013-11.30_
+
+ - Node's additional constructor.
+ - Node's new property: "constant". When set forcefully overrides appropriate
+   referenced token value.
+ - Recover Rule constructor renamed to "permissive".
+ - Require Rule introduced.
+
+
 0.4.0
 -----
 _2013-11-21_

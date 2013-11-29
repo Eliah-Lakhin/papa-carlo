@@ -24,7 +24,7 @@ object ProjectBuildConfig extends Build {
     settings = Defaults.defaultSettings ++ SbtPgp.settings ++
       Seq(
         name := "Papa Carlo",
-        version := "0.4.0",
+        version := "0.4.1",
 
         description :=
           "Constructor of incremental parsers in Scala using PEG grammars",

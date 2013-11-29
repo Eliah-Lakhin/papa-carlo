@@ -21,9 +21,11 @@ import name.lakhin.eliah.projects.papacarlo.syntax.rules._
 abstract class Rule {
   def apply(session: Session): Int
 
-  def recover = RecoveryRule(this)
+  def permissive = RecoveryRule(this)
 
-  def recover(description: String) = RecoveryRule(this, Some(description))
+  def permissive(description: String) = RecoveryRule(this, Some(description))
+
+  def required = RequiredRule(this)
 }
 
 object Rule {
@@ -62,6 +64,8 @@ object Rule {
     case NamedRule(_, rule: Rule) => NamedRule(label, rule)
     case _ => NamedRule(label, rule)
   }
+
+  def name(label: String)(body: => Rule): NamedRule = name(label, body)
 
   def optional(rule: Rule) = RepetitionRule(rule, max = Some(1))
 
