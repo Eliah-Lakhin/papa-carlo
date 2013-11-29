@@ -42,4 +42,8 @@ final class NodeAccessor(val node: Node) {
   def setCachable(cachable: Boolean) {
     if (!node.bound) node.cachable = cachable
   }
+
+  def setConstant(tag: String, value: String) {
+    if (!node.bound) node.constants += tag -> value
+  }
 }

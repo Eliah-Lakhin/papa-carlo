@@ -25,6 +25,7 @@ final class Node(private[syntax] var kind: String,
   private[papacarlo] var id = Node.Unbound
   private[syntax] var branches = Map.empty[String, List[Node]]
   private[syntax] var references = Map.empty[String, List[TokenReference]]
+  private[syntax] var constants = Map.empty[String, String]
   private[syntax] var cachable = false
   private[syntax] var parent = Option.empty[Node]
 
@@ -54,9 +55,11 @@ final class Node(private[syntax] var kind: String,
   def getParent = parent
 
   def getValue(tag: String) =
-    references.lift(tag).map(_.map(_.token.value).mkString).getOrElse("")
+    constants.get(tag).getOrElse(references.lift(tag)
+      .map(_.map(_.token.value).mkString).getOrElse(""))
 
-  def hasValue(tag: String) = references.contains(tag)
+  def hasValue(tag: String) = constants.contains(tag) ||
+    references.contains(tag)
 
   def range = Bounds(begin.index, end.index + 1)
 
@@ -124,13 +127,19 @@ final class Node(private[syntax] var kind: String,
     }
   }
 
+  private def subscribableReferences =
+    references
+      .filter(pair => !constants.contains(pair._1))
+      .map(_._2.filter(_.token.isMutable))
+      .flatten
+
   private def initializeReflection() {
-    for (reference <- references.map(_._2.filter(_.token.isMutable)).flatten)
+    for (reference <- subscribableReferences)
       reference.onUpdate.bind(reflection)
   }
 
   private def releaseReflection() {
-    for (reference <- references.map(_._2.filter(_.token.isMutable)).flatten)
+    for (reference <- subscribableReferences)
       reference.onUpdate.unbind(reflection)
   }
 
@@ -169,11 +178,13 @@ object Node {
             begin: TokenReference,
             end: TokenReference,
             branches: List[Pair[String, Node]] = Nil,
-            references: List[Pair[String, TokenReference]] = Nil) = {
+            references: List[Pair[String, TokenReference]] = Nil,
+            constants: Map[String, String] = Map.empty) = {
     val result = new Node(kind, begin, end)
 
     result.branches = branches.groupBy(_._1).mapValues(_.map(_._2))
     result.references = references.groupBy(_._1).mapValues(_.map(_._2))
+    result.constants = constants
 
     result
   }
