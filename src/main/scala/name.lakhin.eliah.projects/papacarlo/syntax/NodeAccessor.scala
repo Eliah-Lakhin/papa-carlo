@@ -22,42 +22,42 @@ final class NodeAccessor(val node: Node) {
   def setKind(kind: String) = {
     if (!node.bound) node.kind = kind
 
-    node
+    this
   }
 
   def setBegin(reference: TokenReference) = {
     if (!node.bound) node.begin = reference
 
-    node
+    this
   }
 
   def setEnd(reference: TokenReference) = {
     if (!node.bound) node.end = reference
 
-    node
+    this
   }
 
   def setBranches(branches: Map[String, List[Node]]) = {
     if (!node.bound) node.branches = branches
 
-    node
+    this
   }
 
   def setReferences(references: Map[String, List[TokenReference]]) = {
     if (!node.bound) node.references = references
 
-    node
+    this
   }
 
   def setCachable(cachable: Boolean) = {
     if (!node.bound) node.cachable = cachable
 
-    node
+    this
   }
 
   def setConstant(tag: String, value: String) = {
     if (!node.bound) node.constants += tag -> value
 
-    node
+    this
   }
 }
