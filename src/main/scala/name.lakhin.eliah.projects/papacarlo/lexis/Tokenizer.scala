@@ -71,7 +71,6 @@ final class Tokenizer {
     var output = List.empty[Token]
     var position = 0
     var inTheBegin = true
-    var offset = 0
     while (position < input.length) {
       val start = position
 
@@ -96,9 +95,7 @@ final class Tokenizer {
           val kind = successful._1
 
           val indentation = inTheBegin && indentations.contains(kind)
-
-          if (indentation) offset += value.length
-          else inTheBegin = false
+          if (!indentation) inTheBegin = false
 
           output ::= new Token(
             kind = kind,
@@ -113,6 +110,6 @@ final class Tokenizer {
       }
     }
 
-    (offset, output.reverse)
+    output.reverse
   }
 }

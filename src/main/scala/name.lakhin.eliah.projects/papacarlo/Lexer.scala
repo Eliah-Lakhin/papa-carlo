@@ -25,7 +25,6 @@ final class Lexer(tokenizer: Tokenizer,
                   contextualizer: Contextualizer) {
   private var code = ""
   private val tokens = new TokenCollection(contextualizer.lineCutTokens)
-  private var lineOffsets = IndexedSeq.empty[Int]
 
   val fragments = new FragmentController(contextualizer, tokens)
 
@@ -95,23 +94,19 @@ final class Lexer(tokenizer: Tokenizer,
   }
 
   private def inputPrepared(code: String, range: Bounds) {
-    val (lineBounds, tokenBounds) = align(range)
+    val tokenBounds = align(range)
     val codeBounds = tokenBounds.enlarge(0, -1).map(index =>
       tokens.descriptions.take(index).foldLeft(0)((offset, token) =>
         offset + token.value.length))
     val oldCode = codeBounds.substring(this.code)
     val targetCode = range.shift(-codeBounds.from).replace(oldCode, code)
     val targetTokens = new ListBuffer[Token]
-    var lineOffsets = new ListBuffer[Int]
 
     for (line <- targetCode.split("\n", -1)) {
-      val (offset, lineTokens) = tokenizer.tokenize(line)
+      val lineTokens = tokenizer.tokenize(line)
       targetTokens ++= lineTokens
       targetTokens += Token.lineBreak
-      lineOffsets += offset
     }
-
-    this.lineOffsets = lineBounds.replace(this.lineOffsets, lineOffsets)
 
     tokens.write(tokenBounds, targetTokens)
     this.code = codeBounds.replace(this.code, targetCode)
@@ -122,9 +117,7 @@ final class Lexer(tokenizer: Tokenizer,
   }
 
   private def align(range: Bounds) = {
-    var startLine = 0
     var start = 0
-    var endLine = 0
     var end = 0
     var line = 0
     var offset = 0
@@ -136,11 +129,9 @@ final class Lexer(tokenizer: Tokenizer,
 
         if (token.kind == Token.LineBreakKind) {
           if (offset < range.from) {
-              startLine = line
               start = index
           }
           if (range.until < nextOffset) {
-              endLine = line + 1
               end = index + 1
               break()
           }
@@ -154,6 +145,6 @@ final class Lexer(tokenizer: Tokenizer,
       }
     }
 
-    (Bounds(startLine, endLine), Bounds(start, end))
+    Bounds(start, end)
   }
 }
