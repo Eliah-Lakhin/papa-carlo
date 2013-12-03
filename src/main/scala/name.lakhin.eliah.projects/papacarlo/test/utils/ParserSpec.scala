@@ -36,13 +36,13 @@ abstract class ParserSpec(parserName: String,
         (
           "tokenize",
           () => new TokenizerMonitor(lexer),
-          false
+          true
         ),
       "fragment" ->
         (
           "produce fragments",
           () => new FragmentationMonitor(lexer),
-          false
+          true
         ),
       "cache" ->
         (
@@ -51,7 +51,7 @@ abstract class ParserSpec(parserName: String,
             val (lexer, syntax) = parser
             new CacheMonitor(lexer, syntax)
           },
-          false
+          true
         ),
       "node" ->
         (
@@ -60,7 +60,7 @@ abstract class ParserSpec(parserName: String,
             val (lexer, syntax) = parser
             new NodeMonitor(lexer, syntax)
           },
-          false
+          true
         ),
       "error" ->
         (
@@ -69,7 +69,7 @@ abstract class ParserSpec(parserName: String,
             val (lexer, syntax) = parser
             new ErrorMonitor(lexer, syntax)
           },
-          false
+          true
         ),
       "empty" ->
         (
