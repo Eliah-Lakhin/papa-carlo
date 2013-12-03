@@ -18,9 +18,7 @@ package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.Lexer
 
-final class TokenizerMonitor(lexerConstructor: () => Lexer)
-  extends Monitor(lexerConstructor) {
-
+final class TokenizerMonitor(lexer: Lexer) extends Monitor(lexer) {
   def getResult = {
     var context = ""
     val result = new StringBuilder

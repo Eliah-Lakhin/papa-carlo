@@ -18,9 +18,5 @@ package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
 
-abstract class SyntaxMonitor(lexerConstructor: () => Lexer,
-                                 syntaxConstructor: Lexer => Syntax)
-  extends Monitor(lexerConstructor) {
-
-  protected val syntax = syntaxConstructor(lexer)
-}
+abstract class SyntaxMonitor(lexer: Lexer, syntax: Syntax)
+  extends Monitor(lexer)

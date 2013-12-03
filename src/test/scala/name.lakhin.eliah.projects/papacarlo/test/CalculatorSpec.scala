@@ -19,8 +19,12 @@ package papacarlo.test
 import name.lakhin.eliah.projects.papacarlo.examples.Calculator
 import name.lakhin.eliah.projects.papacarlo.test.utils.ParserSpec
 
-class CalculatorSpec extends ParserSpec(
-  parserName = "calculator",
-  lexerConstructor = Calculator.lexer _,
-  syntaxConstructor = Calculator.syntax
-)
+class CalculatorSpec extends ParserSpec("calculator") {
+  override def lexer = Calculator.lexer
+  override def parser = {
+    val lexer = Calculator.lexer
+    val syntax = Calculator.syntax(lexer)
+
+    (lexer, syntax)
+  }
+}

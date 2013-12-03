@@ -18,9 +18,8 @@ package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
 
-final class ErrorMonitor(lexerConstructor: () => Lexer,
-                             syntaxConstructor: Lexer => Syntax)
-  extends SyntaxMonitor(lexerConstructor, syntaxConstructor) {
+final class ErrorMonitor(lexer: Lexer, syntax: Syntax)
+  extends SyntaxMonitor(lexer, syntax) {
 
   def getResult = syntax
     .getErrors

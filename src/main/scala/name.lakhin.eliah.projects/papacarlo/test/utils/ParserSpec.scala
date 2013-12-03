@@ -21,11 +21,12 @@ import org.scalatest.FunSpec
 import net.liftweb.json.JsonAST._
 
 abstract class ParserSpec(parserName: String,
-                          lexerConstructor: () => Lexer,
-                          syntaxConstructor: Lexer => Syntax,
                           inputBase: String = Resources.DefaultResourceBase,
                           outputBase: String = Resources.DefaultResourceBase)
   extends FunSpec {
+
+  protected def lexer: Lexer
+  protected def parser: (Lexer, Syntax)
 
   private val resources = new Resources(inputBase, outputBase)
 
@@ -34,27 +35,36 @@ abstract class ParserSpec(parserName: String,
       "token" ->
         (
           "tokenize",
-          () => new TokenizerMonitor(lexerConstructor)
+          () => new TokenizerMonitor(lexer)
         ),
       "fragment" ->
         (
           "produce fragments",
-          () => new FragmentationMonitor(lexerConstructor)
+          () => new FragmentationMonitor(lexer)
         ),
       "cache" ->
         (
           "track cache",
-          () => new CacheMonitor(lexerConstructor, syntaxConstructor)
+          () => {
+            val (lexer, syntax) = parser
+            new CacheMonitor(lexer, syntax)
+          }
         ),
       "node" ->
         (
           "produce syntax nodes",
-          () => new NodeMonitor(lexerConstructor, syntaxConstructor)
+          () => {
+            val (lexer, syntax) = parser
+            new NodeMonitor(lexer, syntax)
+          }
         ),
       "error" ->
         (
           "produce syntax errors",
-          () => new ErrorMonitor(lexerConstructor, syntaxConstructor)
+          () => {
+            val (lexer, syntax) = parser
+            new ErrorMonitor(lexer, syntax)
+          }
         )
     )
 

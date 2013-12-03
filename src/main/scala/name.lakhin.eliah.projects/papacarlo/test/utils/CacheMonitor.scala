@@ -19,9 +19,8 @@ package papacarlo.test.utils
 import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
 import name.lakhin.eliah.projects.papacarlo.syntax.Cache
 
-final class CacheMonitor(lexerConstructor: () => Lexer,
-                         syntaxConstructor: Lexer => Syntax)
-  extends SyntaxMonitor(lexerConstructor, syntaxConstructor) {
+final class CacheMonitor(lexer: Lexer, syntax: Syntax)
+  extends SyntaxMonitor(lexer, syntax) {
 
   private var cacheLog = List.empty[(Symbol, String)]
 

@@ -19,8 +19,12 @@ package papacarlo.test
 import name.lakhin.eliah.projects.papacarlo.test.utils.ParserSpec
 import name.lakhin.eliah.projects.papacarlo.examples.Json
 
-class JsonParserSpec extends ParserSpec(
-  parserName = "json",
-  lexerConstructor = Json.lexer _,
-  syntaxConstructor = Json.syntax
-)
+class JsonParserSpec extends ParserSpec("json") {
+  override def lexer = Json.lexer
+  override def parser = {
+    val lexer = Json.lexer
+    val syntax = Json.syntax(lexer)
+
+    (lexer, syntax)
+  }
+}

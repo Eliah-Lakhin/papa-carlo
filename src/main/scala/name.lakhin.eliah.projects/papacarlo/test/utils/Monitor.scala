@@ -18,10 +18,8 @@ package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.Lexer
 
-abstract class Monitor(lexerConstructor: () => Lexer) {
+abstract class Monitor(lexer: Lexer) {
   var shortOutput = false
-
-  protected val lexer = lexerConstructor()
 
   final def input(text: String) = {
     val start = System.currentTimeMillis()
