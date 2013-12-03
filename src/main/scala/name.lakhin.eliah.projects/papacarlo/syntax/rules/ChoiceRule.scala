@@ -30,7 +30,7 @@ final case class ChoiceRule(choices: List[Rule]) extends Rule {
 
         case Recoverable =>
           if (bestResult._1 < Recoverable ||
-            bestResult._2.virtualPosition >= session.state.virtualPosition)
+            bestResult._2.virtualPosition < session.state.virtualPosition)
             bestResult = (Recoverable, session.state)
 
           session.state = initialState
