@@ -31,16 +31,18 @@ abstract class ParserSpec(parserName: String,
   private val resources = new Resources(inputBase, outputBase)
 
   private val monitors:
-    Map[String, (String, () => Monitor)] = Map(
+    Map[String, (String, () => Monitor, Boolean)] = Map(
       "token" ->
         (
           "tokenize",
-          () => new TokenizerMonitor(lexer)
+          () => new TokenizerMonitor(lexer),
+          false
         ),
       "fragment" ->
         (
           "produce fragments",
-          () => new FragmentationMonitor(lexer)
+          () => new FragmentationMonitor(lexer),
+          false
         ),
       "cache" ->
         (
@@ -48,7 +50,8 @@ abstract class ParserSpec(parserName: String,
           () => {
             val (lexer, syntax) = parser
             new CacheMonitor(lexer, syntax)
-          }
+          },
+          false
         ),
       "node" ->
         (
@@ -56,7 +59,8 @@ abstract class ParserSpec(parserName: String,
           () => {
             val (lexer, syntax) = parser
             new NodeMonitor(lexer, syntax)
-          }
+          },
+          false
         ),
       "error" ->
         (
@@ -64,7 +68,17 @@ abstract class ParserSpec(parserName: String,
           () => {
             val (lexer, syntax) = parser
             new ErrorMonitor(lexer, syntax)
-          }
+          },
+          false
+        ),
+      "empty" ->
+        (
+          "parse",
+          () => {
+            val (lexer, syntax) = parser
+            new EmptyMonitor(lexer, syntax)
+          },
+          false
         )
     )
 
@@ -100,7 +114,7 @@ abstract class ParserSpec(parserName: String,
                 }.toSet)
 
               case _ => None
-            }.getOrElse(monitors.keys.toSet),
+            }.getOrElse(monitors.filter(_._2._3).keys.toSet),
 
             shortOutput = settings
               .get("shortOutput")
@@ -129,7 +143,8 @@ abstract class ParserSpec(parserName: String,
   for (test <- tests) {
     describe(test.testName + " test") {
 
-      for ((monitorName, (description, monitorConstructor)) <- monitors)
+      for ((monitorName, (description, monitorConstructor, default)) <-
+           monitors)
         if (test.monitors.contains(monitorName))
           it("should " + description) {
             var monitor = constructMonitor(test, monitorConstructor)
