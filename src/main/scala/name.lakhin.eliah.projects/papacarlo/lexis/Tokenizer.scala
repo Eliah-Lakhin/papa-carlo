@@ -59,6 +59,8 @@ final class Tokenizer {
       if (!terminals.exists(terminal => terminal._1 == pattern))
         terminals = (Pair(pattern, StringMatcher(pattern)) :: terminals)
           .sortBy(_._1.length)
+
+    terminals = terminals.sortBy(_._1).reverse
   }
 
   def keywords(patterns: String*) {
