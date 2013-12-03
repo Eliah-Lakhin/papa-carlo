@@ -145,5 +145,5 @@ final class Contextualizer {
     pairs.lift(context.kind - 1).exists(_.caching)
 
   private[lexis] def getContextSkipLevel(context: Context) =
-    pairs.lift(context.kind).map(_.skipLevel)
+    pairs.lift(context.kind - 1).map(_.skipLevel)
 }
