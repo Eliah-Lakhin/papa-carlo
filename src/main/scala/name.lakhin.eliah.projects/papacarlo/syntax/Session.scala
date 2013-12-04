@@ -29,19 +29,17 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
   private val sourceTokens = fragment.getTokens
   private[syntax] val sourceTokensOffset = fragment.begin.index
 
+  private var initialIndex = IndexedSeq.empty[Int]
   private var index = IndexedSeq.empty[Int]
 
   private[syntax] def reference(relativeIndex: Int) =
     syntax.lexer.reference(relativeIndex + sourceTokensOffset)
 
   private[syntax] def relativeSegmentOf(virtualSegment: Bounds) =
-    if (virtualSegment.length > 0)
-      virtualSegment.map(
-        relativeIndexOf,
-        until => relativeIndexOf(until - 1) + 1
-      )
-    else
-      Bounds.cursor(relativeIndexOf(virtualSegment.from))
+    virtualSegment.map(
+      relativeIndexOf,
+      until => relativeIndexOf(until - 1) + 1
+    )
 
   private[syntax] def relativeIndexOf(virtualIndex: Int) =
     if (virtualIndex < index.size)
@@ -69,6 +67,7 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
     sourceTokens.zipWithIndex.filter(!_._1.isSkippable).unzip match {
       case (preparedTokens, preparedIndex) =>
         tokens = preparedTokens
+        initialIndex = preparedIndex
         index = preparedIndex
     }
 
@@ -127,8 +126,8 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
               result.headOption match {
                 case Some(current) =>
                   if ((current.range.until < issue.range.from) &&
-                    (virtualIndexOf(current.range.until) <
-                      virtualIndexOf(issue.range.from))) result ::= issue
+                    (initialIndex.indexOf(current.range.until - 1) + 1 <
+                      initialIndex.indexOf(issue.range.from))) result ::= issue
                   else result = current
                     .copy(range = current.range.union(issue.range)) ::
                       result.tail
