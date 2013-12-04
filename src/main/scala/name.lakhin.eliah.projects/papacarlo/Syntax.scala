@@ -65,7 +65,7 @@ final class Syntax(val lexer: Lexer) {
 
     rules += name -> definition
 
-    NamedRule(name.head.toLower + name.tail, ReferentialRule(name))
+    NamedRule(name, ReferentialRule(name))
   }
 
   def mainRule(name: String)(body: => Rule) = {

@@ -33,7 +33,7 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
       new Node(RecoveryRule.PlaceholderKind, place, place)
     }
 
-    def consume(expectedToken: String) = {
+    def consume(expectedToken: String, optional: Boolean = false) = {
       val currentPosition = session.state.virtualPosition
 
       val actualKind = session
@@ -47,10 +47,12 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
         session.state = session.state
           .copy(virtualPosition = currentPosition + 1)
         Some(tokenReference)
-      } else {
+      } else if (!optional) {
         issues = true
         session.state = session.state
           .issue(expectedToken + " expected, but " + actualKind  + " found")
+        None
+      } else {
         None
       }
     }

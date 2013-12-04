@@ -103,7 +103,8 @@ final class Lexer(tokenizer: Tokenizer,
     val targetTokens = new ListBuffer[Token]
 
     for (line <- targetCode.split("\n", -1)) {
-      targetTokens ++= tokenizer.tokenize(line)
+      val lineTokens = tokenizer.tokenize(line)
+      targetTokens ++= lineTokens
       targetTokens += Token.lineBreak
     }
 
@@ -118,6 +119,7 @@ final class Lexer(tokenizer: Tokenizer,
   private def align(range: Bounds) = {
     var start = 0
     var end = 0
+    var line = 0
     var offset = 0
     var index = 0
 
@@ -133,6 +135,8 @@ final class Lexer(tokenizer: Tokenizer,
               end = index + 1
               break()
           }
+
+          line += 1
         }
 
         offset = nextOffset

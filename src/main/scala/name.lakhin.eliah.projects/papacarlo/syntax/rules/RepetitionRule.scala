@@ -45,8 +45,11 @@ final case class RepetitionRule(element: Rule,
         while (!finished) {
           val lastState = session.state
 
-          if (division(session) == Failed)
+          if (division(session) == Failed) {
+            lastIssues = session.state.issues
+            session.state = lastState
             finished = true
+          }
 
           if (!finished && element(session) == Failed) {
             lastIssues = session.state.issues
@@ -64,8 +67,11 @@ final case class RepetitionRule(element: Rule,
         var finished = counter >= max
 
         while (!finished) {
+          val lastState = session.state
+
           if (element(session) == Failed) {
             lastIssues = session.state.issues
+            session.state = lastState
             finished = true
           }
 

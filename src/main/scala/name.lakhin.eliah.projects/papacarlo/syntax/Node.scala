@@ -169,6 +169,8 @@ final class Node(private[syntax] var kind: String,
 
     result.toString()
   }
+
+  def accessor = new NodeAccessor(this)
 }
 
 object Node {

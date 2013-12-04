@@ -39,8 +39,7 @@ object Rule {
   }
 
   def branch(tag: String, rule: Rule): Rule = rule match {
-    case rule: ReferentialRule =>
-      rule.copy(tag = Some(tag))
+    case rule: ReferentialRule => rule.copy(tag = Some(tag))
 
     case ChoiceRule(cases) =>
       ChoiceRule(cases.map(choice => branch(tag, choice)))

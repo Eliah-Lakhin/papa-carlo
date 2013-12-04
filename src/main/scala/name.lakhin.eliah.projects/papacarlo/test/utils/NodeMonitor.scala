@@ -21,9 +21,8 @@ import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
 import name.lakhin.eliah.projects.papacarlo.syntax.Node
 
-final class NodeMonitor(lexerConstructor: () => Lexer,
-                            syntaxConstructor: Lexer => Syntax)
-  extends SyntaxMonitor(lexerConstructor, syntaxConstructor) {
+final class NodeMonitor(lexer: Lexer, syntax: Syntax)
+  extends SyntaxMonitor(lexer, syntax) {
 
   private var nodeLog = List.empty[(Symbol, String)]
 

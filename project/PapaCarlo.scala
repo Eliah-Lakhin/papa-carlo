@@ -17,14 +17,14 @@ import sbt._
 import Keys._
 import com.typesafe.sbt._
 
-object ProjectBuildConfig extends Build {
+object PapaCarlo extends Build {
   lazy val PapaCarlo = Project(
     id = "papa-carlo",
     base = file("."),
     settings = Defaults.defaultSettings ++ SbtPgp.settings ++
       Seq(
         name := "Papa Carlo",
-        version := "0.4.1",
+        version := "0.4.2",
 
         description :=
           "Constructor of incremental parsers in Scala using PEG grammars",

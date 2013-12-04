@@ -23,6 +23,7 @@ final class Tokenizer {
   private var keywords = Set.empty[String]
   private var skips = Set.empty[String]
   private var mutables = Set.empty[String]
+  private var indentations = Set.empty[String]
 
   final case class RuleDefinition(name: String) {
     def skip = {
@@ -32,6 +33,12 @@ final class Tokenizer {
     }
 
     def mutable = {
+      mutables += name
+
+      this
+    }
+
+    def indentation = {
       mutables += name
 
       this
@@ -52,6 +59,8 @@ final class Tokenizer {
       if (!terminals.exists(terminal => terminal._1 == pattern))
         terminals = (Pair(pattern, StringMatcher(pattern)) :: terminals)
           .sortBy(_._1.length)
+
+    terminals = terminals.sortBy(_._1).reverse
   }
 
   def keywords(patterns: String*) {
@@ -63,6 +72,7 @@ final class Tokenizer {
 
     var output = List.empty[Token]
     var position = 0
+    var inTheBegin = true
     while (position < input.length) {
       val start = position
 
@@ -75,8 +85,9 @@ final class Tokenizer {
         if (application.isEmpty) position += 1
       }
 
-      if (start < position)
+      if (start < position) {
         output ::= Token.unknown(input.substring(start, position))
+      }
 
       for (successful <- application) {
         val value = input.substring(position, successful._2)
@@ -85,11 +96,15 @@ final class Tokenizer {
         else {
           val kind = successful._1
 
+          val indentation = inTheBegin && indentations.contains(kind)
+          if (!indentation) inTheBegin = false
+
           output ::= new Token(
             kind = kind,
             value = value,
             skipped = skips.contains(kind),
-            mutable = mutables.contains(kind)
+            mutable = mutables.contains(kind),
+            indentation = indentation
           )
         }
 

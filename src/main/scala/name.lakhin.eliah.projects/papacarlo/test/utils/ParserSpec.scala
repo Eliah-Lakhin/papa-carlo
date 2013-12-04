@@ -21,40 +21,64 @@ import org.scalatest.FunSpec
 import net.liftweb.json.JsonAST._
 
 abstract class ParserSpec(parserName: String,
-                          lexerConstructor: () => Lexer,
-                          syntaxConstructor: Lexer => Syntax,
                           inputBase: String = Resources.DefaultResourceBase,
                           outputBase: String = Resources.DefaultResourceBase)
   extends FunSpec {
 
+  protected def lexer: Lexer
+  protected def parser: (Lexer, Syntax)
+
   private val resources = new Resources(inputBase, outputBase)
 
   private val monitors:
-    Map[String, (String, () => Monitor)] = Map(
+    Map[String, (String, () => Monitor, Boolean)] = Map(
       "token" ->
         (
           "tokenize",
-          () => new TokenizerMonitor(lexerConstructor)
+          () => new TokenizerMonitor(lexer),
+          true
         ),
       "fragment" ->
         (
           "produce fragments",
-          () => new FragmentationMonitor(lexerConstructor)
+          () => new FragmentationMonitor(lexer),
+          true
         ),
       "cache" ->
         (
           "track cache",
-          () => new CacheMonitor(lexerConstructor, syntaxConstructor)
+          () => {
+            val (lexer, syntax) = parser
+            new CacheMonitor(lexer, syntax)
+          },
+          true
         ),
       "node" ->
         (
           "produce syntax nodes",
-          () => new NodeMonitor(lexerConstructor, syntaxConstructor)
+          () => {
+            val (lexer, syntax) = parser
+            new NodeMonitor(lexer, syntax)
+          },
+          true
         ),
       "error" ->
         (
           "produce syntax errors",
-          () => new ErrorMonitor(lexerConstructor, syntaxConstructor)
+          () => {
+            val (lexer, syntax) = parser
+            new ErrorMonitor(lexer, syntax)
+          },
+          true
+        ),
+      "empty" ->
+        (
+          "parse",
+          () => {
+            val (lexer, syntax) = parser
+            new EmptyMonitor(lexer, syntax)
+          },
+          false
         )
     )
 
@@ -90,7 +114,7 @@ abstract class ParserSpec(parserName: String,
                 }.toSet)
 
               case _ => None
-            }.getOrElse(monitors.keys.toSet),
+            }.getOrElse(monitors.filter(_._2._3).keys.toSet),
 
             shortOutput = settings
               .get("shortOutput")
@@ -119,7 +143,8 @@ abstract class ParserSpec(parserName: String,
   for (test <- tests) {
     describe(test.testName + " test") {
 
-      for ((monitorName, (description, monitorConstructor)) <- monitors)
+      for ((monitorName, (description, monitorConstructor, default)) <-
+           monitors)
         if (test.monitors.contains(monitorName))
           it("should " + description) {
             var monitor = constructMonitor(test, monitorConstructor)

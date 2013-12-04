@@ -19,7 +19,8 @@ package papacarlo.lexis
 final class Token(val kind: String,
                   val value: String,
                   private var skipped: Boolean = false,
-                  private var mutable: Boolean = false) {
+                  private var mutable: Boolean = false,
+                  private var indentation: Boolean = false) {
   private val originallySkipped = skipped
   private val originallyMutable = mutable
 
@@ -32,8 +33,8 @@ final class Token(val kind: String,
 
   private[lexis] def applySkipLevel(level: SkipLevel) {
     level match {
-      case ForceSkip => skipped = false
-      case ForceUse => skipped = true
+      case ForceSkip => skipped = true
+      case ForceUse => skipped = false
       case OriginalSkipping => skipped = originallySkipped
     }
   }

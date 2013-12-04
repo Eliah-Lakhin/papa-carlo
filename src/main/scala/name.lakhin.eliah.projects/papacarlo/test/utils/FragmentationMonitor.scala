@@ -19,9 +19,7 @@ package papacarlo.test.utils
 import name.lakhin.eliah.projects.papacarlo.Lexer
 import name.lakhin.eliah.projects.papacarlo.lexis.Fragment
 
-private final class FragmentationMonitor(lexerConstructor: () => Lexer)
-  extends Monitor(lexerConstructor) {
-
+private final class FragmentationMonitor(lexer: Lexer) extends Monitor(lexer) {
   private var fragmentLog = List.empty[(Symbol, String)]
 
   lexer.fragments.onCreate.bind {

@@ -19,31 +19,45 @@ package papacarlo.syntax
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 
 final class NodeAccessor(val node: Node) {
-  def setKind(kind: String) {
+  def setKind(kind: String) = {
     if (!node.bound) node.kind = kind
+
+    this
   }
 
-  def setBegin(reference: TokenReference) {
+  def setBegin(reference: TokenReference) = {
     if (!node.bound) node.begin = reference
+
+    this
   }
 
-  def setEnd(reference: TokenReference) {
+  def setEnd(reference: TokenReference) = {
     if (!node.bound) node.end = reference
+
+    this
   }
 
-  def setBranches(branches: Map[String, List[Node]]) {
+  def setBranches(branches: Map[String, List[Node]]) = {
     if (!node.bound) node.branches = branches
+
+    this
   }
 
-  def setReferences(references: Map[String, List[TokenReference]]) {
+  def setReferences(references: Map[String, List[TokenReference]]) = {
     if (!node.bound) node.references = references
+
+    this
   }
 
-  def setCachable(cachable: Boolean) {
+  def setCachable(cachable: Boolean) = {
     if (!node.bound) node.cachable = cachable
+
+    this
   }
 
-  def setConstant(tag: String, value: String) {
+  def setConstant(tag: String, value: String) = {
     if (!node.bound) node.constants += tag -> value
+
+    this
   }
 }

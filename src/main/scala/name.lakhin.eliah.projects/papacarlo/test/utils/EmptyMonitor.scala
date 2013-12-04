@@ -16,31 +16,12 @@
 package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
-import name.lakhin.eliah.projects.papacarlo.Lexer
+import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
 
-abstract class Monitor(lexer: Lexer) {
-  var shortOutput = false
+final class EmptyMonitor(lexer: Lexer, syntax: Syntax)
+  extends SyntaxMonitor(lexer, syntax) {
 
-  final def input(text: String) = {
-    val start = System.currentTimeMillis()
-    lexer.input(text)
-    val end = System.currentTimeMillis()
+  def getResult = ""
 
-    end - start
-  }
-
-  def prepare()
-  def getResult: String
-
-  protected final def unionLog(log: List[(Symbol, String)]) = {
-    val result = new StringBuilder
-
-    for (log <- log.reverse) {
-      result ++= " > " + log._1.name + ":\n"
-      result ++= log._2
-      result ++= "\n\n"
-    }
-
-    result.toString()
-  }
+  def prepare() {}
 }

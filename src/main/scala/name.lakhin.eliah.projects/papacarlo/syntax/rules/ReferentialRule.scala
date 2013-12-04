@@ -20,8 +20,7 @@ import name.lakhin.eliah.projects.papacarlo.syntax._
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
-final case class ReferentialRule(name: String,
-                                 tag: Option[String] = None)
+final case class ReferentialRule(name: String, tag: Option[String] = None)
   extends Rule {
 
   def apply(session: Session) = {
@@ -72,12 +71,11 @@ final case class ReferentialRule(name: String,
     val initialState = session.state
 
     for (rule <- session.syntax.rules.get(name)) {
+      session.state = State(virtualPosition = session.state.virtualPosition)
+      result = rule.body(session)
+
       tag match {
         case Some(tag: String) =>
-          session.state =
-            State(virtualPosition = session.state.virtualPosition)
-          result = rule.body(session)
-
           if (result != Failed) {
             var node =
               (if (!rule.cachable
@@ -120,8 +118,15 @@ final case class ReferentialRule(name: String,
               issues = session.state.issues ::: initialState.issues
             )
           }
+          else
+            session.state = initialState.copy(issues = session.state.issues :::
+              initialState.issues)
 
-        case None => result = rule.body(session)
+        case None =>
+          session.state = initialState.copy(
+            virtualPosition = session.state.virtualPosition,
+            issues = session.state.issues ::: initialState.issues
+          )
       }
     }
 
