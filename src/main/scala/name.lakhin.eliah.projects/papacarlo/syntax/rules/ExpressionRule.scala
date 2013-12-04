@@ -183,4 +183,7 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
       }
 
   override val show = "expression(" + atom.show._1 + ") -> " + tag -> 5
+
+  override def map(mapper: Rule => Rule) =
+    mapper(this.copy(tag, atom.map(mapper)))
 }

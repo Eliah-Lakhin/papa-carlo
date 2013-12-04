@@ -19,9 +19,15 @@ package papacarlo.syntax
 import name.lakhin.eliah.projects.papacarlo.syntax.rules._
 
 abstract class Rule {
+  private var debuggableFlag = false
+
+  def map(mapper: Rule => Rule): Rule
+
   def apply(session: Session): Int
 
   def show: (String, Int)
+
+  final def isDebuggable = debuggableFlag
 
   final def showOperand(currentPrecedence: Int): String = {
     val (string, precedence) = show
@@ -36,6 +42,12 @@ abstract class Rule {
     RecoveryRule(this, Some(description))
 
   final def required = RequiredRule(this)
+
+  final def debuggable = this.map {
+    rule =>
+      rule.debuggableFlag = true
+      rule
+  }
 }
 
 object Rule {

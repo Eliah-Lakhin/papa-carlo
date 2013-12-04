@@ -146,4 +146,6 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
       case None => atom -> Int.MaxValue
     }
   }
+
+  override def map(mapper: Rule => Rule) = mapper(this.copy(name, tag))
 }

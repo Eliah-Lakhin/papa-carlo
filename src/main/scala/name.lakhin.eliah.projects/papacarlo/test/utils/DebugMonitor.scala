@@ -42,16 +42,18 @@ final class DebugMonitor(lexer: Lexer, syntax: Syntax)
 
   val onRuleEnter: ((Rule, State)) => Any = {
     case (rule: Rule, state: State) =>
-      log ::= 'enter -> (rule.show._1 + stateInfo(state))
+      if (rule.isDebuggable)
+        log ::= 'enter -> (rule.show._1 + stateInfo(state))
   }
 
   val onRuleLeave: ((Rule, State, Int)) => Any = {
     case (rule: Rule, state: State, result: Int) =>
-      log ::= 'leave -> (rule.show._1 + stateInfo(state) + (result match {
-        case Result.Failed => "\nFailed"
-        case Result.Recoverable => "\nRecoverable"
-        case _ => "\nSuccessful"
-      }))
+      if (rule.isDebuggable)
+        log ::= 'leave -> (rule.show._1 + stateInfo(state) + (result match {
+          case Result.Failed => "\nFailed"
+          case Result.Recoverable => "\nRecoverable"
+          case _ => "\nSuccessful"
+        }))
   }
 
   private def stateInfo(state: State) = {

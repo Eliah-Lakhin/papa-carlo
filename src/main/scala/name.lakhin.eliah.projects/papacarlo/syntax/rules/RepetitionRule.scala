@@ -105,4 +105,9 @@ final case class RepetitionRule(element: Rule,
       case (None, Some(max: Int)) => element.showOperand(2) + " * (0, " +  max +
         ")"
     }) + separator.map(" / " + _.showOperand(2)).getOrElse("")) -> 2
+
+  override def map(mapper: Rule => Rule) = mapper(this.copy(
+    element.map(mapper),
+    separator.map(_.map(mapper)), min, max)
+  )
 }

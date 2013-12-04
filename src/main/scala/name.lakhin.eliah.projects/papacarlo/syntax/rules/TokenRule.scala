@@ -54,6 +54,8 @@ final case class TokenRule(kind: String,
     (if (terminal) kind else "'" + kind + "'") +
       (if (matchUntil) ".matchUntil" else "") -> Int.MaxValue
   }
+
+  override def map(mapper: Rule => Rule) = mapper(this.copy(kind, matchUntil))
 }
 
 object TokenRule {

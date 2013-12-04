@@ -42,4 +42,7 @@ final case class SequentialRule(steps: List[Rule]) extends Rule {
   }
 
   override val show = steps.map(_.showOperand(4)).mkString(" & ") -> 4
+
+  override def map(mapper: Rule => Rule) =
+    mapper(this.copy(steps.map(_.map(mapper))))
 }

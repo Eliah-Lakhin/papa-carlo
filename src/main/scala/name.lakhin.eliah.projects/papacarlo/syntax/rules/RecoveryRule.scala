@@ -74,6 +74,9 @@ final case class RecoveryRule(rule: Rule,
       case None => atom -> Int.MaxValue
     }
   }
+
+  override def map(mapper: Rule => Rule) =
+    mapper(this.copy(rule.map(mapper), exception, branch))
 }
 
 object RecoveryRule {

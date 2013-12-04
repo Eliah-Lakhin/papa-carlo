@@ -51,4 +51,7 @@ final case class ChoiceRule(choices: List[Rule]) extends Rule {
   }
 
   override val show = choices.map(_.showOperand(3)).mkString(" | ") -> 3
+
+  override def map(mapper: Rule => Rule) =
+    mapper(this.copy(choices.map(_.map(mapper))))
 }
