@@ -35,6 +35,4 @@ final case class RequiredRule(rule: Rule) extends Rule {
   }
 
   override val show = "require(" + rule.showOperand(0) + ")" -> Int.MaxValue
-
-  override def map(mapper: Rule => Rule) = mapper(this.copy(rule.map(mapper)))
 }

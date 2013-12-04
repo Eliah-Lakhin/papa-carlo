@@ -17,6 +17,7 @@ package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.lexis.Token
+import name.lakhin.eliah.projects.papacarlo.syntax.rules.NamedRule
 import name.lakhin.eliah.projects.papacarlo.syntax.{Result, Rule, State, Cache}
 import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
 
@@ -26,6 +27,7 @@ final class DebugMonitor(lexer: Lexer, syntax: Syntax)
   private var log = List.empty[(Symbol, String)]
   private var fragment = IndexedSeq.empty[Token]
   private var segment = IndexedSeq.empty[Token]
+  private var deep = 0
 
   val onCacheInvalidate = (cache: Cache) => {
     log ::= Symbol("fragment of node " + cache.node.id) ->
@@ -41,19 +43,30 @@ final class DebugMonitor(lexer: Lexer, syntax: Syntax)
   }
 
   val onRuleEnter: ((Rule, State)) => Any = {
-    case (rule: Rule, state: State) =>
-      if (rule.isDebuggable)
+    case (rule: Rule, state: State) => {
+      if (isTraceable(rule) || deep > 0) deep += 1
+
+      if (rule.isInstanceOf[NamedRule] && deep > 0)
         log ::= 'enter -> (rule.show._1 + stateInfo(state))
+    }
   }
 
   val onRuleLeave: ((Rule, State, Int)) => Any = {
-    case (rule: Rule, state: State, result: Int) =>
-      if (rule.isDebuggable)
+    case (rule: Rule, state: State, result: Int) => {
+      if (rule.isInstanceOf[NamedRule] && deep > 0)
         log ::= 'leave -> (rule.show._1 + stateInfo(state) + (result match {
           case Result.Failed => "\nFailed"
           case Result.Recoverable => "\nRecoverable"
           case _ => "\nSuccessful"
         }))
+
+      if (deep > 0) deep -= 1
+    }
+  }
+
+  private def isTraceable(rule: Rule) = rule match {
+    case NamedRule(_, _, true) => true
+    case _ => false
   }
 
   private def stateInfo(state: State) = {

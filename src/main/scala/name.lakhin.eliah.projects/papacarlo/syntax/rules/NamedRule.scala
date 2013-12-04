@@ -20,7 +20,9 @@ import name.lakhin.eliah.projects.papacarlo.syntax.{Issue,
   Result, Session, Rule}
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 
-final case class NamedRule(label: String, rule: Rule) extends Rule {
+final case class NamedRule(label: String,
+                           rule: Rule,
+                           trace: Boolean = false) extends Rule {
   def apply(session: Session) = {
     session.syntax.onRuleEnter.trigger(this, session.state)
 
@@ -34,13 +36,12 @@ final case class NamedRule(label: String, rule: Rule) extends Rule {
     result
   }
 
+  def debug = copy(trace = true)
+
   override val show =
     rule match {
       case ReferentialRule(name, tag) if name == label => rule.show
       case _ =>
         rule.showOperand(Int.MaxValue) + ".name(" + label + ")" -> Int.MaxValue
     }
-
-  override def map(mapper: Rule => Rule) =
-    mapper(this.copy(label, rule.map(mapper)))
 }

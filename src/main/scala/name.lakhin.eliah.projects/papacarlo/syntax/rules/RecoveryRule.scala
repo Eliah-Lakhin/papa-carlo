@@ -70,13 +70,10 @@ final case class RecoveryRule(rule: Rule,
       exception.map("(" + _ + ")").getOrElse("")
 
     branch match {
-      case Some(branch: String) => atom + " -> " + atom -> 5
+      case Some(branch: String) => branch + " -> " + atom -> 1
       case None => atom -> Int.MaxValue
     }
   }
-
-  override def map(mapper: Rule => Rule) =
-    mapper(this.copy(rule.map(mapper), exception, branch))
 }
 
 object RecoveryRule {

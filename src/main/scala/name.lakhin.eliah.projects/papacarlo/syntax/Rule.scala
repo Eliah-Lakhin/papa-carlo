@@ -19,15 +19,9 @@ package papacarlo.syntax
 import name.lakhin.eliah.projects.papacarlo.syntax.rules._
 
 abstract class Rule {
-  private var debuggableFlag = false
-
-  def map(mapper: Rule => Rule): Rule
-
   def apply(session: Session): Int
 
   def show: (String, Int)
-
-  final def isDebuggable = debuggableFlag
 
   final def showOperand(parentPrecedence: Int): String = {
     val (string, currentPrecedence) = show
@@ -42,13 +36,6 @@ abstract class Rule {
     RecoveryRule(this, Some(description))
 
   final def required = RequiredRule(this)
-
-  final def debuggable = this.map {
-    case rule: ReferentialRule => rule
-    case rule =>
-      rule.debuggableFlag = true
-      rule
-  }
 }
 
 object Rule {
@@ -76,14 +63,14 @@ object Rule {
     case RecoveryRule(rule: Rule, exception, recoveryBranch) =>
       RecoveryRule(branch(tag, rule), exception, Some(tag))
 
-    case NamedRule(label: String, rule: Rule) =>
-      NamedRule(label, branch(tag, rule))
+    case NamedRule(label: String, rule: Rule, trace) =>
+      NamedRule(label, branch(tag, rule), trace)
 
     case _ => rule
   }
 
   def name(label: String, rule: Rule) = rule match {
-    case NamedRule(_, rule: Rule) => NamedRule(label, rule)
+    case NamedRule(_, rule: Rule, trace) => NamedRule(label, rule, trace)
     case _ => NamedRule(label, rule)
   }
 

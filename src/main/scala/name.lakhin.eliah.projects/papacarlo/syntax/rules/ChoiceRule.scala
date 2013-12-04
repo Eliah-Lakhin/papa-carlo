@@ -28,7 +28,9 @@ final case class ChoiceRule(choices: List[Rule]) extends Rule {
 
     for (choice <- choices) {
       choice(session) match {
-        case Successful => return Successful
+        case Successful =>
+          session.syntax.onRuleLeave.trigger(this, session.state, Successful)
+          return Successful
 
         case Recoverable =>
           if (bestResult._1 < Recoverable ||
@@ -51,7 +53,4 @@ final case class ChoiceRule(choices: List[Rule]) extends Rule {
   }
 
   override val show = choices.map(_.showOperand(2)).mkString(" | ") -> 2
-
-  override def map(mapper: Rule => Rule) =
-    mapper(this.copy(choices.map(_.map(mapper))))
 }

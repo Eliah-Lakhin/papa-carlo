@@ -46,8 +46,5 @@ final case class CapturingRule(tag: String, rule: Rule) extends Rule {
     result
   }
 
-  override val show = rule.showOperand(5) + " -> " + tag -> 5
-
-  override def map(mapper: Rule => Rule) =
-    mapper(this.copy(tag, rule.map(mapper)))
+  override val show = rule.showOperand(1) + " -> " + tag -> 1
 }

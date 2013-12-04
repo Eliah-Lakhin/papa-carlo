@@ -33,9 +33,12 @@ final case class RepetitionRule(element: Rule,
     if (element(session) == Failed)
       if (min <= 0) {
         session.state = initialState
+        session.syntax.onRuleLeave.trigger(this, session.state, Successful)
         return Successful
+      } else {
+        session.syntax.onRuleLeave.trigger(this, session.state, Failed)
+        return Failed
       }
-      else return Failed
 
     var counter = 1
     var lastIssues = session.state.issues
@@ -105,9 +108,4 @@ final case class RepetitionRule(element: Rule,
       case (None, Some(max: Int)) => element.showOperand(4) + " * (0, " +  max +
         ")"
     }) + separator.map(" / " + _.showOperand(4)).getOrElse("")) -> 4
-
-  override def map(mapper: Rule => Rule) = mapper(this.copy(
-    element.map(mapper),
-    separator.map(_.map(mapper)), min, max)
-  )
 }

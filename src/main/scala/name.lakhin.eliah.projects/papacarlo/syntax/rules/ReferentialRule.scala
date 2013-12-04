@@ -142,10 +142,8 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
     val atom = "@" + name
 
     tag match {
-      case Some(branch) if branch != name  => branch + " -> " + atom -> 5
+      case Some(branch) if branch != name  => branch + " -> " + atom -> 1
       case _ => atom -> Int.MaxValue
     }
   }
-
-  override def map(mapper: Rule => Rule) = mapper(this.copy(name, tag))
 }

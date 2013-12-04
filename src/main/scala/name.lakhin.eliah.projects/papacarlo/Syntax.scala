@@ -86,7 +86,7 @@ final class Syntax(val lexer: Lexer) {
   def cachable(refs: Rule*) {
     for (rule <- refs)
       rule match {
-        case NamedRule(_, rule: Rule) => cachable(rule)
+        case NamedRule(_, rule: Rule, _) => cachable(rule)
 
         case ReferentialRule(name, _) =>
           for (definition <- rules.get(name)) {
@@ -100,7 +100,7 @@ final class Syntax(val lexer: Lexer) {
 
   def intercept(ref: Rule)(interceptor: Node => Node) {
     ref match {
-      case NamedRule(_, rule: Rule) => intercept(rule)(interceptor)
+      case NamedRule(_, rule: Rule, _) => intercept(rule)(interceptor)
 
       case ReferentialRule(name, _) =>
         for (definition <- rules.get(name)) {
