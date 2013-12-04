@@ -79,6 +79,15 @@ abstract class ParserSpec(parserName: String,
             new EmptyMonitor(lexer, syntax)
           },
           false
+        ),
+      "debug" ->
+        (
+          "debug",
+          () => {
+            val (lexer, syntax) = parser
+            new DebugMonitor(lexer, syntax)
+          },
+          false
         )
     )
 
