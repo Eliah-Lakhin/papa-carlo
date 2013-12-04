@@ -142,8 +142,8 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
     val atom = "@" + name
 
     tag match {
-      case Some(branch: String) => atom + " -> " + atom -> 5
-      case None => atom -> Int.MaxValue
+      case Some(branch) if branch != name  => branch + " -> " + atom -> 5
+      case _ => atom -> Int.MaxValue
     }
   }
 

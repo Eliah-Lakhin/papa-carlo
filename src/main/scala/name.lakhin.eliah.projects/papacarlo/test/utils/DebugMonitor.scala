@@ -57,7 +57,11 @@ final class DebugMonitor(lexer: Lexer, syntax: Syntax)
   }
 
   private def stateInfo(state: State) = {
-    var result = "\nposition: " + state.virtualPosition
+    var result = ""
+
+    if (shortOutput) result += "\nposition: " + state.virtualPosition
+    else result += "\n" + segment.take(state.virtualPosition).mkString(" ") +
+      ":|:" + segment.drop(state.virtualPosition).mkString(" ")
 
     if (state.captures.nonEmpty) {
       result += "\ncaptures:"
@@ -85,7 +89,7 @@ final class DebugMonitor(lexer: Lexer, syntax: Syntax)
     result
   }
 
-  def getResult = unionLog(log)
+  def getResult = unionLog(log, enterLeaveIndentation = true)
 
   def prepare() {
     log = Nil

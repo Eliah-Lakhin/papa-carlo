@@ -35,7 +35,11 @@ final case class NamedRule(label: String, rule: Rule) extends Rule {
   }
 
   override val show =
-    rule.showOperand(Int.MaxValue) + ".name(" + label + ")" -> Int.MaxValue
+    rule match {
+      case ReferentialRule(name, tag) if name == label => rule.show
+      case _ =>
+        rule.showOperand(Int.MaxValue) + ".name(" + label + ")" -> Int.MaxValue
+    }
 
   override def map(mapper: Rule => Rule) =
     mapper(this.copy(label, rule.map(mapper)))

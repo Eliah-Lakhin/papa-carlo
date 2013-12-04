@@ -44,7 +44,8 @@ abstract class Rule {
   final def required = RequiredRule(this)
 
   final def debuggable = this.map {
-    rule =>
+    case rule: ReferentialRule => rule
+    case rule =>
       rule.debuggableFlag = true
       rule
   }
