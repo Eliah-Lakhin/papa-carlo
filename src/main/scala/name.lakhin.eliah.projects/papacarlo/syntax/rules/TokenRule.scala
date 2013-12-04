@@ -51,7 +51,7 @@ final case class TokenRule(kind: String,
 
   override val show = {
     val terminal = !kind.toLowerCase.forall(char => 'a' <= char && char <= 'z')
-    (if (terminal) kind else "'" + kind + "'") +
+    (if (terminal) "'" + kind + "'" else kind) +
       (if (matchUntil) ".matchUntil" else "") -> Int.MaxValue
   }
 

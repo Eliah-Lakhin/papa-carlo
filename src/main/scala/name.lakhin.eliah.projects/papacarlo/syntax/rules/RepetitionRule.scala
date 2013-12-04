@@ -96,15 +96,15 @@ final case class RepetitionRule(element: Rule,
 
   override val show =
     (((min, max) match {
-      case (None, None) => element.showOperand(2) + "*"
-      case (Some(0), None) => element.showOperand(2) + "*"
-      case (Some(1), None) => element.showOperand(2) + "+"
-      case (Some(min: Int), None) => element.showOperand(2) + " * " + min -> 2
-      case (Some(min: Int), Some(max: Int)) => element.showOperand(2) + " * (" +
+      case (None, None) => element.showOperand(4) + "*"
+      case (Some(0), None) => element.showOperand(4) + "*"
+      case (Some(1), None) => element.showOperand(4) + "+"
+      case (Some(min: Int), None) => element.showOperand(4) + " * " + min
+      case (Some(min: Int), Some(max: Int)) => element.showOperand(4) + " * (" +
         min + ", " +  max + ")"
-      case (None, Some(max: Int)) => element.showOperand(2) + " * (0, " +  max +
+      case (None, Some(max: Int)) => element.showOperand(4) + " * (0, " +  max +
         ")"
-    }) + separator.map(" / " + _.showOperand(2)).getOrElse("")) -> 2
+    }) + separator.map(" / " + _.showOperand(4)).getOrElse("")) -> 4
 
   override def map(mapper: Rule => Rule) = mapper(this.copy(
     element.map(mapper),

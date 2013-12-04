@@ -29,10 +29,10 @@ abstract class Rule {
 
   final def isDebuggable = debuggableFlag
 
-  final def showOperand(currentPrecedence: Int): String = {
-    val (string, precedence) = show
+  final def showOperand(parentPrecedence: Int): String = {
+    val (string, currentPrecedence) = show
 
-    if (precedence < currentPrecedence) "(" + string + ")"
+    if (currentPrecedence < parentPrecedence) "(" + string + ")"
     else string
   }
 

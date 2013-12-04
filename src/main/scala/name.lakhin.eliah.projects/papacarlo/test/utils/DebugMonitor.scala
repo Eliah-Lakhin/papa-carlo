@@ -25,7 +25,7 @@ final class DebugMonitor(lexer: Lexer, syntax: Syntax)
 
   private var log = List.empty[(Symbol, String)]
   private var fragment = IndexedSeq.empty[Token]
-  private var segment = IndexedSeq.empty[String]
+  private var segment = IndexedSeq.empty[Token]
 
   val onCacheInvalidate = (cache: Cache) => {
     log ::= Symbol("fragment of node " + cache.node.id) ->
@@ -35,9 +35,9 @@ final class DebugMonitor(lexer: Lexer, syntax: Syntax)
   }
 
   val onParseStep = (tokens: Seq[Token]) => {
-    segment = tokens.map(_.kind).toIndexedSeq
+    segment = tokens.toIndexedSeq
     if (shortOutput) log ::= 'segment -> ("Length: " + segment.size)
-    else log ::= 'segment -> segment.mkString(" ")
+    else log ::= 'segment -> segment.map(_.value).mkString(" ")
   }
 
   val onRuleEnter: ((Rule, State)) => Any = {
@@ -60,8 +60,9 @@ final class DebugMonitor(lexer: Lexer, syntax: Syntax)
     var result = ""
 
     if (shortOutput) result += "\nposition: " + state.virtualPosition
-    else result += "\n" + segment.take(state.virtualPosition).mkString(" ") +
-      ":|:" + segment.drop(state.virtualPosition).mkString(" ")
+    else result += "\n" +
+      segment.take(state.virtualPosition).map(_.kind).mkString(" ") +
+      ":|:" + segment.drop(state.virtualPosition).map(_.kind).mkString(" ")
 
     if (state.captures.nonEmpty) {
       result += "\ncaptures:"
@@ -82,8 +83,8 @@ final class DebugMonitor(lexer: Lexer, syntax: Syntax)
       result += "\nissues:"
       if (shortOutput) result += state.issues.size
       else for (issue <- state.issues)
-        result += "\n  " + issue.description + " = " +
-          issue.range.slice(segment).mkString(" ")
+        result += "\n  \"" + issue.description + "\" = " +
+          issue.range.slice(segment).map(_.kind).mkString(" ")
     }
 
     result
