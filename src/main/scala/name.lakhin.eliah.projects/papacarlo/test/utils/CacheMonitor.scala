@@ -24,17 +24,14 @@ final class CacheMonitor(lexer: Lexer, syntax: Syntax)
 
   private var cacheLog = List.empty[(Symbol, String)]
 
-  syntax.onCacheCreate.bind {
-    cache => cacheLog ::= ('create, cacheInfo(cache))
-  }
+  private val onCacheCreate = (cache: Cache) =>
+    cacheLog ::= ('create, cacheInfo(cache))
 
-  syntax.onCacheInvalidate.bind {
-    cache => cacheLog ::= ('invalidate, cacheInfo(cache))
-  }
+  private val onCacheInvalidate = (cache: Cache) =>
+    cacheLog ::= ('invalidate, cacheInfo(cache))
 
-  syntax.onCacheRemove.bind {
-    cache => cacheLog ::= ('remove, cacheInfo(cache))
-  }
+  private val onCacheRemove = (cache: Cache) =>
+    cacheLog ::= ('remove, cacheInfo(cache))
 
   private def cacheInfo(cache: Cache) =
     "Node " + cache.node.id + ". Fragment:" +
@@ -45,5 +42,17 @@ final class CacheMonitor(lexer: Lexer, syntax: Syntax)
 
   def getResult = unionLog(cacheLog)
 
-  def prepare() {cacheLog = Nil}
+  def prepare() {
+    cacheLog = Nil
+    syntax.onCacheCreate.bind(onCacheCreate)
+    syntax.onCacheInvalidate.bind(onCacheInvalidate)
+    syntax.onCacheRemove.bind(onCacheRemove)
+  }
+
+  def release() {
+    cacheLog = Nil
+    syntax.onCacheCreate.unbind(onCacheCreate)
+    syntax.onCacheInvalidate.unbind(onCacheInvalidate)
+    syntax.onCacheRemove.unbind(onCacheRemove)
+  }
 }

@@ -31,6 +31,7 @@ abstract class Monitor(lexer: Lexer) {
 
   def prepare()
   def getResult: String
+  def release()
 
   protected final def unionLog(log: List[(Symbol, String)]) = {
     val result = new StringBuilder

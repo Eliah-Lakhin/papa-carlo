@@ -31,4 +31,6 @@ final class ErrorMonitor(lexer: Lexer, syntax: Syntax)
     .mkString("\n\n")
 
   def prepare() {}
+
+  def release() {}
 }

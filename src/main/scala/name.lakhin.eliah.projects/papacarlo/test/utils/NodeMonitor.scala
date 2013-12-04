@@ -26,17 +26,11 @@ final class NodeMonitor(lexer: Lexer, syntax: Syntax)
 
   private var nodeLog = List.empty[(Symbol, String)]
 
-  syntax.onNodeCreate.bind {
-    node => nodeLog ::= ('create, nodeInfo(node))
-  }
+  val onNodeCreate = (node: Node) => nodeLog ::= ('create, nodeInfo(node))
 
-  syntax.onNodeMerge.bind {
-    node => nodeLog ::= ('merge, node.prettyPrint())
-  }
+  val onNodeMerge = (node: Node) => nodeLog ::= ('merge, node.prettyPrint())
 
-  syntax.onNodeRemove.bind {
-    node => nodeLog ::= ('remove, nodeInfo(node))
-  }
+  val onNodeRemove = (node: Node) => nodeLog ::= ('remove, nodeInfo(node))
 
   private def nodeInfo(node: Node) =
     node.toString + (
@@ -54,5 +48,17 @@ final class NodeMonitor(lexer: Lexer, syntax: Syntax)
 
   def getResult = unionLog(nodeLog)
 
-  def prepare() {nodeLog = Nil}
+  def prepare() {
+    nodeLog = Nil
+    syntax.onNodeCreate.bind(onNodeCreate)
+    syntax.onNodeMerge.bind(onNodeMerge)
+    syntax.onNodeRemove.bind(onNodeRemove)
+  }
+
+  def release() {
+    nodeLog = Nil
+    syntax.onNodeCreate.unbind(onNodeCreate)
+    syntax.onNodeMerge.unbind(onNodeMerge)
+    syntax.onNodeRemove.unbind(onNodeRemove)
+  }
 }
