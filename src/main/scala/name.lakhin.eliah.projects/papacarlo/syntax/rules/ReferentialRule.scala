@@ -132,4 +132,13 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
 
     result
   }
+
+  override val show = {
+    val atom = "@" + name
+
+    tag match {
+      case Some(branch: String) => atom + " -> " + atom -> 5
+      case None => atom -> Int.MaxValue
+    }
+  }
 }

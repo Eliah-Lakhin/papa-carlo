@@ -45,4 +45,6 @@ final case class ChoiceRule(choices: List[Rule]) extends Rule {
     session.state = bestResult._2
     bestResult._1
   }
+
+  override val show = choices.map(_.showOperand(3)).mkString(" | ") -> 3
 }

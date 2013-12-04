@@ -30,4 +30,7 @@ final case class NamedRule(label: String, rule: Rule) extends Rule {
 
     result
   }
+
+  override val show =
+    rule.showOperand(Int.MaxValue) + ".name(" + label + ")" -> Int.MaxValue
 }

@@ -31,4 +31,6 @@ final case class RequiredRule(rule: Rule) extends Rule {
 
     ruleApplicationResult
   }
+
+  override val show = "require(" + rule.showOperand(0) + ")" -> Int.MaxValue
 }

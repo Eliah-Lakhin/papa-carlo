@@ -61,6 +61,16 @@ final case class RecoveryRule(rule: Rule,
 
     result
   }
+
+  override val show = {
+    val atom = rule.showOperand(Int.MaxValue) + ".recover" +
+      exception.map("(" + _ + ")").getOrElse("")
+
+    branch match {
+      case Some(branch: String) => atom + " -> " + atom -> 5
+      case None => atom -> Int.MaxValue
+    }
+  }
 }
 
 object RecoveryRule {

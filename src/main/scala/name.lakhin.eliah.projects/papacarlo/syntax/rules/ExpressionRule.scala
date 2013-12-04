@@ -176,4 +176,6 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
 
           left
       }
+
+  override val show = "expression(" + atom.show._1 + ") -> " + tag -> 5
 }

@@ -21,11 +21,21 @@ import name.lakhin.eliah.projects.papacarlo.syntax.rules._
 abstract class Rule {
   def apply(session: Session): Int
 
-  def permissive = RecoveryRule(this)
+  def show: (String, Int)
 
-  def permissive(description: String) = RecoveryRule(this, Some(description))
+  final def showOperand(currentPrecedence: Int): String = {
+    val (string, precedence) = show
 
-  def required = RequiredRule(this)
+    if (precedence < currentPrecedence) "(" + string + ")"
+    else string
+  }
+
+  final def permissive = RecoveryRule(this)
+
+  final def permissive(description: String) =
+    RecoveryRule(this, Some(description))
+
+  final def required = RequiredRule(this)
 }
 
 object Rule {
