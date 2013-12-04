@@ -35,10 +35,13 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
     syntax.lexer.reference(relativeIndex + sourceTokensOffset)
 
   private[syntax] def relativeSegmentOf(virtualSegment: Bounds) =
-    virtualSegment.map(
-      relativeIndexOf,
-      until => relativeIndexOf(until - 1) + 1
-    )
+    if (virtualSegment.length > 0)
+      virtualSegment.map(
+        relativeIndexOf,
+        until => relativeIndexOf(until - 1) + 1
+      )
+    else
+      Bounds.cursor(relativeIndexOf(virtualSegment.from))
 
   private[syntax] def relativeIndexOf(virtualIndex: Int) =
     if (virtualIndex < index.size)
@@ -154,7 +157,15 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
 
   private def exclude(virtualSegment: Bounds, reason: String) = {
     val relativeSegment = relativeSegmentOf(virtualSegment)
-    packrat = packrat.filter(_._2.range.intersects(relativeSegment))
+    packrat = packrat
+      .filter(!_._2.range.touches(virtualSegment))
+      .mapValues {
+        packrat =>
+          if (packrat.range.from >= virtualSegment.from)
+            packrat.copy(range = packrat.range.shift(-virtualSegment.length))
+          else
+            packrat
+      }
 
     tokens = virtualSegment.replace(tokens, Vector.empty)
     index = virtualSegment.replace(index, Vector.empty)

@@ -31,8 +31,8 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
 
     val result = session.packrat.lift(packratKey) match {
       case Some(packrat) =>
-        session.state = packrat.state
-          .copy(virtualPosition = session.virtualIndexOf(packrat.range.until))
+        session.state =
+          packrat.state.copy(virtualPosition = packrat.range.until)
 
         packrat.result
 
@@ -56,10 +56,7 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
 
         session.packrat += Pair(packratKey, Packrat(
           name,
-          session.relativeSegmentOf(Bounds(
-            initialPosition,
-            session.state.virtualPosition
-          )),
+          Bounds(initialPosition, session.state.virtualPosition),
           result,
           session.state
         ))

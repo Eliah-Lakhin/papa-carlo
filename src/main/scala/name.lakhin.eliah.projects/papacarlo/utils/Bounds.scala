@@ -95,6 +95,9 @@ final case class Bounds(from: Int, until: Int) {
 
   def intersects(another: Bounds) =
     defined && another.defined && from < another.until && another.from < until
+
+  def touches(another: Bounds) =
+    defined && another.defined && from <= another.until && another.from <= until
 }
 
 object Bounds {
