@@ -24,6 +24,8 @@ final case class RepetitionRule(element: Rule,
                                 min: Option[Int] = None,
                                 max: Option[Int] = None) extends Rule {
   def apply(session: Session): Int = {
+    session.syntax.onRuleEnter.trigger(this, session.state)
+
     val min = this.min.getOrElse(0)
     val max = this.max.getOrElse(Int.MaxValue)
     val initialState = session.state
@@ -82,11 +84,14 @@ final case class RepetitionRule(element: Rule,
         }
     }
 
-    if (counter >= min) Successful
+    val result = if (counter >= min) Successful
     else {
       session.state = initialState.copy(issues = lastIssues)
       Failed
     }
+
+    session.syntax.onRuleLeave.trigger(this, session.state, result)
+    result
   }
 
   override val show =

@@ -21,6 +21,8 @@ import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class SequentialRule(steps: List[Rule]) extends Rule {
   def apply(session: Session): Int = {
+    session.syntax.onRuleEnter.trigger(this, session.state)
+
     var result = Successful
     val initialState = session.state
 
@@ -35,6 +37,7 @@ final case class SequentialRule(steps: List[Rule]) extends Rule {
         case _ =>
       }
 
+    session.syntax.onRuleLeave.trigger(this, session.state, result)
     result
   }
 

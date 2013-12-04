@@ -21,8 +21,7 @@ import name.lakhin.eliah.projects.papacarlo.lexis.{Token, Fragment}
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 import name.lakhin.eliah.projects.papacarlo.syntax.rules.ReferentialRule
 
-final class Session(val syntax: Syntax,
-                    fragment: Fragment) {
+final class Session(val syntax: Syntax, fragment: Fragment) {
   private[syntax] var state = State()
   private[syntax] var packrat = Map.empty[String, Packrat]
   private[syntax] var tokens = IndexedSeq.empty[Token]
@@ -75,6 +74,9 @@ final class Session(val syntax: Syntax,
 
     while (!parsed) {
       state = State()
+
+      syntax.onParseStep.trigger(tokens)
+
       val result = ReferentialRule(ruleName, Some("result"))(this)
 
       if (result == Result.Failed) {

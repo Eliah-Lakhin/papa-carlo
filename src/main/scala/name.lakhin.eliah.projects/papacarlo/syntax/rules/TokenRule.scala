@@ -23,6 +23,8 @@ import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 final case class TokenRule(kind: String,
                            matchUntil: Boolean = false) extends Rule {
   def apply(session: Session) = {
+    session.syntax.onRuleEnter.trigger(this, session.state)
+
     var index = session.state.virtualPosition
 
     if (matchUntil) {
@@ -32,7 +34,7 @@ final case class TokenRule(kind: String,
     val actualKind = session.tokens
       .lift(index).map(_.kind).getOrElse(TokenRule.EndOfFragmentKind)
 
-    if (actualKind == kind) {
+    val result = if (actualKind == kind) {
       session.state = session.state.copy(virtualPosition = index + 1)
       Successful
     } else {
@@ -42,6 +44,9 @@ final case class TokenRule(kind: String,
       )
       Failed
     }
+
+    session.syntax.onRuleLeave.trigger(this, session.state, result)
+    result
   }
 
   override val show = {

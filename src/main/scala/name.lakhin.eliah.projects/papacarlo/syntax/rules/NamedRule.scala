@@ -22,12 +22,15 @@ import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 
 final case class NamedRule(label: String, rule: Rule) extends Rule {
   def apply(session: Session) = {
+    session.syntax.onRuleEnter.trigger(this, session.state)
+
     val initialState = session.state
     val result = rule(session)
 
     if (result == Result.Failed)
       session.state = initialState.issue(label + " expected")
 
+    session.syntax.onRuleLeave.trigger(this, session.state, result)
     result
   }
 

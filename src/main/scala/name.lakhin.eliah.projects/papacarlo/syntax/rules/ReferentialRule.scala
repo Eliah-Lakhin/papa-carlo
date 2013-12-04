@@ -24,10 +24,12 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
   extends Rule {
 
   def apply(session: Session) = {
+    session.syntax.onRuleEnter.trigger(this, session.state)
+
     val packratKey =
       session.relativeIndexOf(session.state.virtualPosition) + name
 
-    session.packrat.lift(packratKey) match {
+    val result = session.packrat.lift(packratKey) match {
       case Some(packrat) =>
         session.state = packrat.state
           .copy(virtualPosition = session.virtualIndexOf(packrat.range.until))
@@ -64,6 +66,9 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
 
         result
     }
+
+    session.syntax.onRuleLeave.trigger(this, session.state, result)
+    result
   }
 
   private def performReferredRule(session: Session) = {

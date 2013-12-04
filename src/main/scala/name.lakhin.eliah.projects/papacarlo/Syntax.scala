@@ -16,7 +16,8 @@
 package name.lakhin.eliah.projects
 package papacarlo
 
-import name.lakhin.eliah.projects.papacarlo.syntax.{Rule, Node, Cache}
+import name.lakhin.eliah.projects.papacarlo.lexis.Token
+import name.lakhin.eliah.projects.papacarlo.syntax.{State, Rule, Node, Cache}
 import name.lakhin.eliah.projects.papacarlo.utils.{Signal, Registry}
 import name.lakhin.eliah.projects.papacarlo.syntax.rules.{NamedRule,
   ReferentialRule}
@@ -44,6 +45,9 @@ final class Syntax(val lexer: Lexer) {
   val onNodeCreate = nodes.onAdd
   val onNodeMerge = new Signal[Node]
   val onNodeRemove = nodes.onRemove
+  val onParseStep = new Signal[Seq[Token]]
+  val onRuleEnter = new Signal[(Rule, State)]
+  val onRuleLeave = new Signal[(Rule, State, Int)]
 
   lexer.fragments.onInvalidate.bind(fragment => {
     var candidate = Option(fragment)

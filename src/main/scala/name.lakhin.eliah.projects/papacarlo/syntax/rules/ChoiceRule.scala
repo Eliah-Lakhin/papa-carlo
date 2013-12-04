@@ -21,6 +21,8 @@ import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class ChoiceRule(choices: List[Rule]) extends Rule {
   def apply(session: Session): Int = {
+    session.syntax.onRuleEnter.trigger(this, session.state)
+
     val initialState = session.state
     var bestResult = (Failed, session.state)
 
@@ -43,6 +45,8 @@ final case class ChoiceRule(choices: List[Rule]) extends Rule {
     }
 
     session.state = bestResult._2
+
+    session.syntax.onRuleLeave.trigger(this, session.state, bestResult._1)
     bestResult._1
   }
 
