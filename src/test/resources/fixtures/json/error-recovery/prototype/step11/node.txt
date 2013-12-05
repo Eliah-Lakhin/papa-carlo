@@ -99,21 +99,17 @@ string:27
 
  > merge:
 object 1 {
-  entry:
-    entry 24 >> 1 {
-      key: "key 1"
-      value:
-        string 25 >> 24 {
-          value: "hello world"
-        }
+  entry: entry 24 >> 1 {
+    key: "key 1"
+    value: string 25 >> 24 {
+      value: "hello world"
     }
-  entry:
-    entry 26 >> 1 {
-      key: "key 1.1"
-      value:
-        string 27 >> 26 {
-          value: "key 2"
-        }
+  }
+  entry: entry 26 >> 1 {
+    key: "key 1.1"
+    value: string 27 >> 26 {
+      value: "key 2"
     }
+  }
 }
 

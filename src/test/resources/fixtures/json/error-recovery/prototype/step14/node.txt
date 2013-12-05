@@ -120,49 +120,37 @@ number:48
 
  > merge:
 object 1 {
-  entry:
-    entry 42 >> 1 {
-      key: "key 1"
-      value:
-        string 43 >> 42 {
-          value: "hello world"
-        }
+  entry: entry 42 >> 1 {
+    key: "key 1"
+    value: string 43 >> 42 {
+      value: "hello world"
     }
-  entry:
-    entry 44 >> 1 {
-      key: "key 1.1"
-      value:
-        string 45 >> 44 {
-          value: "value 1.1"
-        }
+  }
+  entry: entry 44 >> 1 {
+    key: "key 1.1"
+    value: string 45 >> 44 {
+      value: "value 1.1"
     }
-  entry:
-    entry 46 >> 1 {
-      key: "key 2"
-      value:
-        array 33 >> 46
-        cachable {
-          value:
-            string 34 >> 33 {
-              value: [
-            }
-          value:
-            string 35 >> 33 {
-              value:  
-            }
-          value:
-            string 36 >> 33 {
-              value:  
-            }
-        }
+  }
+  entry: entry 46 >> 1 {
+    key: "key 2"
+    value: array 33 cachable >> 46 {
+      value: string 34 >> 33 {
+        value: [
+      }
+      value: string 35 >> 33 {
+        value:  
+      }
+      value: string 36 >> 33 {
+        value:  
+      }
     }
-  entry:
-    entry 47 >> 1 {
-      key: "key 3"
-      value:
-        number 48 >> 47 {
-          value: 100
-        }
+  }
+  entry: entry 47 >> 1 {
+    key: "key 3"
+    value: number 48 >> 47 {
+      value: 100
     }
+  }
 }
 

@@ -64,29 +64,22 @@ string:17
 
  > merge:
 object 1 {
-  entry:
-    entry 12 >> 1 {
-      key: "key 1"
-      value:
-        string 13 >> 12 {
-          value: "hello world"
-        }
+  entry: entry 12 >> 1 {
+    key: "key 1"
+    value: string 13 >> 12 {
+      value: "hello world"
     }
-  entry:
-    entry 14 >> 1 {
-      key: "key 2"
-      value:
-        array 15 >> 14
-        cachable {
-          value:
-            string 16 >> 15 {
-              value: "array value 1"
-            }
-          value:
-            string 17 >> 15 {
-              value: "array value 2"
-            }
-        }
+  }
+  entry: entry 14 >> 1 {
+    key: "key 2"
+    value: array 15 cachable >> 14 {
+      value: string 16 >> 15 {
+        value: "array value 1"
+      }
+      value: string 17 >> 15 {
+        value: "array value 2"
+      }
     }
+  }
 }
 

@@ -28,13 +28,11 @@ string:5
 
  > merge:
 object 1 {
-  entry:
-    entry 4 >> 1 {
-      key: "key 1"
-      value:
-        string 5 >> 4 {
-          value: "hello world"
-        }
+  entry: entry 4 >> 1 {
+    key: "key 1"
+    value: string 5 >> 4 {
+      value: "hello world"
     }
+  }
 }
 

@@ -18,6 +18,7 @@ package papacarlo.syntax
 
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import name.lakhin.eliah.projects.papacarlo.utils.{Registry, Bounds, Signal}
+import scala.collection.mutable.ListBuffer
 
 final class Node(private[syntax] var kind: String,
                  private[syntax] var begin: TokenReference,
@@ -145,32 +146,63 @@ final class Node(private[syntax] var kind: String,
 
   override def toString = kind + ":" + id + (if (cachable) " cachable" else "")
 
-  def prettyPrint(prefix: String = ""): String = {
+  def prettyPrint(prefix: String = "", showHash: Boolean = false): String = {
     val result = new StringBuilder
 
-    result ++= prefix + kind + " " + id
+    result ++= kind + " " + id
+
+    if (showHash) result ++= "@" + hash
+
+    if (cachable) result ++= " cachable"
 
     result ++= parent.map(" >> " + _.id).getOrElse("")
 
-    if (cachable) result ++= "\n" + prefix + "cachable"
+    if (references.nonEmpty || branches.nonEmpty) {
+      result ++= " {"
 
-    result ++= " {"
+      for (reference <- references)
+        result ++= "\n" + prefix + "  " + reference._1 + ": " +
+          getValue(reference._1)
 
-    for (reference <- references)
-      result ++= "\n" + prefix + "  " + reference._1 + ": " +
-        getValue(reference._1)
+      for ((name, subnodes) <- branches; branch <- subnodes) {
+        result ++= "\n" + prefix + "  " + name + ": "
+        result ++= branch.prettyPrint(prefix + "  ", showHash)
+      }
 
-    for ((name, subnodes) <- branches; branch <- subnodes) {
-      result ++= "\n" + prefix + "  " + name + ":\n"
-      result ++= branch.prettyPrint(prefix + "    ")
+      result ++= "\n" + prefix + "}"
     }
-
-    result ++= "\n" + prefix + "}"
 
     result.toString()
   }
 
   def accessor = new NodeAccessor(this)
+
+  lazy val hash: Int = {
+    var elements = List.empty[Int]
+
+    elements ::= kind.hashCode
+    elements ::= end.index - begin.index + 1
+
+    for ((tag, list) <- branches) {
+      elements ::= tag.hashCode
+      for (branch <- list) elements ::= branch.hash
+    }
+
+    for ((tag, list) <- references) {
+      elements ::= tag.hashCode
+      for (reference <- list if !reference.token.isMutable)
+        elements ::= reference.token.value.hashCode()
+    }
+
+    for ((tag, constant) <- constants) {
+      elements ::= tag.hashCode
+      elements ::= constant.hashCode
+    }
+
+    elements ::= cachable.hashCode
+
+    elements.hashCode()
+  }
 }
 
 object Node {

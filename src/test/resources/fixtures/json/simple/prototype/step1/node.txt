@@ -109,35 +109,26 @@ string:22
 
 
  > merge:
-array 7 >> 6
-cachable {
-  value:
-    string 16 >> 7 {
-      value: "array element"
+array 7 cachable >> 6 {
+  value: string 16 >> 7 {
+    value: "array element"
+  }
+  value: number 17 >> 7 {
+    value: 2.6e-2
+  }
+  value: boolean 18 >> 7 {
+    value: true
+  }
+  value: string 19 >> 7 {
+    value: "false"
+  }
+  value: array 20 cachable >> 7 {
+    value: string 21 >> 20 {
+      value: "a"
     }
-  value:
-    number 17 >> 7 {
-      value: 2.6e-2
+    value: string 22 >> 20 {
+      value: "b"
     }
-  value:
-    boolean 18 >> 7 {
-      value: true
-    }
-  value:
-    string 19 >> 7 {
-      value: "false"
-    }
-  value:
-    array 20 >> 7
-    cachable {
-      value:
-        string 21 >> 20 {
-          value: "a"
-        }
-      value:
-        string 22 >> 20 {
-          value: "b"
-        }
-    }
+  }
 }
 

@@ -154,80 +154,57 @@ entry:34
 
  > merge:
 object 1 {
-  entry:
-    entry 27 >> 1 {
-      key: "key 1"
-      value:
-        string 28 >> 27 {
-          value: "value 1"
-        }
+  entry: entry 27 >> 1 {
+    key: "key 1"
+    value: string 28 >> 27 {
+      value: "value 1"
     }
-  entry:
-    entry 29 >> 1 {
-      key: "key 2"
-      value:
-        string 30 >> 29 {
-          value: "value 2"
-        }
+  }
+  entry: entry 29 >> 1 {
+    key: "key 2"
+    value: string 30 >> 29 {
+      value: "value 2"
     }
-  entry:
-    entry 31 >> 1 {
-      key: "key 3"
-      value:
-        array 7 >> 31
-        cachable {
-          value:
-            string 23 >> 7 {
-              value: "array element"
-            }
-          value:
-            number 24 >> 7 {
-              value: 100
-            }
-          value:
-            boolean 25 >> 7 {
-              value: true
-            }
-          value:
-            string 26 >> 7 {
-              value: "false"
-            }
-          value:
-            array 20 >> 7
-            cachable {
-              value:
-                string 21 >> 20 {
-                  value: "a"
-                }
-              value:
-                string 22 >> 20 {
-                  value: "b"
-                }
-            }
+  }
+  entry: entry 31 >> 1 {
+    key: "key 3"
+    value: array 7 cachable >> 31 {
+      value: string 23 >> 7 {
+        value: "array element"
+      }
+      value: number 24 >> 7 {
+        value: 100
+      }
+      value: boolean 25 >> 7 {
+        value: true
+      }
+      value: string 26 >> 7 {
+        value: "false"
+      }
+      value: array 20 cachable >> 7 {
+        value: string 21 >> 20 {
+          value: "a"
         }
-    }
-  entry:
-    entry 32 >> 1 {
-      key: "key 3.5"
-      value:
-        string 33 >> 32 {
-          value: "value 3.5"
+        value: string 22 >> 20 {
+          value: "b"
         }
+      }
     }
-  entry:
-    entry 34 >> 1 {
-      key: "key 4"
-      value:
-        object 13 >> 34
-        cachable {
-          entry:
-            entry 14 >> 13 {
-              key: ]
-              value:
-                null 15 >> 14 {
-                }
-            }
-        }
+  }
+  entry: entry 32 >> 1 {
+    key: "key 3.5"
+    value: string 33 >> 32 {
+      value: "value 3.5"
     }
+  }
+  entry: entry 34 >> 1 {
+    key: "key 4"
+    value: object 13 cachable >> 34 {
+      entry: entry 14 >> 13 {
+        key: ]
+        value: null 15 >> 14
+      }
+    }
+  }
 }
 

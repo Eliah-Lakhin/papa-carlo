@@ -90,41 +90,31 @@ entry:41
 
  > merge:
 object 1 {
-  entry:
-    entry 37 >> 1 {
-      key: "key 1"
-      value:
-        string 38 >> 37 {
-          value: "hello world"
-        }
+  entry: entry 37 >> 1 {
+    key: "key 1"
+    value: string 38 >> 37 {
+      value: "hello world"
     }
-  entry:
-    entry 39 >> 1 {
-      key: "key 1.1"
-      value:
-        string 40 >> 39 {
-          value: "value 1.1"
-        }
+  }
+  entry: entry 39 >> 1 {
+    key: "key 1.1"
+    value: string 40 >> 39 {
+      value: "value 1.1"
     }
-  entry:
-    entry 41 >> 1 {
-      key: "key 2"
-      value:
-        array 33 >> 41
-        cachable {
-          value:
-            string 34 >> 33 {
-              value: [
-            }
-          value:
-            string 35 >> 33 {
-              value:  
-            }
-          value:
-            string 36 >> 33 {
-              value:  
-            }
-        }
+  }
+  entry: entry 41 >> 1 {
+    key: "key 2"
+    value: array 33 cachable >> 41 {
+      value: string 34 >> 33 {
+        value: [
+      }
+      value: string 35 >> 33 {
+        value:  
+      }
+      value: string 36 >> 33 {
+        value:  
+      }
     }
+  }
 }
 

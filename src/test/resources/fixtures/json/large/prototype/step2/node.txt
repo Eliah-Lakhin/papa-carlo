@@ -38,31 +38,24 @@ string:928 (236:9) - (236:15)
 string:929 (237:9) - (237:13)
 
  > merge:
-array 343 >> 342
-cachable {
-  value:
-    string 924 >> 343 {
-      value: "id"
-    }
-  value:
-    string 925 >> 343 {
-      value: "Lorem"
-    }
-  value:
-    string 926 >> 343 {
-      value: "anim"
-    }
-  value:
-    string 927 >> 343 {
-      value: "esse"
-    }
-  value:
-    string 928 >> 343 {
-      value: "aute"
-    }
-  value:
-    string 929 >> 343 {
-      value: "ut"
-    }
+array 343 cachable >> 342 {
+  value: string 924 >> 343 {
+    value: "id"
+  }
+  value: string 925 >> 343 {
+    value: "Lorem"
+  }
+  value: string 926 >> 343 {
+    value: "anim"
+  }
+  value: string 927 >> 343 {
+    value: "esse"
+  }
+  value: string 928 >> 343 {
+    value: "aute"
+  }
+  value: string 929 >> 343 {
+    value: "ut"
+  }
 }
 

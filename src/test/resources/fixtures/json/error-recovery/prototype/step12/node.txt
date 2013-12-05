@@ -117,41 +117,31 @@ string:36
 
  > merge:
 object 1 {
-  entry:
-    entry 28 >> 1 {
-      key: "key 1"
-      value:
-        string 29 >> 28 {
-          value: "hello world"
-        }
+  entry: entry 28 >> 1 {
+    key: "key 1"
+    value: string 29 >> 28 {
+      value: "hello world"
     }
-  entry:
-    entry 30 >> 1 {
-      key: "key 1.1"
-      value:
-        string 31 >> 30 {
-          value: "value 1.1"
-        }
+  }
+  entry: entry 30 >> 1 {
+    key: "key 1.1"
+    value: string 31 >> 30 {
+      value: "value 1.1"
     }
-  entry:
-    entry 32 >> 1 {
-      key: "key 2"
-      value:
-        array 33 >> 32
-        cachable {
-          value:
-            string 34 >> 33 {
-              value: "array value 1"
-            }
-          value:
-            string 35 >> 33 {
-              value: "array value 2"
-            }
-          value:
-            string 36 >> 33 {
-              value: "array value 3"
-            }
-        }
+  }
+  entry: entry 32 >> 1 {
+    key: "key 2"
+    value: array 33 cachable >> 32 {
+      value: string 34 >> 33 {
+        value: "array value 1"
+      }
+      value: string 35 >> 33 {
+        value: "array value 2"
+      }
+      value: string 36 >> 33 {
+        value: "array value 3"
+      }
     }
+  }
 }
 

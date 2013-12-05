@@ -14,87 +14,62 @@ entry:922 (580:23) - (580:51)
 string:923 (580:31) - (580:51)
 
  > merge:
-array 840 >> 839
-cachable {
-  value:
-    object 841 >> 840
-    cachable {
-      entry:
-        entry 842 >> 841 {
-          key: "id"
-          value:
-            number 843 >> 842 {
-              value: 0
-            }
-        }
-      entry:
-        entry 844 >> 841 {
-          key: "name"
-          value:
-            string 845 >> 844 {
-              value: "Rios Duffy"
-            }
-        }
+array 840 cachable >> 839 {
+  value: object 841 cachable >> 840 {
+    entry: entry 842 >> 841 {
+      key: "id"
+      value: number 843 >> 842 {
+        value: 0
+      }
     }
-  value:
-    object 919 >> 840
-    cachable {
-      entry:
-        entry 920 >> 919 {
-          key: "id"
-          value:
-            number 921 >> 920 {
-              value: 0.5
-            }
-        }
-      entry:
-        entry 922 >> 919 {
-          key: "name"
-          value:
-            string 923 >> 922 {
-              value: "another one friend"
-            }
-        }
+    entry: entry 844 >> 841 {
+      key: "name"
+      value: string 845 >> 844 {
+        value: "Rios Duffy"
+      }
     }
-  value:
-    object 846 >> 840
-    cachable {
-      entry:
-        entry 847 >> 846 {
-          key:  
-          value:
-            number 848 >> 847 {
-              value:  
-            }
-        }
-      entry:
-        entry 849 >> 846 {
-          key: "another one friend"
-          value:
-            string 850 >> 849 {
-              value:         
-            }
-        }
+  }
+  value: object 919 cachable >> 840 {
+    entry: entry 920 >> 919 {
+      key: "id"
+      value: number 921 >> 920 {
+        value: 0.5
+      }
     }
-  value:
-    object 851 >> 840
-    cachable {
-      entry:
-        entry 852 >> 851 {
-          key:           
-          value:
-            number 853 >> 852 {
-              value:  
-            }
-        }
-      entry:
-        entry 854 >> 851 {
-          key: }
-          value:
-            string 855 >> 854 {
-              value:         
-            }
-        }
+    entry: entry 922 >> 919 {
+      key: "name"
+      value: string 923 >> 922 {
+        value: "another one friend"
+      }
     }
+  }
+  value: object 846 cachable >> 840 {
+    entry: entry 847 >> 846 {
+      key:  
+      value: number 848 >> 847 {
+        value:  
+      }
+    }
+    entry: entry 849 >> 846 {
+      key: "another one friend"
+      value: string 850 >> 849 {
+        value:         
+      }
+    }
+  }
+  value: object 851 cachable >> 840 {
+    entry: entry 852 >> 851 {
+      key:           
+      value: number 853 >> 852 {
+        value:  
+      }
+    }
+    entry: entry 854 >> 851 {
+      key: }
+      value: string 855 >> 854 {
+        value:         
+      }
+    }
+  }
 }
 

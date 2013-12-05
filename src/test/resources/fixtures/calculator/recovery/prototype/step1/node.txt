@@ -30,27 +30,21 @@ number:7
 
  > merge:
 + 1 {
-  left:
-    number 2 >> 1 {
-      value: 1
+  left: number 2 >> 1 {
+    value: 1
+  }
+  right: * 3 >> 1 {
+    left: number 4 >> 3 {
+      value: 2
     }
-  right:
-    * 3 >> 1 {
-      left:
-        number 4 >> 3 {
-          value: 2
-        }
-      right:
-        - 5 >> 3 {
-          left:
-            number 6 >> 5 {
-              value: 3
-            }
-          right:
-            number 7 >> 5 {
-              value: 4
-            }
-        }
+    right: - 5 >> 3 {
+      left: number 6 >> 5 {
+        value: 3
+      }
+      right: number 7 >> 5 {
+        value: 4
+      }
     }
+  }
 }
 
