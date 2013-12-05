@@ -16,7 +16,7 @@
 package name.lakhin.eliah.projects
 package papacarlo.lexis
 
-import name.lakhin.eliah.projects.papacarlo.utils.{Signal, Bounds}
+import name.lakhin.eliah.projects.papacarlo.utils.{Difference, Signal, Bounds}
 import scala.util.control.Breaks._
 
 final class TokenCollection(lineCutTokens: Set[String]) {
@@ -64,7 +64,7 @@ final class TokenCollection(lineCutTokens: Set[String]) {
   }
 
   def write(bounds: Bounds, replacement: Seq[Token]) {
-    val oldTokens = descriptions.slice(bounds.from, bounds.until)
+    val oldTokens = bounds.slice(descriptions)
 
     var equal = false
 
@@ -92,8 +92,7 @@ final class TokenCollection(lineCutTokens: Set[String]) {
       val newTokens = replacement.slice(diff._1, replacement.size - diff._2)
       val newRange = Bounds(range.from, range.from + newTokens.size)
 
-      for (removeTarget <- range.slice(references))
-        removeTarget.onRemove.trigger(removeTarget)
+      for (removeTarget <- range.slice(references)) removeTarget.remove()
 
       val rightHandOffset = newTokens.size - range.length
       for (rightHand <- references.slice(range.until, references.size))
@@ -181,15 +180,16 @@ final class TokenCollection(lineCutTokens: Set[String]) {
   }
 
   private def computeDifference(first: Seq[Token], second: Seq[Token]) = {
-    val pairs = first.zip(second)
-    val head = pairs.takeWhile(pair => pair._1.value == pair._2.value).length
-    (
-      head,
-      if (first.exists(token => lineCutTokens(token.kind))
-        || second.exists(token => lineCutTokens(token.kind))) 0
+    val comparator =
+      (pair: Pair[Token, Token]) => pair._1.value == pair._2.value
+
+    if (first.exists(token => lineCutTokens(token.kind))
+        || second.exists(token => lineCutTokens(token.kind)))
+        (
+          Difference.head[Token](first, second, comparator),
+          0
+        )
       else
-        first.drop(head).reverse.zip(second.drop(head).reverse)
-          .takeWhile(pair => pair._1.value == pair._2.value).length
-    )
+        Difference.double[Token](first, second, comparator)
   }
 }

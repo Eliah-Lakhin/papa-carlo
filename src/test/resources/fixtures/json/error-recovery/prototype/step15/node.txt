@@ -1,174 +1,34 @@
- > remove:
-string:43
-{
-  "key 1": <<<"hello world">>>,
-  "key 1.1": "value 1.1"
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": 100
-}
-
-
- > remove:
-entry:42
-{
-  <<<"key 1": "hello world">>>,
-  "key 1.1": "value 1.1"
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": 100
-}
-
-
- > remove:
-string:45
-{
-  "key 1": "hello world",
-  "key 1.1": <<<"value 1.1">>>
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": 100
-}
-
-
- > remove:
-entry:44
-{
-  "key 1": "hello world",
-  <<<"key 1.1": "value 1.1">>>
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": 100
-}
-
-
- > remove:
-entry:46
-{
-  "key 1": "hello world",
-  "key 1.1": "value 1.1"
-  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
-  "key 3": 100
-}
-
-
- > remove:
-number:48
-{
-  "key 1": "hello world",
-  "key 1.1": "value 1.1"
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": <<<100>>>
-}
-
-
- > remove:
-entry:47
-{
-  "key 1": "hello world",
-  "key 1.1": "value 1.1"
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-  <<<"key 3": 100>>>
-}
-
-
- > create:
-entry:49
-{
-  <<<"key 1": "hello world">>>,
-  "key 1.1": "value 1.1"
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": 100
-}
-
-
- > create:
-string:50
-{
-  "key 1": <<<"hello world">>>,
-  "key 1.1": "value 1.1"
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": 100
-}
-
-
- > create:
-entry:51
-{
-  "key 1": "hello world",
-  <<<"key 1.1": "value 1.1">>>
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": 100
-}
-
-
- > create:
-string:52
-{
-  "key 1": "hello world",
-  "key 1.1": <<<"value 1.1">>>
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": 100
-}
-
-
- > create:
-entry:53
-{
-  "key 1": "hello world",
-  "key 1.1": "value 1.1"
-  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
-  "key 3": 100
-}
-
-
- > create:
-entry:54
-{
-  "key 1": "hello world",
-  "key 1.1": "value 1.1"
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-  <<<"key 3": 100>>>
-}
-
-
- > create:
-number:55
-{
-  "key 1": "hello world",
-  "key 1.1": "value 1.1"
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-  "key 3": <<<100>>>
-}
-
-
  > merge:
 object 1 {
-  entry: entry 49 >> 1 {
+  entry: entry 2 >> 1 {
     key: "key 1"
-    value: string 50 >> 49 {
+    value: string 3 >> 2 {
       value: "hello world"
     }
   }
-  entry: entry 51 >> 1 {
+  entry: entry 11 >> 1 {
     key: "key 1.1"
-    value: string 52 >> 51 {
+    value: string 12 >> 11 {
       value: "value 1.1"
     }
   }
-  entry: entry 53 >> 1 {
+  entry: entry 13 >> 1 {
     key: "key 2"
-    value: array 33 cachable >> 53 {
-      value: string 34 >> 33 {
+    value: array 14 cachable >> 13 {
+      value: string 15 >> 14 {
         value: "array value 1"
       }
-      value: string 35 >> 33 {
+      value: string 16 >> 14 {
         value: "array value 2"
       }
-      value: string 36 >> 33 {
+      value: string 17 >> 14 {
         value: "array value 3"
       }
     }
   }
-  entry: entry 54 >> 1 {
+  entry: entry 18 >> 1 {
     key: "key 3"
-    value: number 55 >> 54 {
+    value: number 19 >> 18 {
       value: 100
     }
   }

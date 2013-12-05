@@ -14,29 +14,24 @@
    limitations under the License.
 */
 package name.lakhin.eliah.projects
-package papacarlo.lexis
+package papacarlo.utils
 
-import name.lakhin.eliah.projects.papacarlo.utils.Signal
+object Difference {
+  def head[A](first: Seq[A],
+                second: Seq[A],
+                comparator: Pair[A, A] => Boolean) =
+    first.zip(second).takeWhile(comparator).length
 
-final class TokenReference(val collection: TokenCollection,
-                           var index: Int) {
-  private[lexis] var fragment = Option.empty[Fragment]
-  private var removed: Boolean = false
-
-  val onUpdate = new Signal[TokenReference]
-  val onRemove = new Signal[TokenReference]
-
-  def exists = !removed
-
-  def token = {
-    if (removed) throw new RuntimeException("Token was removed")
-    collection.descriptions(index)
-  }
-
-  def getFragment = fragment
-
-  private[lexis] def remove() {
-    removed = true
-    onRemove.trigger(this)
+  def double[A](first: Seq[A],
+                second: Seq[A],
+                comparator: Pair[A, A] => Boolean) = {
+    val pairs = first.zip(second)
+    val head = pairs.takeWhile(comparator).length
+    (
+      head,
+      first.drop(head).reverse.zip(second.drop(head).reverse)
+        .takeWhile(comparator)
+        .length
+    )
   }
 }

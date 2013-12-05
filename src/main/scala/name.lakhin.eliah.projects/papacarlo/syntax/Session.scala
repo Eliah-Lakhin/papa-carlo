@@ -165,6 +165,7 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
           else
             packrat
       }
+      .view.force
 
     tokens = virtualSegment.replace(tokens, Vector.empty)
     index = virtualSegment.replace(index, Vector.empty)

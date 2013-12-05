@@ -78,12 +78,20 @@ final case class Bounds(from: Int, until: Int) {
     if (defined) seq.slice(from, until)
     else seq
 
+  def slice[A](seq: List[A]) =
+    if (defined) seq.slice(from, until)
+    else seq
+
   def substring(string: String) =
     if (defined) string.substring(from, until)
     else string
 
   def replace[A](target: IndexedSeq[A], replacement: Seq[A]) =
     if (defined) target.take(from) ++ replacement ++ target.drop(until)
+    else target
+
+  def replace[A](target: List[A], replacement: List[A]) =
+    if (defined) target.take(from) ::: replacement ::: target.drop(until)
     else target
 
   def replace[A](target: String, replacement: String) =

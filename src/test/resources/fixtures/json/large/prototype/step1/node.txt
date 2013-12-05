@@ -45,29 +45,29 @@ array 840 cachable >> 839 {
   }
   value: object 846 cachable >> 840 {
     entry: entry 847 >> 846 {
-      key:  
+      key: "id"
       value: number 848 >> 847 {
-        value:  
+        value: 1
       }
     }
     entry: entry 849 >> 846 {
-      key: "another one friend"
+      key: "name"
       value: string 850 >> 849 {
-        value:         
+        value: "Katheryn Foreman"
       }
     }
   }
   value: object 851 cachable >> 840 {
     entry: entry 852 >> 851 {
-      key:           
+      key: "id"
       value: number 853 >> 852 {
-        value:  
+        value: 2
       }
     }
     entry: entry 854 >> 851 {
-      key: }
+      key: "name"
       value: string 855 >> 854 {
-        value:         
+        value: "Maldonado Herring"
       }
     }
   }

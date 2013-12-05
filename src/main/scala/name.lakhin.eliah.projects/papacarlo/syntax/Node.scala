@@ -17,8 +17,8 @@ package name.lakhin.eliah.projects
 package papacarlo.syntax
 
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
-import name.lakhin.eliah.projects.papacarlo.utils.{Registry, Bounds, Signal}
-import scala.collection.mutable.ListBuffer
+import name.lakhin.eliah.projects.papacarlo.utils.{Difference, Registry, Bounds,
+  Signal}
 
 final class Node(private[syntax] var kind: String,
                  private[syntax] var begin: TokenReference,
@@ -59,8 +59,8 @@ final class Node(private[syntax] var kind: String,
     constants.get(tag).getOrElse(references.lift(tag)
       .map(_.map(_.token.value).mkString).getOrElse(""))
 
-  def hasValue(tag: String) = constants.contains(tag) ||
-    references.contains(tag)
+  def hasValue(tag: String) =
+    constants.contains(tag) || references.contains(tag)
 
   def range = Bounds(begin.index, end.index + 1)
 
@@ -81,6 +81,24 @@ final class Node(private[syntax] var kind: String,
   }
 
   private[syntax] def merge(registry: Registry[Node], replacement: Node) = {
+    for ((tag, oldBranches) <- this.branches;
+         newBranches <- replacement.branches.get(tag)) {
+      val difference = Difference.double[Node](
+        oldBranches,
+        newBranches,
+        (pair: Pair[Node, Node]) => pair._1.bound &&
+          pair._1.sourceCode == pair._2.sourceCode
+      )
+
+      if (difference != (0, 0))
+        replacement.branches += tag ->
+          Bounds(difference._1, oldBranches.size - difference._2).replace(
+            oldBranches,
+            Bounds(difference._1, newBranches.size - difference._2)
+              .slice(newBranches)
+          )
+    }
+
     kind = replacement.kind
     releaseReflection()
     begin = replacement.begin
@@ -131,7 +149,8 @@ final class Node(private[syntax] var kind: String,
   private def subscribableReferences =
     references
       .filter(pair => !constants.contains(pair._1))
-      .map(_._2.filter(_.token.isMutable))
+      .map(_._2.filter(reference => !reference.exists ||
+        reference.token.isMutable))
       .flatten
 
   private def initializeReflection() {
@@ -146,12 +165,17 @@ final class Node(private[syntax] var kind: String,
 
   override def toString = kind + ":" + id + (if (cachable) " cachable" else "")
 
-  def prettyPrint(prefix: String = "", showHash: Boolean = false): String = {
+  def sourceCode =
+    if (begin.exists && end.exists)
+      begin.collection.descriptions.slice(begin.index, end.index + 1)
+        .map(_.value).mkString
+    else
+      ""
+
+  def prettyPrint(prefix: String = ""): String = {
     val result = new StringBuilder
 
     result ++= kind + " " + id
-
-    if (showHash) result ++= "@" + hash
 
     if (cachable) result ++= " cachable"
 
@@ -166,7 +190,7 @@ final class Node(private[syntax] var kind: String,
 
       for ((name, subnodes) <- branches; branch <- subnodes) {
         result ++= "\n" + prefix + "  " + name + ": "
-        result ++= branch.prettyPrint(prefix + "  ", showHash)
+        result ++= branch.prettyPrint(prefix + "  ")
       }
 
       result ++= "\n" + prefix + "}"
@@ -176,33 +200,6 @@ final class Node(private[syntax] var kind: String,
   }
 
   def accessor = new NodeAccessor(this)
-
-  lazy val hash: Int = {
-    var elements = List.empty[Int]
-
-    elements ::= kind.hashCode
-    elements ::= end.index - begin.index + 1
-
-    for ((tag, list) <- branches) {
-      elements ::= tag.hashCode
-      for (branch <- list) elements ::= branch.hash
-    }
-
-    for ((tag, list) <- references) {
-      elements ::= tag.hashCode
-      for (reference <- list if !reference.token.isMutable)
-        elements ::= reference.token.value.hashCode()
-    }
-
-    for ((tag, constant) <- constants) {
-      elements ::= tag.hashCode
-      elements ::= constant.hashCode
-    }
-
-    elements ::= cachable.hashCode
-
-    elements.hashCode()
-  }
 }
 
 object Node {
@@ -216,8 +213,9 @@ object Node {
             constants: Map[String, String] = Map.empty) = {
     val result = new Node(kind, begin, end)
 
-    result.branches = branches.groupBy(_._1).mapValues(_.map(_._2))
+    result.branches = branches.groupBy(_._1).mapValues(_.map(_._2)).view.force
     result.references = references.groupBy(_._1).mapValues(_.map(_._2))
+      .view.force
     result.constants = constants
 
     result

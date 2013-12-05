@@ -103,11 +103,11 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
                 node.cachable = rule.cachable
                 node.branches =
                   session.state.products.groupBy(_._1)
-                    .mapValues(_.map(_._2).reverse)
+                    .mapValues(_.map(_._2).reverse).view.force
                 node.references =
                   session.state.captures.groupBy(_._1)
                     .mapValues(_.map(_._2.iterator
-                      .map(session.reference)).flatten)
+                      .map(session.reference)).flatten).view.force
 
                 node
               }

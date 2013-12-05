@@ -1,55 +1,5 @@
  > remove:
-string:16
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": [<<<"array element">>>, 100, true, "false", ["a", "b"]],
-  "key 4": {"subkey": null}
-}
-
-
- > remove:
-number:17
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", <<<100>>>, true, "false", ["a", "b"]],
-  "key 4": {"subkey": null}
-}
-
-
- > remove:
-boolean:18
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", 100, <<<true>>>, "false", ["a", "b"]],
-  "key 4": {"subkey": null}
-}
-
-
- > remove:
-string:19
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", 100, true, <<<"false">>>, ["a", "b"]],
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-string:23
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": [<<<"array element">>>, 100, true, "false", ["a", "b"]],
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-number:24
+number:9
 {
   "key 1": "value 1",
   "key 2": "value 2",
@@ -59,44 +9,34 @@ number:24
 
 
  > create:
-boolean:25
+number:20
 {
   "key 1": "value 1",
   "key 2": "value 2",
-  "key 3": ["array element", 100, <<<true>>>, "false", ["a", "b"]],
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-string:26
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", 100, true, <<<"false">>>, ["a", "b"]],
+  "key 3": ["array element", <<<100>>>, true, "false", ["a", "b"]],
   "key 4": {"subkey": null}
 }
 
 
  > merge:
 array 7 cachable >> 6 {
-  value: string 23 >> 7 {
+  value: string 8 >> 7 {
     value: "array element"
   }
-  value: number 24 >> 7 {
+  value: number 20 >> 7 {
     value: 100
   }
-  value: boolean 25 >> 7 {
+  value: boolean 10 >> 7 {
     value: true
   }
-  value: string 26 >> 7 {
+  value: string 16 >> 7 {
     value: "false"
   }
-  value: array 20 cachable >> 7 {
-    value: string 21 >> 20 {
+  value: array 17 cachable >> 7 {
+    value: string 18 >> 17 {
       value: "a"
     }
-    value: string 22 >> 20 {
+    value: string 19 >> 17 {
       value: "b"
     }
   }

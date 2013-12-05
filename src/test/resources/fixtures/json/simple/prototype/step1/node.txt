@@ -1,34 +1,4 @@
  > remove:
-string:8
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": [<<<"array element">>>, 2.6e-2, true, "false", ["a", "b"]],
-  "key 4": {"subkey": null}
-}
-
-
- > remove:
-number:9
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", <<<2.6e-2>>>, true, "false", ["a", "b"]],
-  "key 4": {"subkey": null}
-}
-
-
- > remove:
-boolean:10
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", 2.6e-2, <<<true>>>, "false", ["a", "b"]],
-  "key 4": {"subkey": null}
-}
-
-
- > remove:
 boolean:11
 {
   "key 1": "value 1",
@@ -43,43 +13,13 @@ string:16
 {
   "key 1": "value 1",
   "key 2": "value 2",
-  "key 3": [<<<"array element">>>, 2.6e-2, true, "false", ["a", "b"]],
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-number:17
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", <<<2.6e-2>>>, true, "false", ["a", "b"]],
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-boolean:18
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", 2.6e-2, <<<true>>>, "false", ["a", "b"]],
-  "key 4": {"subkey": null}
-}
-
-
- > create:
-string:19
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
   "key 3": ["array element", 2.6e-2, true, <<<"false">>>, ["a", "b"]],
   "key 4": {"subkey": null}
 }
 
 
  > create:
-array:20 cachable
+array:17 cachable
 {
   "key 1": "value 1",
   "key 2": "value 2",
@@ -89,7 +29,7 @@ array:20 cachable
 
 
  > create:
-string:21
+string:18
 {
   "key 1": "value 1",
   "key 2": "value 2",
@@ -99,7 +39,7 @@ string:21
 
 
  > create:
-string:22
+string:19
 {
   "key 1": "value 1",
   "key 2": "value 2",
@@ -110,23 +50,23 @@ string:22
 
  > merge:
 array 7 cachable >> 6 {
-  value: string 16 >> 7 {
+  value: string 8 >> 7 {
     value: "array element"
   }
-  value: number 17 >> 7 {
+  value: number 9 >> 7 {
     value: 2.6e-2
   }
-  value: boolean 18 >> 7 {
+  value: boolean 10 >> 7 {
     value: true
   }
-  value: string 19 >> 7 {
+  value: string 16 >> 7 {
     value: "false"
   }
-  value: array 20 cachable >> 7 {
-    value: string 21 >> 20 {
+  value: array 17 cachable >> 7 {
+    value: string 18 >> 17 {
       value: "a"
     }
-    value: string 22 >> 20 {
+    value: string 19 >> 17 {
       value: "b"
     }
   }

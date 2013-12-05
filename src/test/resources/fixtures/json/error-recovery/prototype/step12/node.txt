@@ -1,23 +1,5 @@
  > remove:
-string:25
-{
-  "key 1": <<<"hello world">>>,
-  "key 1.1": "value 1.1"
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-}
-
-
- > remove:
-entry:24
-{
-  <<<"key 1": "hello world">>>,
-  "key 1.1": "value 1.1"
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-}
-
-
- > remove:
-string:27
+string:10
 {
   "key 1": "hello world",
   "key 1.1": "value 1.1"
@@ -26,7 +8,7 @@ string:27
 
 
  > remove:
-entry:26
+entry:9
 {
   "key 1": "hello world",
   <<<"key 1.1": "value 1.1"
@@ -35,25 +17,7 @@ entry:26
 
 
  > create:
-entry:28
-{
-  <<<"key 1": "hello world">>>,
-  "key 1.1": "value 1.1"
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-}
-
-
- > create:
-string:29
-{
-  "key 1": <<<"hello world">>>,
-  "key 1.1": "value 1.1"
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-}
-
-
- > create:
-entry:30
+entry:11
 {
   "key 1": "hello world",
   <<<"key 1.1": "value 1.1">>>
@@ -62,7 +26,7 @@ entry:30
 
 
  > create:
-string:31
+string:12
 {
   "key 1": "hello world",
   "key 1.1": <<<"value 1.1">>>
@@ -71,7 +35,7 @@ string:31
 
 
  > create:
-entry:32
+entry:13
 {
   "key 1": "hello world",
   "key 1.1": "value 1.1"
@@ -80,7 +44,7 @@ entry:32
 
 
  > create:
-array:33 cachable
+array:14 cachable
 {
   "key 1": "hello world",
   "key 1.1": "value 1.1"
@@ -89,7 +53,7 @@ array:33 cachable
 
 
  > create:
-string:34
+string:15
 {
   "key 1": "hello world",
   "key 1.1": "value 1.1"
@@ -98,7 +62,7 @@ string:34
 
 
  > create:
-string:35
+string:16
 {
   "key 1": "hello world",
   "key 1.1": "value 1.1"
@@ -107,7 +71,7 @@ string:35
 
 
  > create:
-string:36
+string:17
 {
   "key 1": "hello world",
   "key 1.1": "value 1.1"
@@ -117,28 +81,28 @@ string:36
 
  > merge:
 object 1 {
-  entry: entry 28 >> 1 {
+  entry: entry 2 >> 1 {
     key: "key 1"
-    value: string 29 >> 28 {
+    value: string 3 >> 2 {
       value: "hello world"
     }
   }
-  entry: entry 30 >> 1 {
+  entry: entry 11 >> 1 {
     key: "key 1.1"
-    value: string 31 >> 30 {
+    value: string 12 >> 11 {
       value: "value 1.1"
     }
   }
-  entry: entry 32 >> 1 {
+  entry: entry 13 >> 1 {
     key: "key 2"
-    value: array 33 cachable >> 32 {
-      value: string 34 >> 33 {
+    value: array 14 cachable >> 13 {
+      value: string 15 >> 14 {
         value: "array value 1"
       }
-      value: string 35 >> 33 {
+      value: string 16 >> 14 {
         value: "array value 2"
       }
-      value: string 36 >> 33 {
+      value: string 17 >> 14 {
         value: "array value 3"
       }
     }
