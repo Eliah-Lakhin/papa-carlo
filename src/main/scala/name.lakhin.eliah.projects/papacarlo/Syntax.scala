@@ -49,18 +49,19 @@ final class Syntax(val lexer: Lexer) {
   val onRuleEnter = new Signal[(Rule, State)]
   val onRuleLeave = new Signal[(Rule, State, Int)]
 
-  lexer.fragments.onInvalidate.bind(fragment => {
-    var candidate = Option(fragment)
+  lexer.fragments.onInvalidate.bind {
+    case (fragment, range) =>
+      var candidate = Option(fragment)
 
-    while (candidate.exists(fragment => !cache.contains(fragment.id)))
-      candidate = candidate.flatMap(_.parent)
+      while (candidate.exists(fragment => !cache.contains(fragment.id)))
+        candidate = candidate.flatMap(_.parent)
 
-    for (cache <-
-         cache.get(candidate.getOrElse(lexer.fragments.rootFragment).id)) {
-      onCacheInvalidate.trigger(cache)
-      cache.invalidate()
-    }
-  })
+      for (cache <-
+           cache.get(candidate.getOrElse(lexer.fragments.rootFragment).id)) {
+        onCacheInvalidate.trigger(cache)
+        cache.invalidate(range)
+      }
+  }
 
   def getErrors = cache.values.map(cache => cache.errors).flatten.toList
 

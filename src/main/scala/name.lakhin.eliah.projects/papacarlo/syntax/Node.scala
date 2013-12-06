@@ -80,14 +80,19 @@ final class Node(private[syntax] var kind: String,
     }
   }
 
-  private[syntax] def merge(registry: Registry[Node], replacement: Node) = {
+  private[syntax] def merge(registry: Registry[Node],
+                            replacement: Node,
+                            invalidationRange: Bounds) = {
     for ((tag, oldBranches) <- this.branches;
          newBranches <- replacement.branches.get(tag)) {
       val difference = Difference.double[Node](
         oldBranches,
         newBranches,
-        (pair: Pair[Node, Node]) => pair._1.bound &&
-          pair._1.sourceCode == pair._2.sourceCode
+        (pair: Pair[Node, Node]) => {
+          pair._1.bound &&
+            !pair._2.range.intersects(invalidationRange) &&
+            pair._1.sourceCode == pair._2.sourceCode
+        }
       )
 
       if (difference != (0, 0))

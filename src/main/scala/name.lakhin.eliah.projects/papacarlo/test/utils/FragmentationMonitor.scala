@@ -18,6 +18,7 @@ package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.Lexer
 import name.lakhin.eliah.projects.papacarlo.lexis.Fragment
+import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 
 private final class FragmentationMonitor(lexer: Lexer) extends Monitor(lexer) {
   private var fragmentLog = List.empty[(Symbol, String)]
@@ -25,8 +26,8 @@ private final class FragmentationMonitor(lexer: Lexer) extends Monitor(lexer) {
   val onCreate = (fragment: Fragment) =>
     fragmentLog ::= ('create, fragmentToString(fragment))
 
-  val onInvalidate = (fragment: Fragment) =>
-    fragmentLog ::= ('invalidate, fragmentToString(fragment))
+  val onInvalidate = (pair: (Fragment, Bounds)) =>
+    fragmentLog ::= ('invalidate, fragmentToString(pair._1))
 
   val onRemove = (fragment: Fragment) =>
     fragmentLog ::= ('remove, fragmentToString(fragment))
