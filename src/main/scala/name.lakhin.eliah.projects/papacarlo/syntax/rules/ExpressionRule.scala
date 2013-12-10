@@ -89,10 +89,12 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
   private var parselets = Map.empty[String, Parselet]
 
   def apply(session: Session) = {
+    session.syntax.onRuleEnter.trigger(this, session.state)
+
     val state = new ExpressionState(session)
 
-    parse(state) match {
-      case Some(result) =>
+    val result = parse(state) match {
+      case Some(result: Node) =>
         session.state = session.state.copy(products = (tag, result) ::
           session.state.products)
 
@@ -101,6 +103,9 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
 
       case None => Failed
     }
+
+    session.syntax.onRuleLeave.trigger(this, session.state, result)
+    result
   }
 
   def parselet(operator: String) =
@@ -176,4 +181,6 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
 
           left
       }
+
+  override val show = "expression(" + atom.show._1 + ") -> " + tag -> 1
 }

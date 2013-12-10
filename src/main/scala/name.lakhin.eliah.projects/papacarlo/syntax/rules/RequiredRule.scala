@@ -21,14 +21,18 @@ import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class RequiredRule(rule: Rule) extends Rule {
   def apply(session: Session): Int = {
+    session.syntax.onRuleEnter.trigger(this, session.state)
+
     val initialPosition = session.state.virtualPosition
+    var result = rule(session)
 
-    var ruleApplicationResult = rule(session)
-
-    if (ruleApplicationResult == Recoverable &&
+    if (result == Recoverable &&
       session.state.virtualPosition == initialPosition)
-      ruleApplicationResult = Failed
+      result = Failed
 
-    ruleApplicationResult
+    session.syntax.onRuleLeave.trigger(this, session.state, result)
+    result
   }
+
+  override val show = "require(" + rule.showOperand(0) + ")" -> Int.MaxValue
 }

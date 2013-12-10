@@ -79,6 +79,15 @@ abstract class ParserSpec(parserName: String,
             new EmptyMonitor(lexer, syntax)
           },
           false
+        ),
+      "debug" ->
+        (
+          "debug",
+          () => {
+            val (lexer, syntax) = parser
+            new DebugMonitor(lexer, syntax)
+          },
+          false
         )
     )
 
@@ -159,6 +168,7 @@ abstract class ParserSpec(parserName: String,
               monitor.prepare()
               statistics ::= monitor.input(test.inputs.getOrElse(step, ""))
               val result = monitor.getResult
+              monitor.release()
               if (step >= test.outputFrom)
                 test.write(monitorName, step, result)
               results ::= result

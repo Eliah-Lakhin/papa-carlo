@@ -14,13 +14,11 @@ string:3
 
  > merge:
 object 1 {
-  entry:
-    entry 2 >> 1 {
-      key: "key 1"
-      value:
-        string 3 >> 2 {
-          value: "hello world"
-        }
+  entry: entry 2 >> 1 {
+    key: "key 1"
+    value: string 3 >> 2 {
+      value: "hello world"
     }
+  }
 }
 

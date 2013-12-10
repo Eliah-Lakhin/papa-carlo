@@ -26,6 +26,8 @@ final class TokenReference(val collection: TokenCollection,
   val onUpdate = new Signal[TokenReference]
   val onRemove = new Signal[TokenReference]
 
+  def exists = !removed
+
   def token = {
     if (removed) throw new RuntimeException("Token was removed")
     collection.descriptions(index)

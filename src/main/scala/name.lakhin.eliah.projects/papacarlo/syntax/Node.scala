@@ -17,7 +17,8 @@ package name.lakhin.eliah.projects
 package papacarlo.syntax
 
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
-import name.lakhin.eliah.projects.papacarlo.utils.{Registry, Bounds, Signal}
+import name.lakhin.eliah.projects.papacarlo.utils.{Difference, Registry, Bounds,
+  Signal}
 
 final class Node(private[syntax] var kind: String,
                  private[syntax] var begin: TokenReference,
@@ -58,8 +59,8 @@ final class Node(private[syntax] var kind: String,
     constants.get(tag).getOrElse(references.lift(tag)
       .map(_.map(_.token.value).mkString).getOrElse(""))
 
-  def hasValue(tag: String) = constants.contains(tag) ||
-    references.contains(tag)
+  def hasValue(tag: String) =
+    constants.contains(tag) || references.contains(tag)
 
   def range = Bounds(begin.index, end.index + 1)
 
@@ -79,7 +80,30 @@ final class Node(private[syntax] var kind: String,
     }
   }
 
-  private[syntax] def merge(registry: Registry[Node], replacement: Node) = {
+  private[syntax] def merge(registry: Registry[Node],
+                            replacement: Node,
+                            invalidationRange: Bounds) = {
+    for ((tag, oldBranches) <- this.branches;
+         newBranches <- replacement.branches.get(tag)) {
+      val difference = Difference.double[Node](
+        oldBranches,
+        newBranches,
+        (pair: Pair[Node, Node]) => {
+          pair._1.bound &&
+            !pair._2.range.intersects(invalidationRange) &&
+            pair._1.sourceCode == pair._2.sourceCode
+        }
+      )
+
+      if (difference != (0, 0))
+        replacement.branches += tag ->
+          Bounds(difference._1, oldBranches.size - difference._2).replace(
+            oldBranches,
+            Bounds(difference._1, newBranches.size - difference._2)
+              .slice(newBranches)
+          )
+    }
+
     kind = replacement.kind
     releaseReflection()
     begin = replacement.begin
@@ -130,7 +154,8 @@ final class Node(private[syntax] var kind: String,
   private def subscribableReferences =
     references
       .filter(pair => !constants.contains(pair._1))
-      .map(_._2.filter(_.token.isMutable))
+      .map(_._2.filter(reference => !reference.exists ||
+        reference.token.isMutable))
       .flatten
 
   private def initializeReflection() {
@@ -145,27 +170,36 @@ final class Node(private[syntax] var kind: String,
 
   override def toString = kind + ":" + id + (if (cachable) " cachable" else "")
 
+  def sourceCode =
+    if (begin.exists && end.exists)
+      begin.collection.descriptions.slice(begin.index, end.index + 1)
+        .map(_.value).mkString
+    else
+      ""
+
   def prettyPrint(prefix: String = ""): String = {
     val result = new StringBuilder
 
-    result ++= prefix + kind + " " + id
+    result ++= kind + " " + id
+
+    if (cachable) result ++= " cachable"
 
     result ++= parent.map(" >> " + _.id).getOrElse("")
 
-    if (cachable) result ++= "\n" + prefix + "cachable"
+    if (references.nonEmpty || branches.nonEmpty) {
+      result ++= " {"
 
-    result ++= " {"
+      for (reference <- references)
+        result ++= "\n" + prefix + "  " + reference._1 + ": " +
+          getValue(reference._1)
 
-    for (reference <- references)
-      result ++= "\n" + prefix + "  " + reference._1 + ": " +
-        getValue(reference._1)
+      for ((name, subnodes) <- branches; branch <- subnodes) {
+        result ++= "\n" + prefix + "  " + name + ": "
+        result ++= branch.prettyPrint(prefix + "  ")
+      }
 
-    for ((name, subnodes) <- branches; branch <- subnodes) {
-      result ++= "\n" + prefix + "  " + name + ":\n"
-      result ++= branch.prettyPrint(prefix + "    ")
+      result ++= "\n" + prefix + "}"
     }
-
-    result ++= "\n" + prefix + "}"
 
     result.toString()
   }
@@ -184,8 +218,9 @@ object Node {
             constants: Map[String, String] = Map.empty) = {
     val result = new Node(kind, begin, end)
 
-    result.branches = branches.groupBy(_._1).mapValues(_.map(_._2))
+    result.branches = branches.groupBy(_._1).mapValues(_.map(_._2)).view.force
     result.references = references.groupBy(_._1).mapValues(_.map(_._2))
+      .view.force
     result.constants = constants
 
     result

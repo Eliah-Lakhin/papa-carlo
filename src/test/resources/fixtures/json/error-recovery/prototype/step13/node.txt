@@ -1,130 +1,30 @@
- > remove:
-string:29
-{
-  "key 1": <<<"hello world">>>,
-  "key 1.1": "value 1.1",
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-}
-
-
- > remove:
-entry:28
-{
-  <<<"key 1": "hello world">>>,
-  "key 1.1": "value 1.1",
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-}
-
-
- > remove:
-string:31
-{
-  "key 1": "hello world",
-  "key 1.1": <<<"value 1.1">>>,
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-}
-
-
- > remove:
-entry:30
-{
-  "key 1": "hello world",
-  <<<"key 1.1": "value 1.1">>>,
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-}
-
-
- > remove:
-entry:32
-{
-  "key 1": "hello world",
-  "key 1.1": "value 1.1",
-  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
-}
-
-
- > create:
-entry:37
-{
-  <<<"key 1": "hello world">>>,
-  "key 1.1": "value 1.1",
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-}
-
-
- > create:
-string:38
-{
-  "key 1": <<<"hello world">>>,
-  "key 1.1": "value 1.1",
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-}
-
-
- > create:
-entry:39
-{
-  "key 1": "hello world",
-  <<<"key 1.1": "value 1.1">>>,
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-}
-
-
- > create:
-string:40
-{
-  "key 1": "hello world",
-  "key 1.1": <<<"value 1.1">>>,
-  "key 2": ["array value 1", "array value 2", "array value 3"],
-}
-
-
- > create:
-entry:41
-{
-  "key 1": "hello world",
-  "key 1.1": "value 1.1",
-  <<<"key 2": ["array value 1", "array value 2", "array value 3"]>>>,
-}
-
-
  > merge:
 object 1 {
-  entry:
-    entry 37 >> 1 {
-      key: "key 1"
-      value:
-        string 38 >> 37 {
-          value: "hello world"
-        }
+  entry: entry 2 >> 1 {
+    key: "key 1"
+    value: string 3 >> 2 {
+      value: "hello world"
     }
-  entry:
-    entry 39 >> 1 {
-      key: "key 1.1"
-      value:
-        string 40 >> 39 {
-          value: "value 1.1"
-        }
+  }
+  entry: entry 11 >> 1 {
+    key: "key 1.1"
+    value: string 12 >> 11 {
+      value: "value 1.1"
     }
-  entry:
-    entry 41 >> 1 {
-      key: "key 2"
-      value:
-        array 33 >> 41
-        cachable {
-          value:
-            string 34 >> 33 {
-              value: [
-            }
-          value:
-            string 35 >> 33 {
-              value:  
-            }
-          value:
-            string 36 >> 33 {
-              value:  
-            }
-        }
+  }
+  entry: entry 13 >> 1 {
+    key: "key 2"
+    value: array 14 cachable >> 13 {
+      value: string 15 >> 14 {
+        value: "array value 1"
+      }
+      value: string 16 >> 14 {
+        value: "array value 2"
+      }
+      value: string 17 >> 14 {
+        value: "array value 3"
+      }
     }
+  }
 }
 

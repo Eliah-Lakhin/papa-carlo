@@ -7,7 +7,7 @@ Node 1. Fragment:
 >>>
 
  > create:
-Node 15. Fragment:
+Node 5. Fragment:
 {
   "key 1": "hello world",
   "key 2": <<<["array value 1", "array value 2"]>>>

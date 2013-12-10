@@ -107,9 +107,9 @@ final class Contextualizer {
       }
 
       val result =
-        stateMachine.groupBy(_._1)
-          .mapValues(_.groupBy(_._2)
-          .mapValues(list => (list.head._3, list.head._4)))
+        stateMachine.groupBy(_._1).mapValues(_.groupBy(_._2)
+          .mapValues(list => (list.head._3, list.head._4)).view.force)
+          .view.force
 
       this.stateMachineCache = Some(result)
 

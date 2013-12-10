@@ -1,4 +1,3 @@
  > merge:
-object 1 {
-}
+object 1
 

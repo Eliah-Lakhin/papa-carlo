@@ -16,7 +16,8 @@
 package name.lakhin.eliah.projects
 package papacarlo
 
-import name.lakhin.eliah.projects.papacarlo.syntax.{Rule, Node, Cache}
+import name.lakhin.eliah.projects.papacarlo.lexis.Token
+import name.lakhin.eliah.projects.papacarlo.syntax.{State, Rule, Node, Cache}
 import name.lakhin.eliah.projects.papacarlo.utils.{Signal, Registry}
 import name.lakhin.eliah.projects.papacarlo.syntax.rules.{NamedRule,
   ReferentialRule}
@@ -44,19 +45,23 @@ final class Syntax(val lexer: Lexer) {
   val onNodeCreate = nodes.onAdd
   val onNodeMerge = new Signal[Node]
   val onNodeRemove = nodes.onRemove
+  val onParseStep = new Signal[Seq[Token]]
+  val onRuleEnter = new Signal[(Rule, State)]
+  val onRuleLeave = new Signal[(Rule, State, Int)]
 
-  lexer.fragments.onInvalidate.bind(fragment => {
-    var candidate = Option(fragment)
+  lexer.fragments.onInvalidate.bind {
+    case (fragment, range) =>
+      var candidate = Option(fragment)
 
-    while (candidate.exists(fragment => !cache.contains(fragment.id)))
-      candidate = candidate.flatMap(_.parent)
+      while (candidate.exists(fragment => !cache.contains(fragment.id)))
+        candidate = candidate.flatMap(_.parent)
 
-    for (cache <-
-         cache.get(candidate.getOrElse(lexer.fragments.rootFragment).id)) {
-      onCacheInvalidate.trigger(cache)
-      cache.invalidate()
-    }
-  })
+      for (cache <-
+           cache.get(candidate.getOrElse(lexer.fragments.rootFragment).id)) {
+        onCacheInvalidate.trigger(cache)
+        cache.invalidate(range)
+      }
+  }
 
   def getErrors = cache.values.map(cache => cache.errors).flatten.toList
 
@@ -82,7 +87,7 @@ final class Syntax(val lexer: Lexer) {
   def cachable(refs: Rule*) {
     for (rule <- refs)
       rule match {
-        case NamedRule(_, rule: Rule) => cachable(rule)
+        case NamedRule(_, rule: Rule, _) => cachable(rule)
 
         case ReferentialRule(name, _) =>
           for (definition <- rules.get(name)) {
@@ -96,7 +101,7 @@ final class Syntax(val lexer: Lexer) {
 
   def intercept(ref: Rule)(interceptor: Node => Node) {
     ref match {
-      case NamedRule(_, rule: Rule) => intercept(rule)(interceptor)
+      case NamedRule(_, rule: Rule, _) => intercept(rule)(interceptor)
 
       case ReferentialRule(name, _) =>
         for (definition <- rules.get(name)) {
