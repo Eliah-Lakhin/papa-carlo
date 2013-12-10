@@ -82,7 +82,7 @@ to include it on the list.
 
 Development status
 ------------------
-The current version of the library is **0.4.2**.
+The current version of the library is **0.5.0**.
 
 I use [Semantic Version policy v. 2.0](http://semver.org/) in naming project's
 versions. So the first stable release version will be "1.0.0".
