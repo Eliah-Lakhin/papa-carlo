@@ -28,7 +28,7 @@ final class Syntax(val lexer: Lexer) {
     private[papacarlo] var cachingFlag = false
     private[papacarlo] var transformer: Option[Node => Node] = None
 
-    private var constructor = Option.empty[(() => Rule, Rule)]
+    private var constructor = Option.empty[(() => Rule, NamedRule)]
     private[papacarlo] lazy val body = constructor match {
       case Some(Pair(bodyConstructor, _)) => bodyConstructor()
       case _ => throw new RuntimeException("Rule " + name + " undefined")
