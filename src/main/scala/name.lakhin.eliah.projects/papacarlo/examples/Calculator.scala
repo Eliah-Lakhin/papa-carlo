@@ -55,7 +55,7 @@ object Calculator {
     import Rule._
     import Expressions._
 
-    mainRule("expression") {
+    rule("expression").main {
       val rule =
         expression(branch("operand", recover(number, "operand required")))
 

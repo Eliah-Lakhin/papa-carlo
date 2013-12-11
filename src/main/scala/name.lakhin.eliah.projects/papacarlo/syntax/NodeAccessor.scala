@@ -20,43 +20,64 @@ import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 
 final class NodeAccessor(val node: Node) {
   def setKind(kind: String) = {
-    if (!node.bound) node.kind = kind
+    if (!node.bound) {
+      node.kind = kind
+      node.cachable = false
+    }
 
     this
   }
 
   def setBegin(reference: TokenReference) = {
-    if (!node.bound) node.begin = reference
+    if (!node.bound) {
+      node.begin = reference
+      node.cachable = false
+    }
 
     this
   }
 
   def setEnd(reference: TokenReference) = {
-    if (!node.bound) node.end = reference
+    if (!node.bound) {
+      node.end = reference
+      node.cachable = false
+    }
 
     this
   }
 
   def setBranches(branches: Map[String, List[Node]]) = {
-    if (!node.bound) node.branches = branches
+    if (!node.bound) {
+      node.branches = branches
+      node.cachable = false
+    }
 
     this
   }
 
   def setReferences(references: Map[String, List[TokenReference]]) = {
-    if (!node.bound) node.references = references
+    if (!node.bound) {
+      node.references = references
+      node.cachable = false
+    }
 
     this
   }
 
   def setCachable(cachable: Boolean) = {
-    if (!node.bound) node.cachable = cachable
+    if (!node.bound) {
+      node.cachable = cachable
+      node.cachable = false
+    }
 
     this
   }
 
   def setConstant(tag: String, value: String) = {
-    if (!node.bound) node.constants += tag -> value
+    if (!node.bound) {
+      node.constants += tag -> value
+      node.cachable = false
+    }
 
     this
   }

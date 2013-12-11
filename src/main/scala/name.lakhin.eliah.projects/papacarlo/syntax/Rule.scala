@@ -36,6 +36,11 @@ abstract class Rule {
     RecoveryRule(this, Some(description))
 
   final def required = RequiredRule(this)
+
+  final def name(label: String) =  this match {
+    case NamedRule(_, rule: Rule, trace) => NamedRule(label, rule, trace)
+    case _ => NamedRule(label, this)
+  }
 }
 
 object Rule {
@@ -69,12 +74,7 @@ object Rule {
     case _ => rule
   }
 
-  def name(label: String, rule: Rule) = rule match {
-    case NamedRule(_, rule: Rule, trace) => NamedRule(label, rule, trace)
-    case _ => NamedRule(label, rule)
-  }
-
-  def name(label: String)(body: => Rule): NamedRule = name(label, body)
+  def subrule(label: String)(body: => Rule) = body.name(label)
 
   def optional(rule: Rule) = RepetitionRule(rule, max = Some(1))
 
