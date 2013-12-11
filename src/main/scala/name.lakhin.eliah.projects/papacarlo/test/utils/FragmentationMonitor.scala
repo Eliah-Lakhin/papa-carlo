@@ -18,21 +18,19 @@ package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.Lexer
 import name.lakhin.eliah.projects.papacarlo.lexis.Fragment
+import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 
 private final class FragmentationMonitor(lexer: Lexer) extends Monitor(lexer) {
   private var fragmentLog = List.empty[(Symbol, String)]
 
-  lexer.fragments.onCreate.bind {
-    fragment => fragmentLog ::= ('create, fragmentToString(fragment))
-  }
+  val onCreate = (fragment: Fragment) =>
+    fragmentLog ::= ('create, fragmentToString(fragment))
 
-  lexer.fragments.onInvalidate.bind {
-    fragment => fragmentLog ::= ('invalidate, fragmentToString(fragment))
-  }
+  val onInvalidate = (pair: (Fragment, Bounds)) =>
+    fragmentLog ::= ('invalidate, fragmentToString(pair._1))
 
-  lexer.fragments.onRemove.bind {
-    fragment => fragmentLog ::= ('remove, fragmentToString(fragment))
-  }
+  val onRemove = (fragment: Fragment) =>
+    fragmentLog ::= ('remove, fragmentToString(fragment))
 
   private def fragmentToString(fragment: Fragment) =
     if (shortOutput) fragment.toString
@@ -40,5 +38,17 @@ private final class FragmentationMonitor(lexer: Lexer) extends Monitor(lexer) {
 
   def getResult = unionLog(fragmentLog)
 
-  def prepare() {fragmentLog = Nil}
+  def prepare() {
+    fragmentLog = Nil
+    lexer.fragments.onCreate.bind(onCreate)
+    lexer.fragments.onInvalidate.bind(onInvalidate)
+    lexer.fragments.onRemove.bind(onRemove)
+  }
+
+  def release() {
+    fragmentLog = Nil
+    lexer.fragments.onCreate.unbind(onCreate)
+    lexer.fragments.onInvalidate.unbind(onInvalidate)
+    lexer.fragments.onRemove.unbind(onRemove)
+  }
 }

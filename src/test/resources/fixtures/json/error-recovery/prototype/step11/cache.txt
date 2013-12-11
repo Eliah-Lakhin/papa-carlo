@@ -8,7 +8,7 @@ Node 1. Fragment:
 >>>
 
  > remove:
-Node 15. Fragment:
+Node 5. Fragment:
 {
   "key 1": "hello world",
   "key 1.1":

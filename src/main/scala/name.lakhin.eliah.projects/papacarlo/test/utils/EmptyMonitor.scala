@@ -24,4 +24,6 @@ final class EmptyMonitor(lexer: Lexer, syntax: Syntax)
   def getResult = ""
 
   def prepare() {}
+
+  def release() {}
 }

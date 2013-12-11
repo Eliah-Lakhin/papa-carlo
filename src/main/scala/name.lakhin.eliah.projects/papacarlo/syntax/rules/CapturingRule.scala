@@ -22,6 +22,8 @@ import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class CapturingRule(tag: String, rule: Rule) extends Rule {
   def apply(session: Session) = {
+    session.syntax.onRuleEnter.trigger(this, session.state)
+
     val initialState = session.state
     var result = rule(session)
 
@@ -40,6 +42,9 @@ final case class CapturingRule(tag: String, rule: Rule) extends Rule {
       result = Failed
     }
 
+    session.syntax.onRuleLeave.trigger(this, session.state, result)
     result
   }
+
+  override val show = rule.showOperand(1) + " -> " + tag -> 1
 }

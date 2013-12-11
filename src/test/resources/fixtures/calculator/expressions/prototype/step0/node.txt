@@ -20,20 +20,16 @@ number:5
 
  > merge:
 + 1 {
-  left:
-    + 2 >> 1 {
-      left:
-        number 3 >> 2 {
-          value: 1
-        }
-      right:
-        number 4 >> 2 {
-          value: 2
-        }
+  left: + 2 >> 1 {
+    left: number 3 >> 2 {
+      value: 1
     }
-  right:
-    number 5 >> 1 {
-      value: 3
+    right: number 4 >> 2 {
+      value: 2
     }
+  }
+  right: number 5 >> 1 {
+    value: 3
+  }
 }
 

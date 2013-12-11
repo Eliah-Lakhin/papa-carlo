@@ -31,14 +31,23 @@ abstract class Monitor(lexer: Lexer) {
 
   def prepare()
   def getResult: String
+  def release()
 
-  protected final def unionLog(log: List[(Symbol, String)]) = {
+  protected final def unionLog(log: List[(Symbol, String)],
+                               enterLeaveIndentation: Boolean = false) = {
     val result = new StringBuilder
+    var indent = 0
 
-    for (log <- log.reverse) {
-      result ++= " > " + log._1.name + ":\n"
-      result ++= log._2
+    for ((title, details) <- log.reverse) {
+      if (title == 'leave) indent -= 1
+
+      val offset = "  " * (indent * 2)
+
+      result ++= offset + " > " + title.name + ":\n"
+      result ++= details.split("\n", -1).map(offset + _).mkString("\n")
       result ++= "\n\n"
+
+      if (title == 'enter) indent += 1
     }
 
     result.toString()

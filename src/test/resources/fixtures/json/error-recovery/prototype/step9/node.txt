@@ -1,76 +1,21 @@
- > remove:
-string:13
-{
-  "key 1": <<<"hello world">>>,
-  "key 2": ["array value 1", "array value 2"],
-}
-
-
- > remove:
-entry:12
-{
-  <<<"key 1": "hello world">>>,
-  "key 2": ["array value 1", "array value 2"],
-}
-
-
- > remove:
-entry:14
-{
-  "key 1": "hello world",
-  <<<"key 2": ["array value 1", "array value 2"]>>>,
-}
-
-
- > create:
-entry:18
-{
-  <<<"key 1": "hello world">>>,
-  "key 2": ["array value 1", "array value 2"],
-}
-
-
- > create:
-string:19
-{
-  "key 1": <<<"hello world">>>,
-  "key 2": ["array value 1", "array value 2"],
-}
-
-
- > create:
-entry:20
-{
-  "key 1": "hello world",
-  <<<"key 2": ["array value 1", "array value 2"]>>>,
-}
-
-
  > merge:
 object 1 {
-  entry:
-    entry 18 >> 1 {
-      key: "key 1"
-      value:
-        string 19 >> 18 {
-          value: "hello world"
-        }
+  entry: entry 2 >> 1 {
+    key: "key 1"
+    value: string 3 >> 2 {
+      value: "hello world"
     }
-  entry:
-    entry 20 >> 1 {
-      key: "key 2"
-      value:
-        array 15 >> 20
-        cachable {
-          value:
-            string 16 >> 15 {
-              value: "array value 1"
-            }
-          value:
-            string 17 >> 15 {
-              value: "array value 2"
-            }
-        }
+  }
+  entry: entry 4 >> 1 {
+    key: "key 2"
+    value: array 5 cachable >> 4 {
+      value: string 6 >> 5 {
+        value: "array value 1"
+      }
+      value: string 7 >> 5 {
+        value: "array value 2"
+      }
     }
+  }
 }
 

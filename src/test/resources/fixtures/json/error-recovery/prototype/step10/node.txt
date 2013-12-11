@@ -1,37 +1,5 @@
- > remove:
-string:16
-{
-  "key 1": "hello world",
-  "key 2": [<<<"array value 1">>>, "array value 2", "array value 3"],
-}
-
-
- > remove:
-string:17
-{
-  "key 1": "hello world",
-  "key 2": ["array value 1", <<<"array value 2">>>, "array value 3"],
-}
-
-
  > create:
-string:21
-{
-  "key 1": "hello world",
-  "key 2": [<<<"array value 1">>>, "array value 2", "array value 3"],
-}
-
-
- > create:
-string:22
-{
-  "key 1": "hello world",
-  "key 2": ["array value 1", <<<"array value 2">>>, "array value 3"],
-}
-
-
- > create:
-string:23
+string:8
 {
   "key 1": "hello world",
   "key 2": ["array value 1", "array value 2", <<<"array value 3">>>],
@@ -39,19 +7,15 @@ string:23
 
 
  > merge:
-array 15 >> 20
-cachable {
-  value:
-    string 21 >> 15 {
-      value: "array value 1"
-    }
-  value:
-    string 22 >> 15 {
-      value: "array value 2"
-    }
-  value:
-    string 23 >> 15 {
-      value: "array value 3"
-    }
+array 5 cachable >> 4 {
+  value: string 6 >> 5 {
+    value: "array value 1"
+  }
+  value: string 7 >> 5 {
+    value: "array value 2"
+  }
+  value: string 8 >> 5 {
+    value: "array value 3"
+  }
 }
 

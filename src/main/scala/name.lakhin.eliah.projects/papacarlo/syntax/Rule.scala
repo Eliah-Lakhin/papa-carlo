@@ -21,11 +21,21 @@ import name.lakhin.eliah.projects.papacarlo.syntax.rules._
 abstract class Rule {
   def apply(session: Session): Int
 
-  def permissive = RecoveryRule(this)
+  def show: (String, Int)
 
-  def permissive(description: String) = RecoveryRule(this, Some(description))
+  final def showOperand(parentPrecedence: Int): String = {
+    val (string, currentPrecedence) = show
 
-  def required = RequiredRule(this)
+    if (currentPrecedence < parentPrecedence) "(" + string + ")"
+    else string
+  }
+
+  final def permissive = RecoveryRule(this)
+
+  final def permissive(description: String) =
+    RecoveryRule(this, Some(description))
+
+  final def required = RequiredRule(this)
 }
 
 object Rule {
@@ -53,14 +63,14 @@ object Rule {
     case RecoveryRule(rule: Rule, exception, recoveryBranch) =>
       RecoveryRule(branch(tag, rule), exception, Some(tag))
 
-    case NamedRule(label: String, rule: Rule) =>
-      NamedRule(label, branch(tag, rule))
+    case NamedRule(label: String, rule: Rule, trace) =>
+      NamedRule(label, branch(tag, rule), trace)
 
     case _ => rule
   }
 
   def name(label: String, rule: Rule) = rule match {
-    case NamedRule(_, rule: Rule) => NamedRule(label, rule)
+    case NamedRule(_, rule: Rule, trace) => NamedRule(label, rule, trace)
     case _ => NamedRule(label, rule)
   }
 

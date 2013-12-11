@@ -24,13 +24,15 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
   extends Rule {
 
   def apply(session: Session) = {
+    session.syntax.onRuleEnter.trigger(this, session.state)
+
     val packratKey =
       session.relativeIndexOf(session.state.virtualPosition) + name
 
-    session.packrat.lift(packratKey) match {
+    val result = session.packrat.lift(packratKey) match {
       case Some(packrat) =>
-        session.state = packrat.state
-          .copy(virtualPosition = session.virtualIndexOf(packrat.range.until))
+        session.state =
+          packrat.state.copy(virtualPosition = packrat.range.until)
 
         packrat.result
 
@@ -54,16 +56,16 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
 
         session.packrat += Pair(packratKey, Packrat(
           name,
-          session.relativeSegmentOf(Bounds(
-            initialPosition,
-            session.state.virtualPosition
-          )),
+          Bounds(initialPosition, session.state.virtualPosition),
           result,
           session.state
         ))
 
         result
     }
+
+    session.syntax.onRuleLeave.trigger(this, session.state, result)
+    result
   }
 
   private def performReferredRule(session: Session) = {
@@ -101,11 +103,11 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
                 node.cachable = rule.cachable
                 node.branches =
                   session.state.products.groupBy(_._1)
-                    .mapValues(_.map(_._2).reverse)
+                    .mapValues(_.map(_._2).reverse).view.force
                 node.references =
                   session.state.captures.groupBy(_._1)
                     .mapValues(_.map(_._2.iterator
-                      .map(session.reference)).flatten)
+                      .map(session.reference)).flatten).view.force
 
                 node
               }
@@ -131,5 +133,14 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
     }
 
     result
+  }
+
+  override val show = {
+    val atom = "@" + name
+
+    tag match {
+      case Some(branch) if branch != name  => branch + " -> " + atom -> 1
+      case _ => atom -> Int.MaxValue
+    }
   }
 }

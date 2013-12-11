@@ -1,44 +1,10 @@
- > remove:
-string:5
-{
-  "key 1": <<<"hello world">>>,
-  ["array value 1"
-}
-
-
- > remove:
-entry:4
-{
-  <<<"key 1": "hello world">>>,
-  ["array value 1"
-}
-
-
- > create:
-entry:6
-{
-  <<<"key 1": "hello world">>>,
-  ["array value 1"
-}
-
-
- > create:
-string:7
-{
-  "key 1": <<<"hello world">>>,
-  ["array value 1"
-}
-
-
  > merge:
 object 1 {
-  entry:
-    entry 6 >> 1 {
-      key: "key 1"
-      value:
-        string 7 >> 6 {
-          value: "hello world"
-        }
+  entry: entry 2 >> 1 {
+    key: "key 1"
+    value: string 3 >> 2 {
+      value: "hello world"
     }
+  }
 }
 

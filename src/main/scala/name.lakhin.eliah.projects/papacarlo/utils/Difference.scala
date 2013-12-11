@@ -14,23 +14,24 @@
    limitations under the License.
 */
 package name.lakhin.eliah.projects
-package papacarlo.test.utils
+package papacarlo.utils
 
-import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
+object Difference {
+  def head[A](first: Seq[A],
+                second: Seq[A],
+                comparator: Pair[A, A] => Boolean) =
+    first.zip(second).takeWhile(comparator).length
 
-final class ErrorMonitor(lexer: Lexer, syntax: Syntax)
-  extends SyntaxMonitor(lexer, syntax) {
-
-  def getResult = syntax
-    .getErrors
-    .map(error => " > " + error.description +
-      (
-        if (shortOutput) " " + lexer.rangeToString(error.range)
-        else ":\n" + lexer.highlight(error.range, Some(10)))
-      )
-    .mkString("\n\n")
-
-  def prepare() {}
-
-  def release() {}
+  def double[A](first: Seq[A],
+                second: Seq[A],
+                comparator: Pair[A, A] => Boolean) = {
+    val pairs = first.zip(second)
+    val head = pairs.takeWhile(comparator).length
+    (
+      head,
+      first.drop(head).reverse.zip(second.drop(head).reverse)
+        .takeWhile(comparator)
+        .length
+    )
+  }
 }

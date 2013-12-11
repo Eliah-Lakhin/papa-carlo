@@ -26,6 +26,8 @@ final case class RecoveryRule(rule: Rule,
   extends Rule {
 
   def apply(session: Session) = {
+    session.syntax.onRuleEnter.trigger(this, session.state)
+
     val initialState = session.state
     var result = rule(session)
 
@@ -59,7 +61,18 @@ final case class RecoveryRule(rule: Rule,
       result = Recoverable
     }
 
+    session.syntax.onRuleLeave.trigger(this, session.state, result)
     result
+  }
+
+  override val show = {
+    val atom = rule.showOperand(Int.MaxValue) + ".recover" +
+      exception.map("(" + _ + ")").getOrElse("")
+
+    branch match {
+      case Some(branch: String) => branch + " -> " + atom -> 1
+      case None => atom -> Int.MaxValue
+    }
   }
 }
 

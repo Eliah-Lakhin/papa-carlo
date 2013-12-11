@@ -18,6 +18,7 @@ package papacarlo.syntax
 
 import name.lakhin.eliah.projects.papacarlo.Syntax
 import name.lakhin.eliah.projects.papacarlo.lexis.Fragment
+import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 
 final class Cache(syntax: Syntax,
                   val fragment: Fragment,
@@ -37,7 +38,7 @@ final class Cache(syntax: Syntax,
 
   syntax.onCacheCreate.trigger(this)
 
-  private[papacarlo] def invalidate() {
+  private[papacarlo] def invalidate(range: Bounds) {
     val session = new Session(syntax, fragment)
 
     ready = false
@@ -48,7 +49,7 @@ final class Cache(syntax: Syntax,
 
     for (replacement <- result._1) {
       val errorBounds = errors.map(_.range)
-      for (descendant <- node.merge(syntax.nodes, replacement))
+      for (descendant <- node.merge(syntax.nodes, replacement, range))
         if (descendant.cachable)
           for (descendantFragment <- descendant.begin.getFragment)
             if (descendantFragment.end.index == descendant.end.index

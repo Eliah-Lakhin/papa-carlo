@@ -28,7 +28,7 @@ final class FragmentController(contextualizer: Contextualizer,
   private var valid = true
 
   val onCreate = registry.onAdd
-  val onInvalidate = new Signal[Fragment]
+  val onInvalidate = new Signal[(Fragment, Bounds)]
   val onRemove = registry.onRemove
 
   val rootFragment = createFragment(tokens.head, tokens.last)
@@ -154,7 +154,8 @@ final class FragmentController(contextualizer: Contextualizer,
   private def createFragment(start: TokenReference, end: TokenReference) = {
     val fragment = registry.add(id => Fragment(id, start, end))
 
-    fragment.onInvalidate.bind(onInvalidate.trigger)
+    fragment.onInvalidate.bind(fragment =>
+      onInvalidate.trigger(Pair(fragment, invalidationRange)))
     fragment.onRemove.bind(fragment => registry.remove(fragment.id))
 
     fragment

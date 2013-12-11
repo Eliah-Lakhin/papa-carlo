@@ -21,8 +21,7 @@ import name.lakhin.eliah.projects.papacarlo.lexis.{Token, Fragment}
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 import name.lakhin.eliah.projects.papacarlo.syntax.rules.ReferentialRule
 
-final class Session(val syntax: Syntax,
-                    fragment: Fragment) {
+final class Session(val syntax: Syntax, fragment: Fragment) {
   private[syntax] var state = State()
   private[syntax] var packrat = Map.empty[String, Packrat]
   private[syntax] var tokens = IndexedSeq.empty[Token]
@@ -30,6 +29,7 @@ final class Session(val syntax: Syntax,
   private val sourceTokens = fragment.getTokens
   private[syntax] val sourceTokensOffset = fragment.begin.index
 
+  private var initialIndex = IndexedSeq.empty[Int]
   private var index = IndexedSeq.empty[Int]
 
   private[syntax] def reference(relativeIndex: Int) =
@@ -67,6 +67,7 @@ final class Session(val syntax: Syntax,
     sourceTokens.zipWithIndex.filter(!_._1.isSkippable).unzip match {
       case (preparedTokens, preparedIndex) =>
         tokens = preparedTokens
+        initialIndex = preparedIndex
         index = preparedIndex
     }
 
@@ -75,6 +76,9 @@ final class Session(val syntax: Syntax,
 
     while (!parsed) {
       state = State()
+
+      syntax.onParseStep.trigger(tokens)
+
       val result = ReferentialRule(ruleName, Some("result"))(this)
 
       if (result == Result.Failed) {
@@ -122,8 +126,8 @@ final class Session(val syntax: Syntax,
               result.headOption match {
                 case Some(current) =>
                   if ((current.range.until < issue.range.from) &&
-                    (virtualIndexOf(current.range.until) <
-                      virtualIndexOf(issue.range.from))) result ::= issue
+                    (initialIndex.indexOf(current.range.until - 1) + 1 <
+                      initialIndex.indexOf(issue.range.from))) result ::= issue
                   else result = current
                     .copy(range = current.range.union(issue.range)) ::
                       result.tail
@@ -152,7 +156,16 @@ final class Session(val syntax: Syntax,
 
   private def exclude(virtualSegment: Bounds, reason: String) = {
     val relativeSegment = relativeSegmentOf(virtualSegment)
-    packrat = packrat.filter(_._2.range.intersects(relativeSegment))
+    packrat = packrat
+      .filter(!_._2.range.touches(virtualSegment))
+      .mapValues {
+        packrat =>
+          if (packrat.range.from >= virtualSegment.from)
+            packrat.copy(range = packrat.range.shift(-virtualSegment.length))
+          else
+            packrat
+      }
+      .view.force
 
     tokens = virtualSegment.replace(tokens, Vector.empty)
     index = virtualSegment.replace(index, Vector.empty)

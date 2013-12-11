@@ -18,7 +18,4 @@ package papacarlo.syntax
 
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 
-final case class Packrat(rule: String,
-                         range: Bounds,
-                         result: Int,
-                         state: State)
+final case class Packrat(rule: String, range: Bounds, result: Int, state: State)

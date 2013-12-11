@@ -1,16 +1,46 @@
 Development history
 ===================
 
+0.5.0
+-----
+_2013-12-10_
+
+ - New features:
+   - Debug Monitor that shows parse steps of the selected parse rule.
+   - Node smart merging. Now merging procedure reuses branches of the previously
+     parsed node.
+ - Minor improvements:
+   - Nodes support hash function.
+   - Rule pretty printing.
+ - Bug fix:
+   - Zombie-monitors removing.
+   - Major issue in Packrat cache fixed.
+
+0.4.2
+-----
+_2013-12-04_
+
+ - Bug fix:
+   - Fragment forceful skipping/using, i.e comments erasing case.
+   - Repetition rule bug.
+   - Referential rule for without tag.
+   - Choice Rule bug in selection of the suitable recoverable candidate.
+ - Minor improvements:
+   - Node construction in call-chain way.
+   - Optional token consumption feature in Expression parser.
+   - Line offset token tracking.
+   - Syntax parser in ParserSpec can be instantiated separately from the lexer.
+   - Empty Monitor that tracks nothing. For simple debug purposes.
+
 0.4.1
 -----
-_2013-11.30_
+_2013-11-30_
 
  - Node's additional constructor.
  - Node's new property: "constant". When set forcefully overrides appropriate
    referenced token value.
  - Recover Rule constructor renamed to "permissive".
  - Require Rule introduced.
-
 
 0.4.0
 -----

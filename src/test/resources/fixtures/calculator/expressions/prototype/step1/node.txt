@@ -85,64 +85,47 @@ number:18
 
  > merge:
 + 1 {
-  left:
-    + 2 >> 1 {
-      left:
-        + 3 >> 2 {
-          left:
-            - 4 >> 3 {
-              left:
-                number 5 >> 4 {
-                  value: 1
-                }
-              right:
-                / 6 >> 4 {
-                  left:
-                    - 7 >> 6 {
-                      operand:
-                        number 8 >> 7 {
-                          value: 2
-                        }
-                    }
-                  right:
-                    / 9 >> 6 {
-                      left:
-                        * 10 >> 9 {
-                          left:
-                            number 11 >> 10 {
-                              value: 3
-                            }
-                          right:
-                            + 12 >> 10 {
-                              operand:
-                                number 13 >> 12 {
-                                  value: 4
-                                }
-                            }
-                        }
-                      right:
-                        number 14 >> 9 {
-                          value: 5
-                        }
-                    }
-                }
-            }
-          right:
-            number 15 >> 3 {
-              value: 6
-            }
+  left: + 2 >> 1 {
+    left: + 3 >> 2 {
+      left: - 4 >> 3 {
+        left: number 5 >> 4 {
+          value: 1
         }
-      right:
-        % 16 >> 2 {
-          operand:
-            number 17 >> 16 {
-              value: 7
+        right: / 6 >> 4 {
+          left: - 7 >> 6 {
+            operand: number 8 >> 7 {
+              value: 2
             }
+          }
+          right: / 9 >> 6 {
+            left: * 10 >> 9 {
+              left: number 11 >> 10 {
+                value: 3
+              }
+              right: + 12 >> 10 {
+                operand: number 13 >> 12 {
+                  value: 4
+                }
+              }
+            }
+            right: number 14 >> 9 {
+              value: 5
+            }
+          }
         }
+      }
+      right: number 15 >> 3 {
+        value: 6
+      }
     }
-  right:
-    number 18 >> 1 {
-      value: 8
+    right: % 16 >> 2 {
+      operand: number 17 >> 16 {
+        value: 7
+      }
     }
+  }
+  right: number 18 >> 1 {
+    value: 8
+  }
 }
 

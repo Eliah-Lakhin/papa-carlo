@@ -43,4 +43,6 @@ final class TokenizerMonitor(lexer: Lexer) extends Monitor(lexer) {
   }
 
   def prepare() {}
+
+  def release() {}
 }

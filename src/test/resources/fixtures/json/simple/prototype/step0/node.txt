@@ -140,60 +140,43 @@ null:15
 
  > merge:
 object 1 {
-  entry:
-    entry 2 >> 1 {
-      key: "key 1"
-      value:
-        string 3 >> 2 {
-          value: "value 1"
-        }
+  entry: entry 2 >> 1 {
+    key: "key 1"
+    value: string 3 >> 2 {
+      value: "value 1"
     }
-  entry:
-    entry 4 >> 1 {
-      key: "key 2"
-      value:
-        string 5 >> 4 {
-          value: "value 2"
-        }
+  }
+  entry: entry 4 >> 1 {
+    key: "key 2"
+    value: string 5 >> 4 {
+      value: "value 2"
     }
-  entry:
-    entry 6 >> 1 {
-      key: "key 3"
-      value:
-        array 7 >> 6
-        cachable {
-          value:
-            string 8 >> 7 {
-              value: "array element"
-            }
-          value:
-            number 9 >> 7 {
-              value: 2.6e-2
-            }
-          value:
-            boolean 10 >> 7 {
-              value: true
-            }
-          value:
-            boolean 11 >> 7 {
-              value: false
-            }
-        }
+  }
+  entry: entry 6 >> 1 {
+    key: "key 3"
+    value: array 7 cachable >> 6 {
+      value: string 8 >> 7 {
+        value: "array element"
+      }
+      value: number 9 >> 7 {
+        value: 2.6e-2
+      }
+      value: boolean 10 >> 7 {
+        value: true
+      }
+      value: boolean 11 >> 7 {
+        value: false
+      }
     }
-  entry:
-    entry 12 >> 1 {
-      key: "key 4"
-      value:
-        object 13 >> 12
-        cachable {
-          entry:
-            entry 14 >> 13 {
-              key: "subkey"
-              value:
-                null 15 >> 14 {
-                }
-            }
-        }
+  }
+  entry: entry 12 >> 1 {
+    key: "key 4"
+    value: object 13 cachable >> 12 {
+      entry: entry 14 >> 13 {
+        key: "subkey"
+        value: null 15 >> 14
+      }
     }
+  }
 }
 
