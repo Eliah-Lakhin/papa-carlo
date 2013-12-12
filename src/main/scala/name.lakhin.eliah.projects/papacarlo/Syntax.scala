@@ -28,9 +28,9 @@ final class Syntax(val lexer: Lexer) {
     private[papacarlo] var cachingFlag = false
     private[papacarlo] var transformer: Option[Node => Node] = None
 
-    private var constructor = Option.empty[(() => Rule, NamedRule)]
+    private var constructor = Option.empty[() => Rule]
     private[papacarlo] lazy val body = constructor match {
-      case Some(Pair(bodyConstructor, _)) => bodyConstructor()
+      case Some(bodyConstructor) => bodyConstructor()
       case _ => throw new RuntimeException("Rule " + name + " undefined")
     }
 
@@ -60,14 +60,12 @@ final class Syntax(val lexer: Lexer) {
       this
     }
 
+    def reference = NamedRule(name, ReferentialRule(name))
+
     def apply(body: => Rule) = {
       constructor match {
-        case Some(Pair(bodyConstructor, reference)) => reference
-
         case None =>
-          val reference = NamedRule(name, ReferentialRule(name))
-
-          constructor = Some(Pair(() => body, reference))
+          constructor = Some(() => body)
 
           if (mainRule.exists(_ == name)) {
             val rootFragment = lexer.fragments.rootFragment
@@ -79,8 +77,10 @@ final class Syntax(val lexer: Lexer) {
             new Cache(Syntax.this, rootFragment, rootNode)
           }
 
-          reference
+        case _ =>
       }
+
+      reference
     }
   }
 
