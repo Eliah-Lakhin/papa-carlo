@@ -62,6 +62,13 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
       states ::= session.state -> issues
     }
 
+    def freeState() {
+      states match {
+        case _ :: tail => states = tail
+        case _ =>
+      }
+    }
+
     def restoreState() {
       states match {
         case head :: tail =>
