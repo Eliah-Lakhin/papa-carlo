@@ -55,6 +55,15 @@ final class NodeAccessor(val node: Node) {
     this
   }
 
+  def setBranches(tag: String, branches: List[Node]) = {
+    if (!node.bound) {
+      node.branches += tag -> branches
+      node.cachable = false
+    }
+
+    this
+  }
+
   def setReferences(references: Map[String, List[TokenReference]]) = {
     if (!node.bound) {
       node.references = references
@@ -64,9 +73,9 @@ final class NodeAccessor(val node: Node) {
     this
   }
 
-  def setCachable(cachable: Boolean) = {
+  def setReferences(tag: String, references: List[TokenReference]) = {
     if (!node.bound) {
-      node.cachable = cachable
+      node.references += tag -> references
       node.cachable = false
     }
 
