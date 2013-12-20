@@ -189,9 +189,12 @@ final class Node(private[syntax] var kind: String,
     if (references.nonEmpty || branches.nonEmpty) {
       result ++= " {"
 
-      for (reference <- references)
-        result ++= "\n" + prefix + "  " + reference._1 + ": " +
-          getValue(reference._1)
+      for (reference <- references.keys ++ constants.keys
+        .filter(constant => !references.contains(constant))) {
+
+        result ++= "\n" + prefix + "  " + reference + ": " +
+          getValue(reference)
+      }
 
       for ((name, subnodes) <- branches; branch <- subnodes) {
         result ++= "\n" + prefix + "  " + name + ": "
