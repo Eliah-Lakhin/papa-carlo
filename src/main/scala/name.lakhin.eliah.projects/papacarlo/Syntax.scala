@@ -75,6 +75,8 @@ final class Syntax(val lexer: Lexer) {
             nodes.add(id => {rootNode.id = id; rootNode})
 
             new Cache(Syntax.this, rootFragment, rootNode)
+
+            Syntax.this.rootNode = Some(rootNode)
           }
 
         case _ =>
@@ -85,6 +87,7 @@ final class Syntax(val lexer: Lexer) {
   }
 
   private[papacarlo] var rules = Map.empty[String, RuleDefinition]
+  private var rootNode: Option[Node] = None
   private var mainRule: Option[String] = None
   private[papacarlo] var nodes = new Registry[Node]
   private[papacarlo] var cache = Map.empty[Int, Cache]
@@ -126,4 +129,6 @@ final class Syntax(val lexer: Lexer) {
 
         definition
     }
+
+  def getRootNode = rootNode
 }
