@@ -32,6 +32,7 @@ final class Node(private[syntax] var kind: String,
 
   val onChange = new Signal[Node]
   val onRemove = new Signal[Node]
+  val onAddBranch = new Signal[Node]
 
   private val reflection = (reference: TokenReference) => update()
 
@@ -133,6 +134,10 @@ final class Node(private[syntax] var kind: String,
           descendant.id = id
           descendant
       }
+
+    for (descendant <- unregistered;
+         parent <- descendant.parent)
+      parent.onAddBranch.trigger(descendant)
 
     unregistered
   }
