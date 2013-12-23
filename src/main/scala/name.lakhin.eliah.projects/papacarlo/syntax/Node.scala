@@ -128,18 +128,20 @@ final class Node(private[syntax] var kind: String,
 
     branches = replacement.branches
 
-    for (descendant <- unregistered.reverseIterator)
+    val reversedUnregistered = unregistered.reverse
+
+    for (descendant <- reversedUnregistered)
       registry.add {
         id =>
           descendant.id = id
           descendant
       }
 
-    for (descendant <- unregistered;
+    for (descendant <- reversedUnregistered;
          parent <- descendant.parent)
       parent.onAddBranch.trigger(descendant)
 
-    unregistered
+    reversedUnregistered
   }
 
   private def visitBranches(current: Node, enter: (Node, Node) => Any) {

@@ -39,4 +39,12 @@ final class TokenReference(val collection: TokenCollection,
     removed = true
     onRemove.trigger(this)
   }
+
+  override def toString =
+    if (removed) "removed"
+    else {
+      val cursor = collection.cursor(index)
+
+      cursor._1 + ":" + cursor._2
+    }
 }
