@@ -131,4 +131,6 @@ final class Syntax(val lexer: Lexer) {
     }
 
   def getRootNode = rootNode
+
+  def getNode(id: Int) = nodes.get(id)
 }
