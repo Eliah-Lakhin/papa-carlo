@@ -23,6 +23,8 @@ final class Registry[A] {
   val onAdd = new Signal[A]
   val onRemove = new Signal[A]
 
+  def elements = records.values
+
   def add(element: A) = {
     val name = generateName
     records += name -> element
