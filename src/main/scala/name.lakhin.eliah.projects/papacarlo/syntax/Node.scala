@@ -56,6 +56,9 @@ final class Node(private[syntax] var kind: String,
 
   def getParent = parent
 
+  def getValues(tag: String) =
+    references.lift(tag).map(_.map(_.token.value)).getOrElse(Nil)
+
   def getValue(tag: String) =
     constants.get(tag).getOrElse(references.lift(tag)
       .map(_.map(_.token.value).mkString).getOrElse(""))
