@@ -1,23 +1,29 @@
-About Papa Carlo
-----------------
+What is "incremental parser"?
+-----------------------------
 
-Constructor of incremental parsers in Scala using PEG grammars.
+Papa Carlo is the first Scala parser library utilises incremental parsing
+approach.
 
-Papa Carlo was designed to construct programming language parsers that may be
-used in a wide range of code editors from simple syntax highlighters to
-full-featured IDEs like Eclipse or IntelliJ Idea.
+In contrast to all other parsing libraries that designed to parse complete
+source code file at once, Papa Carlo continuously parses source code while end
+users edit the file. And parser's performance is always relative to the changes
+in the code. Hence parsing time does not depend on the whole code size, small
+changes performing in no time even if the code consists of thousands lines.
 
-It also may be a useful tool to improve programming language syntax support in
-a number of popular source code editors like Sublime Text, Notepad++ or even
-terminal-based like Vim and Emacs.
+![Incremental parser workflow illustration](https://raw.github.com/Eliah-Lakhin/papa-carlo-media/master/snapshots/manuscript.jpg)
 
-The core feature of the parsers made with Papa Carlo is utilizing incremental
-parsing approach. That means the parser doesn't need to parse again the whole
-source code when end users make small changes to it. Thus users can continuously
-edit source code with thousands lines in real time. And the parser keeps Parse
-Tree in touch with the source code permanently without performance penalties.
+Typical use cases of incremental parser
+---------------------------------------
 
-This is a list of the main Papa Carlo's features provided out of the box:
+ * Language support plugins for code editors. For example full-featured Java IDE
+   based on Sublime Text or VIM.
+ * Realtime code analysis tools. Imaging smart semantic Diff!
+ * [Incremental compilers](http://en.wikipedia.org/wiki/Incremental_compiler).
+ * Client-server compilation [environment](http://lakhin.com/blog/15.11.2013-handy-incremental-parser/).
+
+Papa Carlo features
+-------------------
+
  * Syntax definition directly in the Scala code using library's API.
  * Resulting parser builds and incrementally updates Abstract Syntax Tree.
  * Error-recovery mechanism.
@@ -29,21 +35,54 @@ This is a list of the main Papa Carlo's features provided out of the box:
    [Pratt algorithm](http://en.wikipedia.org/wiki/Pratt_parser) and prepared
    primitives.
 
-Example parsers:
 
+Documentation
+-------------
+
+There is detailed tutorial on the project's website:
+[http://lakhin.com/projects/papa-carlo/](http://lakhin.com/projects/papa-carlo/).
+
+The tutorial is generated based mostly on materials from the
+[wiki](https://github.com/Eliah-Lakhin/papa-carlo/wiki). The wiki is open for
+read/write access to everyone. And contribution is very welcome!
+
+Users support forum: [https://groups.google.com/forum/#!forum/papa-carlo](https://groups.google.com/forum/#!forum/papa-carlo).
+
+
+##### Example parsers
+
+ * [Malvina programming language compiler](https://github.com/Eliah-Lakhin/malvina-in-scala).
  * [JSON parser](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Json.scala).
  * [Calculator parser](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Calculator.scala).
 
+##### Another links
 
-Getting started
----------------
+ * [Introduction blog post](http://lakhin.com/blog/15.11.2013-handy-incremental-parser/).
+ * [Discussion on Reddit](http://www.reddit.com/r/programming/comments/1rfyzx/whats_wrong_with_the_most_programming_language/).
+ * [Introduction article on Habrahabr in Russian](http://habrahabr.ru/post/201774/).
+ * [Approach brief description on Lambda the Ultimate](http://lambda-the-ultimate.org/node/4840).
 
-##### Using distributed artifacts
+If you have a project, or an article, or link to discussion related to the
+topic, please bring me a line to: eliah.lakhin [at] gmail.com. Or start a topic
+on the [Forum](https://groups.google.com/forum/#!forum/papa-carlo). I will be
+glad to include it on the list.
 
-1. Install [SBT](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html#installing-sbt).
-2. Add dependency to the project's configuration: `libraryDependencies += "name.lakhin.eliah.projects.papacarlo" %% "papa-carlo" % "<lib version>"`.
 
-Remote artifact URLs:
+Development status
+------------------
+Current version of the library is **0.5.0**. The project is in Beta stage.
+All planned features are done and ready to use. Source code is covered by a
+number of functional [tests](https://github.com/Eliah-Lakhin/papa-carlo/tree/master/src/test).
+
+I use [Semantic Version policy v. 2.0](http://semver.org/) in naming project's
+versions. So the first stable release version will be "1.0.0".
+
+Please see change log for details:
+[CHANGES](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/CHANGES.md)
+
+
+JAR artifacts
+--------------
 
  * Release artifacts on Maven Central:
    [http://central.maven.org/maven2/name/lakhin/eliah/projects/papacarlo/](http://central.maven.org/maven2/name/lakhin/eliah/projects/papacarlo/)
@@ -56,56 +95,6 @@ Remote artifact URLs:
 2. Run `sbt test` to compile and run tests.
 3. Run `sbt packageBin` to build JAR package. The JAR package can be found in
    the `target/` directory.
-
-
-Documentation
--------------
-
-There is detailed tutorial on the project's website:
-[http://lakhin.com/projects/papa-carlo/](http://lakhin.com/projects/papa-carlo/).
-
-The tutorial is generated based mostly on materials from the
-[wiki](https://github.com/Eliah-Lakhin/papa-carlo/wiki). The wiki is open for
-read/write access to everyone. And contribution is very welcome.
-
-##### Another links
-
- * [Introduction blog post](http://lakhin.com/blog/15.11.2013-handy-incremental-parser/).
- * [Discussion on Reddit](http://www.reddit.com/r/programming/comments/1rfyzx/whats_wrong_with_the_most_programming_language/).
- * [Introduction article on Habrahabr in Russian](http://habrahabr.ru/post/201774/).
- * [Approach brief description on Lambda the Ultimate](http://lambda-the-ultimate.org/node/4840).
-
-If you have a project, or an article, or link to discussion related to the the
-topic, please bring me a line to: eliah.lakhin [at] gmail.com. I will be glad
-to include it on the list.
-
-
-Development status
-------------------
-The current version of the library is **0.5.0**.
-
-I use [Semantic Version policy v. 2.0](http://semver.org/) in naming project's
-versions. So the first stable release version will be "1.0.0".
-
-Please see change log for details:
-[CHANGES](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/CHANGES.md)
-
----
-
-Currently the project is in Beta stage. All planned features are done and ready
-to use. Source code is covered by a number of functional
-[tests](https://github.com/Eliah-Lakhin/papa-carlo/tree/master/src/test).
-
-Before the project becomes in stable stage, ready to use in production it must
-pass a "trial by combat". My another project includes two components that will
-be built on top of Papa Carlo:
- * Incremental compiler of the general purpose programming language Malvina with
-   static type system.
- * Web-based IDE for this language. With deep code syntax/semantic analysis and
-   manipulation features.
-
-I hope these two projects could become a proof of readiness the library to use
-in production.
 
 
 License
