@@ -23,19 +23,72 @@ import name.lakhin.eliah.projects.papacarlo.syntax.rules.{NamedRule,
   ReferentialRule}
 
 final class Syntax(val lexer: Lexer) {
+  final class RuleDefinition(val name: String) {
+    private[papacarlo] var productKind: String = name
+    private[papacarlo] var cachingFlag = false
+    private[papacarlo] var transformer: Option[Node => Node] = None
 
-  final class RuleDefinition(val productKind: String,
-                             bodyInitializer: => Rule,
-                             val interceptor: Option[Node => Node] = None,
-                             val cachable: Boolean = false) {
-    lazy val body = bodyInitializer
+    private var constructor = Option.empty[() => Rule]
+    private[papacarlo] lazy val body = constructor match {
+      case Some(bodyConstructor) => bodyConstructor()
+      case _ => throw new RuntimeException("Rule " + name + " undefined")
+    }
 
-    private[Syntax] def copy(interceptor: Option[Node => Node] = interceptor,
-                             cachable: Boolean = cachable) =
-      new RuleDefinition(productKind, bodyInitializer, interceptor, cachable)
+    def produce(kind: String) = {
+      productKind = kind
+
+      this
+    }
+
+    def main = {
+      if (Syntax.this.mainRule.isEmpty) Syntax.this.mainRule = Some(name)
+
+      this
+    }
+
+    def cachable = {
+      cachingFlag = true
+      transformer = None
+
+      this
+    }
+
+    def transform(transformer: Node => Node) = {
+      cachingFlag = false
+      this.transformer = Some(transformer)
+
+      this
+    }
+
+    def reference = NamedRule(name, ReferentialRule(name))
+
+    def apply(body: => Rule) = {
+      constructor match {
+        case None =>
+          constructor = Some(() => body)
+
+          if (mainRule.exists(_ == name)) {
+            val rootFragment = lexer.fragments.rootFragment
+            val rootNode = new Node(name, rootFragment.begin,
+              rootFragment.end)
+
+            nodes.add(id => {rootNode.id = id; rootNode})
+
+            new Cache(Syntax.this, rootFragment, rootNode)
+
+            Syntax.this.rootNode = Some(rootNode)
+          }
+
+        case _ =>
+      }
+
+      reference
+    }
   }
 
-  var rules = Map.empty[String, RuleDefinition]
+  private[papacarlo] var rules = Map.empty[String, RuleDefinition]
+  private var rootNode: Option[Node] = None
+  private var mainRule: Option[String] = None
   private[papacarlo] var nodes = new Registry[Node]
   private[papacarlo] var cache = Map.empty[Int, Cache]
 
@@ -65,51 +118,19 @@ final class Syntax(val lexer: Lexer) {
 
   def getErrors = cache.values.map(cache => cache.errors).flatten.toList
 
-  def rule(name: String)(body: => Rule) = {
-    val definition = new RuleDefinition(name, body)
+  def rule(name: String) =
+    rules.get(name) match {
+      case Some(definition) => definition
 
-    rules += name -> definition
+      case None =>
+        val definition = new RuleDefinition(name)
 
-    NamedRule(name, ReferentialRule(name))
-  }
+        rules += name -> definition
 
-  def mainRule(name: String)(body: => Rule) = {
-    val rootFragment = lexer.fragments.rootFragment
-    val rootNode = new Node(name, rootFragment.begin, rootFragment.end)
-
-    nodes.add(id => {rootNode.id = id; rootNode})
-
-    new Cache(this, rootFragment, rootNode)
-
-    rule(name)(body)
-  }
-
-  def cachable(refs: Rule*) {
-    for (rule <- refs)
-      rule match {
-        case NamedRule(_, rule: Rule, _) => cachable(rule)
-
-        case ReferentialRule(name, _) =>
-          for (definition <- rules.get(name)) {
-            rules += name -> definition.copy(cachable = true,
-              interceptor = None)
-          }
-
-        case _ =>
-      }
-  }
-
-  def intercept(ref: Rule)(interceptor: Node => Node) {
-    ref match {
-      case NamedRule(_, rule: Rule, _) => intercept(rule)(interceptor)
-
-      case ReferentialRule(name, _) =>
-        for (definition <- rules.get(name)) {
-          rules += name -> definition.copy(cachable = false,
-            interceptor = Some(interceptor))
-        }
-
-      case _ =>
+        definition
     }
-  }
+
+  def getRootNode = rootNode
+
+  def getNode(id: Int) = nodes.get(id)
 }

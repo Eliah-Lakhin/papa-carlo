@@ -9,22 +9,22 @@ Node 1. Fragment:
 >>>
 
  > create:
-Node 13. Fragment:
-{
-  "key 1": "value 1",
-  "key 2": "value 2",
-  "key 3": ["array element", 2.6e-2, true, false],
-  "key 4": <<<{"subkey": null}>>>
-}
-
-
- > create:
 Node 7. Fragment:
 {
   "key 1": "value 1",
   "key 2": "value 2",
   "key 3": <<<["array element", 2.6e-2, true, false]>>>,
   "key 4": {"subkey": null}
+}
+
+
+ > create:
+Node 13. Fragment:
+{
+  "key 1": "value 1",
+  "key 2": "value 2",
+  "key 3": ["array element", 2.6e-2, true, false],
+  "key 4": <<<{"subkey": null}>>>
 }
 
 

@@ -80,7 +80,7 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
         case Some(tag: String) =>
           if (result != Failed) {
             var node =
-              (if (!rule.cachable
+              (if (!rule.cachingFlag
                 && session.state.captures.isEmpty
                 && session.state.products.size == 1)
                 session.state.products
@@ -91,16 +91,14 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
                       else None
                   }
               else None).getOrElse {
-                val begin = session.reference(
-                  session.relativeIndexOf(initialState.virtualPosition)
-                )
-                val end = session.reference(
-                  session.relativeIndexOf(session.state.virtualPosition - 1)
-                )
+                val begin = session.reference(session
+                  .relativeIndexOf(initialState.virtualPosition))
+                val end = session.reference(session
+                  .relativeIndexOf(session.state.virtualPosition - 1))
 
                 val node = new Node(rule.productKind, begin, end)
 
-                node.cachable = rule.cachable
+                node.cachable = rule.cachingFlag
                 node.branches =
                   session.state.products.groupBy(_._1)
                     .mapValues(_.map(_._2).reverse).view.force
@@ -112,7 +110,7 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
                 node
               }
 
-            for (interceptor <- rule.interceptor) node = interceptor(node)
+            for (transformer <- rule.transformer) node = transformer(node)
 
             session.state = initialState.copy(
               virtualPosition = session.state.virtualPosition,

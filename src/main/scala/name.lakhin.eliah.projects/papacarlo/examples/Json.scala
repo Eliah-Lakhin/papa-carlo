@@ -101,7 +101,7 @@ object Json {
     import syntax._
     import Rule._
 
-    val jsonObject = mainRule("object") {
+    val jsonObject = rule("object").cachable.main {
       sequence(
         token("{"),
         zeroOrMore(
@@ -121,7 +121,7 @@ object Json {
       )
     }
 
-    val jsonArray = rule("array") {
+    val jsonArray = rule("array").cachable {
       sequence(
         token("["),
         zeroOrMore(
@@ -149,12 +149,9 @@ object Json {
       token("null")
     }
 
-    val jsonValue: NamedRule = name(
-      "value",
+    val jsonValue: NamedRule = subrule("value") {
       choice(jsonString, jsonNumber, jsonObject, jsonArray, jsonBoolean,
         jsonNull)
-    )
-
-    cachable(jsonObject, jsonArray)
+    }
   }.syntax
 }

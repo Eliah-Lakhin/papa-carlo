@@ -23,6 +23,8 @@ final class Registry[A] {
   val onAdd = new Signal[A]
   val onRemove = new Signal[A]
 
+  def elements = records.values
+
   def add(element: A) = {
     val name = generateName
     records += name -> element
@@ -40,12 +42,15 @@ final class Registry[A] {
 
   def get(id: Int) = records.get(id)
 
-  def remove(id: Int) {
+  def remove(id: Int) = {
     val value = records.get(id)
+
     for (value <- value) {
       records -= id
       onRemove.trigger(value)
     }
+
+    value
   }
 
   private def generateName = {index += 1; index}

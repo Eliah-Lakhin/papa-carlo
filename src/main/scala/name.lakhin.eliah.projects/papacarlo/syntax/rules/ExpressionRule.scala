@@ -17,12 +17,13 @@ package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
 
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
-import name.lakhin.eliah.projects.papacarlo.syntax.{Node, Session, Rule}
+import name.lakhin.eliah.projects.papacarlo.syntax.{State, Node, Session, Rule}
 import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
   final class ExpressionState(private[ExpressionRule] val session: Session) {
     private[ExpressionRule] var issues: Boolean = false
+    private var states = List.empty[(State, Boolean)]
 
     def parseRight(rightBindingPower: Int = 0) =
       ExpressionRule.this.parse(this, rightBindingPower)
@@ -54,6 +55,28 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
         None
       } else {
         None
+      }
+    }
+
+    def saveState() {
+      states ::= session.state -> issues
+    }
+
+    def freeState() {
+      states match {
+        case _ :: tail => states = tail
+        case _ =>
+      }
+    }
+
+    def restoreState() {
+      states match {
+        case head :: tail =>
+          session.state = head._1
+          issues = head._2
+          states = tail
+
+        case _ =>
       }
     }
   }

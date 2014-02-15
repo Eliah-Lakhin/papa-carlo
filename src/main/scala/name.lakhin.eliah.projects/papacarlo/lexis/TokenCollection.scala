@@ -72,14 +72,17 @@ final class TokenCollection(lineCutTokens: Set[String]) {
       val tokenPairs = oldTokens.zip(replacement)
 
       if (tokenPairs.forall(pair => pair._1.sameAs(pair._2))) {
-        equal = true
+        val references = bounds.slice(this.references)
 
-        descriptions = bounds.replace(descriptions, replacement)
+        if (references.forall(_.onUpdate.nonEmpty)) {
+          equal = true
 
-        for (((oldToken, newToken), reference) <-
-             tokenPairs.zip(bounds.slice(references)))
-          if (oldToken.value != newToken.value)
-            reference.onUpdate.trigger(reference)
+          descriptions = bounds.replace(descriptions, replacement)
+
+          for (((oldToken, newToken), reference) <- tokenPairs.zip(references))
+            if (oldToken.value != newToken.value)
+              reference.onUpdate.trigger(reference)
+        }
       }
     }
 

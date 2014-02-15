@@ -32,6 +32,7 @@ final class Node(private[syntax] var kind: String,
 
   val onChange = new Signal[Node]
   val onRemove = new Signal[Node]
+  val onAddBranch = new Signal[Node]
 
   private val reflection = (reference: TokenReference) => update()
 
@@ -54,6 +55,9 @@ final class Node(private[syntax] var kind: String,
   def hasBranch(tag: String) = branches.contains(tag)
 
   def getParent = parent
+
+  def getValues(tag: String) =
+    references.lift(tag).map(_.map(_.token.value)).getOrElse(Nil)
 
   def getValue(tag: String) =
     constants.get(tag).getOrElse(references.lift(tag)
@@ -127,14 +131,20 @@ final class Node(private[syntax] var kind: String,
 
     branches = replacement.branches
 
-    for (descendant <- unregistered.reverseIterator)
+    val reversedUnregistered = unregistered.reverse
+
+    for (descendant <- reversedUnregistered)
       registry.add {
         id =>
           descendant.id = id
           descendant
       }
 
-    unregistered
+    for (descendant <- reversedUnregistered;
+         parent <- descendant.parent)
+      parent.onAddBranch.trigger(descendant)
+
+    reversedUnregistered
   }
 
   private def visitBranches(current: Node, enter: (Node, Node) => Any) {
@@ -189,9 +199,12 @@ final class Node(private[syntax] var kind: String,
     if (references.nonEmpty || branches.nonEmpty) {
       result ++= " {"
 
-      for (reference <- references)
-        result ++= "\n" + prefix + "  " + reference._1 + ": " +
-          getValue(reference._1)
+      for (reference <- references.keys ++ constants.keys
+        .filter(constant => !references.contains(constant))) {
+
+        result ++= "\n" + prefix + "  " + reference + ": " +
+          getValue(reference)
+      }
 
       for ((name, subnodes) <- branches; branch <- subnodes) {
         result ++= "\n" + prefix + "  " + name + ": "

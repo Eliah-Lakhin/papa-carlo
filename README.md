@@ -70,7 +70,7 @@ glad to include it on the list.
 
 Development status
 ------------------
-Current version of the library is **0.5.0**. The project is in Beta stage.
+Current version of the library is **0.6.0**. The project is in Beta stage.
 All planned features are done and ready to use. Source code is covered by a
 number of functional [tests](https://github.com/Eliah-Lakhin/papa-carlo/tree/master/src/test).
 
