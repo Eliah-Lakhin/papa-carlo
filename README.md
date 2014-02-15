@@ -1,5 +1,5 @@
-What is "incremental parser"
-----------------------------
+What is "incremental parser"?
+-----------------------------
 
 Papa Carlo is the first Scala parser library utilises incremental parsing
 approach.
