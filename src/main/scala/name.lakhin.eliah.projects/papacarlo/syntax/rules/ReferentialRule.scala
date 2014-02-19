@@ -27,7 +27,9 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
     session.syntax.onRuleEnter.trigger(this, session.state)
 
     val packratKey =
-      session.relativeIndexOf(session.state.virtualPosition) + name
+      session.relativeIndexOf(session.state.virtualPosition) +
+        name +
+        tag.map(":" + _).getOrElse("")
 
     val result = session.packrat.lift(packratKey) match {
       case Some(packrat) =>
