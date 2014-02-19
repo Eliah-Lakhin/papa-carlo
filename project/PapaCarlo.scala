@@ -24,7 +24,7 @@ object PapaCarlo extends Build {
     settings = Defaults.defaultSettings ++ SbtPgp.settings ++
       Seq(
         name := "Papa Carlo",
-        version := "0.6.0-SNAPSHOT",
+        version := "0.7.0-SNAPSHOT",
 
         description :=
           "Constructor of incremental parsers in Scala using PEG grammars",

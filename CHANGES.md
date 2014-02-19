@@ -1,6 +1,22 @@
 Development history
 ===================
 
+0.6.0
+-----
+_2014-02-16_
+
+ - Syntax rule construction API major rework.
+ - New features:
+   - `Node.getValues` method to retrieve captured parts separately.
+   - Tracking child branches using `Node.onAddBranch` event.
+   - AST Node random access by ID.
+   - Direct access to the top node of the AST.
+ - Bug fix:
+   - Children node track in wrong order.
+   - Minor issue in pretty print procedure.
+   - Caching minor issues.
+
+
 0.5.0
 -----
 _2013-12-10_
