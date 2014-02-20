@@ -108,4 +108,9 @@ final case class RepetitionRule(element: Rule,
       case (None, Some(max: Int)) => element.showOperand(4) + " * (0, " +  max +
         ")"
     }) + separator.map(" / " + _.showOperand(4)).getOrElse("")) -> 4
+
+  override val captures =
+    element.captures ++ separator.map(_.captures).getOrElse(Set.empty)
+
+  override val branches = element.branches
 }

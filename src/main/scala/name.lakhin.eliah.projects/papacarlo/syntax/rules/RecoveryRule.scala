@@ -74,6 +74,17 @@ final case class RecoveryRule(rule: Rule,
       case None => atom -> Int.MaxValue
     }
   }
+
+  override val captures = rule.captures
+
+  override val branches =
+    branch match {
+      case Some(tag) =>
+        rule.branches + (tag ->
+          (rule.branches.getOrElse(tag, Set.empty) + RecoveryRule.PlaceholderKind))
+
+      case None => rule.branches
+    }
 }
 
 object RecoveryRule {

@@ -48,7 +48,7 @@ object Expressions {
       .leftDenotation {
         (expression, left, operatorReference) =>
           val node = new Node(operator, operatorReference, operatorReference)
-          node.branches += "operand" -> List(left)
+          node.branches += ExpressionRule.Operand -> List(left)
           node
       }
   }
@@ -60,7 +60,7 @@ object Expressions {
       (expression, operatorReference) =>
         val node = new Node(operator, operatorReference, operatorReference)
         for (right <- expression.parseRight(power))
-          node.branches += "operand" -> List(right)
+          node.branches += ExpressionRule.Operand -> List(right)
         node
     }
   }

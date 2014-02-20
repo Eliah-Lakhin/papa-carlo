@@ -53,4 +53,14 @@ final case class ChoiceRule(choices: List[Rule]) extends Rule {
   }
 
   override val show = choices.map(_.showOperand(2)).mkString(" | ") -> 2
+
+  override val captures = choices.map(_.captures).reduce(_ ++ _)
+
+  override val branches = choices.map(_.branches).reduce {
+    (left, right) =>
+      var result = left
+      for ((key, values) <- right)
+        result += key -> (result.getOrElse(key, Set.empty) ++ values)
+      result
+  }
 }

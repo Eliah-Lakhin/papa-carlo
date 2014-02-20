@@ -23,6 +23,10 @@ abstract class Rule {
 
   def show: (String, Int)
 
+  def captures: Set[String]
+
+  def branches: Map[String, Set[String]]
+
   final def showOperand(parentPrecedence: Int): String = {
     val (string, currentPrecedence) = show
 
@@ -107,5 +111,5 @@ object Rule {
 
   def expression(tag: String, atom: Rule) = ExpressionRule(tag, atom)
 
-  def expression(atom: Rule) = ExpressionRule("result", atom)
+  def expression(atom: Rule) = ExpressionRule(ReferentialRule.Result, atom)
 }

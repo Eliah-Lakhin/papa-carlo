@@ -54,6 +54,10 @@ final case class TokenRule(kind: String,
     (if (terminal) "'" + kind + "'" else kind) +
       (if (matchUntil) ".matchUntil" else "") -> Int.MaxValue
   }
+
+  override val captures = Set.empty[String]
+
+  override val branches = Map.empty[String, Set[String]]
 }
 
 object TokenRule {

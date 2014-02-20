@@ -29,6 +29,7 @@ final class Node(private[syntax] var kind: String,
   private[syntax] var constants = Map.empty[String, String]
   private[syntax] var cachable = false
   private[syntax] var parent = Option.empty[Node]
+  private[syntax] var producer = Option.empty[Rule]
 
   val onChange = new Signal[Node]
   val onRemove = new Signal[Node]
@@ -64,6 +65,8 @@ final class Node(private[syntax] var kind: String,
       if (deep > 0) parent.getBranchName(deep - 1)
       else parent.branches.find(entry => entry._2.exists(_.id == id)).map(_._1)
   }
+
+  def getProducer = producer
 
   def range = Bounds(begin.index, end.index + 1)
 

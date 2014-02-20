@@ -44,4 +44,8 @@ final case class NamedRule(label: String,
       case _ =>
         rule.showOperand(Int.MaxValue) + ".name(" + label + ")" -> Int.MaxValue
     }
+
+  override val captures = rule.captures
+
+  override val branches = rule.branches
 }

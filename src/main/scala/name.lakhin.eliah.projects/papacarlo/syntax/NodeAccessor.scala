@@ -22,7 +22,7 @@ final class NodeAccessor(val node: Node) {
   def setKind(kind: String) = {
     if (!node.bound) {
       node.kind = kind
-      node.cachable = false
+      change()
     }
 
     this
@@ -31,7 +31,7 @@ final class NodeAccessor(val node: Node) {
   def setBegin(reference: TokenReference) = {
     if (!node.bound) {
       node.begin = reference
-      node.cachable = false
+      change()
     }
 
     this
@@ -40,7 +40,7 @@ final class NodeAccessor(val node: Node) {
   def setEnd(reference: TokenReference) = {
     if (!node.bound) {
       node.end = reference
-      node.cachable = false
+      change()
     }
 
     this
@@ -49,7 +49,7 @@ final class NodeAccessor(val node: Node) {
   def setBranches(branches: Map[String, List[Node]]) = {
     if (!node.bound) {
       node.branches = branches
-      node.cachable = false
+      change()
     }
 
     this
@@ -58,7 +58,7 @@ final class NodeAccessor(val node: Node) {
   def setBranches(tag: String, branches: List[Node]) = {
     if (!node.bound) {
       node.branches += tag -> branches
-      node.cachable = false
+      change()
     }
 
     this
@@ -67,7 +67,7 @@ final class NodeAccessor(val node: Node) {
   def setReferences(references: Map[String, List[TokenReference]]) = {
     if (!node.bound) {
       node.references = references
-      node.cachable = false
+      change()
     }
 
     this
@@ -76,7 +76,7 @@ final class NodeAccessor(val node: Node) {
   def setReferences(tag: String, references: List[TokenReference]) = {
     if (!node.bound) {
       node.references += tag -> references
-      node.cachable = false
+      change()
     }
 
     this
@@ -85,9 +85,14 @@ final class NodeAccessor(val node: Node) {
   def setConstant(tag: String, value: String) = {
     if (!node.bound) {
       node.constants += tag -> value
-      node.cachable = false
+      change()
     }
 
     this
+  }
+
+  private def change() {
+    node.cachable = false
+    node.producer = None
   }
 }

@@ -89,7 +89,7 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
                   .headOption
                   .flatMap {
                     product =>
-                      if (product._1 == "result") Some(product._2)
+                      if (product._1 == ReferentialRule.Result) Some(product._2)
                       else None
                   }
               else None).getOrElse {
@@ -108,6 +108,7 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
                   session.state.captures.groupBy(_._1)
                     .mapValues(_.map(_._2.iterator
                       .map(session.reference)).flatten).view.force
+                node.producer = Some(rule.body)
 
                 node
               }
@@ -143,4 +144,13 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
       case _ => atom -> Int.MaxValue
     }
   }
+
+  override val captures = Set.empty[String]
+
+  override val branches =
+    tag.map(tag => Map(tag -> Set(name))).getOrElse(Map.empty)
+}
+
+object ReferentialRule {
+  val Result = "result"
 }
