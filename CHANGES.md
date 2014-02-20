@@ -1,6 +1,13 @@
 Development history
 ===================
 
+0.6.1
+-----
+_2014-02-20_
+
+ - Bug in packrat cache fixed.
+
+
 0.6.0
 -----
 _2014-02-16_
