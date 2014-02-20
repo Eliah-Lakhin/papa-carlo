@@ -48,23 +48,22 @@ final class Node(private[syntax] var kind: String,
 
   def getRange = Bounds(begin.index, end.index + 1)
 
-  def getBranches(tag: String) = branches.getOrElse(tag, Nil)
+  def getBranches = branches
 
-  def getBranch(tag: String) = getBranches(tag).headOption
-
-  def hasBranch(tag: String) = branches.contains(tag)
+  def getValues = references.map {
+    case (tag, tokens) =>
+      tag -> constants
+        .get(tag).map(constant => List(constant))
+        .getOrElse(tokens.map(_.token.value))
+  }
 
   def getParent = parent
 
-  def getValues(tag: String) =
-    references.lift(tag).map(_.map(_.token.value)).getOrElse(Nil)
-
-  def getValue(tag: String) =
-    constants.get(tag).getOrElse(references.lift(tag)
-      .map(_.map(_.token.value).mkString).getOrElse(""))
-
-  def hasValue(tag: String) =
-    constants.contains(tag) || references.contains(tag)
+  def getBranchName(deep: Int = 0): Option[String] = parent.flatMap {
+    parent =>
+      if (deep > 0) parent.getBranchName(deep - 1)
+      else parent.branches.find(entry => entry._2.exists(_.id == id)).map(_._1)
+  }
 
   def range = Bounds(begin.index, end.index + 1)
 
@@ -209,7 +208,7 @@ final class Node(private[syntax] var kind: String,
         .filter(constant => !references.contains(constant))) {
 
         result ++= "\n" + prefix + "  " + reference + ": " +
-          getValue(reference)
+          getValues(reference).mkString("")
       }
 
       for ((name, subnodes) <- branches; branch <- subnodes) {
