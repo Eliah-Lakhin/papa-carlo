@@ -147,6 +147,12 @@ final class Node(private[syntax] var kind: String,
     reversedUnregistered
   }
 
+  def visit(enter: Node => Any, leave: Node => Any) {
+    enter(this)
+    for (branch <- branches.map(_._2).flatten) branch.visit(enter, leave)
+    leave(this)
+  }
+
   private def visitBranches(current: Node, enter: (Node, Node) => Any) {
     for (branch <- branches.map(_._2).flatten) {
       enter(current, branch)
