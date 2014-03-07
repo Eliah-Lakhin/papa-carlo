@@ -1,0 +1,48 @@
+ > create:
+entry:2
+{
+    <<<"hello": "world">>>, // comment 1
+    "second": "line"
+}
+
+
+ > create:
+string:3
+{
+    "hello": <<<"world">>>, // comment 1
+    "second": "line"
+}
+
+
+ > create:
+entry:4
+{
+    "hello": "world", // comment 1
+    <<<"second": "line">>>
+}
+
+
+ > create:
+string:5
+{
+    "hello": "world", // comment 1
+    "second": <<<"line">>>
+}
+
+
+ > merge:
+object 1 {
+  entry: entry 2 >> 1 {
+    key: "hello"
+    value: string 3 >> 2 {
+      value: "world"
+    }
+  }
+  entry: entry 4 >> 1 {
+    key: "second"
+    value: string 5 >> 4 {
+      value: "line"
+    }
+  }
+}
+

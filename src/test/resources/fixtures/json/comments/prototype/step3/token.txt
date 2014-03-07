@@ -1,0 +1,6 @@
+{~2:0~
+    string: string,    /*~4:2:0~
+    "second": "line",  */
+~2:0~    string: string
+}
+~0~

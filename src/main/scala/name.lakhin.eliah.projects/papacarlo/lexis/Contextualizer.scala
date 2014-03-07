@@ -85,8 +85,9 @@ final class Contextualizer {
         stateMachine ::= Tuple4(first.close, first.context, LeaveContext, -1)
 
         if (first.open != first.close) {
-          stateMachine ::= Tuple4(first.open, first.context, EnterContext,
-            first.context)
+          if (!first.top)
+            stateMachine ::= Tuple4(first.open, first.context, EnterContext,
+              first.context)
           if (first.close != Token.LineBreakKind)
             stateMachine ::= Tuple4(first.close, 0, UnexpectedSeam, -1)
         }

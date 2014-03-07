@@ -22,5 +22,8 @@
     "fragment-recovery-advanced": {
         "steps": 3,
         "monitors": ["token", "fragment"]
+    },
+    "comments": {
+        "independentSteps": true
     }
 }

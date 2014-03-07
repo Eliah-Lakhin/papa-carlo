@@ -1,0 +1,14 @@
+ > create:
+<<<{
+    "hello": "world", // comment 1 // subcomment
+    "second": "line"
+}>>>
+
+
+ > invalidate:
+<<<{
+    "hello": "world", // comment 1 // subcomment
+    "second": "line"
+}
+>>>
+

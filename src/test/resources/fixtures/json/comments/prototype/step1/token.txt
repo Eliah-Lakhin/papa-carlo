@@ -1,0 +1,5 @@
+{~2:0~
+    string: string, //~3:2:0~ comment 1 // subcomment
+    ~2:0~string: string
+}
+~0~
