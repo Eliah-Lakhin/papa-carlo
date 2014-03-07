@@ -1,0 +1,4 @@
+ScalaJS.modules.name_lakhin_eliah_projects_papacarlo_Syntax();
+ScalaJS.modules.name_lakhin_eliah_projects_papacarlo_Lexer();
+ScalaJS.modules.name_lakhin_eliah_projects_papacarlo_examples_Json();
+ScalaJS.modules.name_lakhin_eliah_projects_papacarlo_examples_Calculator();

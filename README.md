@@ -92,9 +92,9 @@ JAR artifacts
 ##### Build from sources
 
 1. Install [SBT](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html#installing-sbt). Version 0.13.0 is preferable.
-2. Run `sbt test` to compile and run tests.
-3. Run `sbt packageBin` to build JAR package. The JAR package can be found in
-   the `target/` directory.
+2. Run `sbt jvm/test` to compile and run tests.
+3. Run `sbt jvm/packageBin` to build JAR package. The JAR package can be found in the `./jvm/target/` directory.
+4. Run `sbt js/optimizeJS` to build the project using [Scala-JS](https://github.com/scala-js/scala-js) compiler. JavaScript files are placed into `./js/target/` directory. This is experimental feature.
 
 
 License
