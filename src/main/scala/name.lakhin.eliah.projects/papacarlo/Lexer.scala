@@ -82,10 +82,10 @@ final class Lexer(tokenizer: Tokenizer,
     var current = (0, 0)
 
     while (offset < code.length - 1 && (current._1 < cursor._1 ||
-      (cursor._1 == current._1 && cursor._2 < current._2))) {
+      (current._1 == cursor._1 && current._2 < cursor._2))) {
 
       if (code.charAt(offset) == '\n') current = (current._1 + 1, 0)
-      else current = (current._1, current._1 + 1)
+      else current = (current._1, current._2 + 1)
 
       offset += 1
     }
