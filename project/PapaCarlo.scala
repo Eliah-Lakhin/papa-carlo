@@ -44,6 +44,19 @@ object PapaCarlo extends Build {
     scalaVersion := "2.10.0"
   )
 
+  val jsSettings = Defaults.defaultSettings ++ baseSettings ++
+    scalaJSSettings ++ Seq(
+      libraryDependencies += "org.scala-lang.modules.scalajs" %%
+        "scalajs-jasmine-test-framework" % scalaJSVersion % "test",
+
+      sourceDirectory := (sourceDirectory in PapaCarlo).value,
+
+      unmanagedSources in (Compile, ScalaJSKeys.packageJS) +=
+        (baseDirectory in PapaCarlo).value / "js" / "entrypoints.js",
+
+      excludeFilter in unmanagedSources := "test"
+    )
+
   lazy val PapaCarlo: sbt.Project = Project(
     id = "root",
     base = file(".")
@@ -97,17 +110,15 @@ object PapaCarlo extends Build {
   lazy val JS = Project(
     id = "js",
     base = file("./js/"),
-    settings = Defaults.defaultSettings ++ baseSettings ++ scalaJSSettings ++
-      Seq(
-        libraryDependencies += "org.scala-lang.modules.scalajs" %%
-          "scalajs-jasmine-test-framework" % scalaJSVersion % "test",
+    settings = jsSettings
+  )
 
-        sourceDirectory := (sourceDirectory in PapaCarlo).value,
-
-        unmanagedSources in (Compile, ScalaJSKeys.packageJS) +=
-          baseDirectory.value / "startup.js",
-
-        excludeFilter in unmanagedSources := "test"
-      )
+  lazy val JSDemo = Project(
+    id = "js-demo",
+    base = file("./js/demo/"),
+    settings = jsSettings ++ Seq(
+      unmanagedSources in (Compile, ScalaJSKeys.packageJS) +=
+        (baseDirectory in PapaCarlo).value / "js" / "demo" / "Demo.js"
+    )
   )
 }
