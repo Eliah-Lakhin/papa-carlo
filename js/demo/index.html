@@ -17,15 +17,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>JSON incremental parser</title>
+    <title>Demo Incremental Parser</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap-theme.min.css"/>
 
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/codemirror.min.css"/>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/theme/mbo.min.css"/>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/codemirror.min.css"/>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/theme/mbo.min.css"/>
 
     <style type="text/css">
         .cm-s-mbo span.cm-error {
@@ -33,39 +37,169 @@
             color: inherit;
             border-bottom: 1px solid #ff7f7f;
         }
+
+        #errors tbody tr {
+            cursor: pointer;
+        }
     </style>
-
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" ></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/codemirror.min.js" ></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/mode/javascript/javascript.min.js" ></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js" ></script>
-
-    <script type="text/javascript" src="./target/scala-2.10/papa-carlo-extdeps.js"></script>
-    <script type="text/javascript" src="./target/scala-2.10/papa-carlo-intdeps.js"></script>
-    <script type="text/javascript" src="./target/scala-2.10/papa-carlo.js"></script>
-
-    <!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo-opt.js"></script>-->
 </head>
 <body>
+
+<a href="https://github.com/Eliah-Lakhin/papa-carlo" target="_blank"
+   title="Opens new tab"><img
+        style="position: absolute; top: 0; left: 0; border: 0;"
+        src="https://github-camo.global.ssl.fastly.net/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67"
+        alt="Fork me on GitHub"
+        data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
 
 <div class="container">
     <div class="row">
         <div class="col-md-12 page-header">
-            <h1>JSON incremental parser</h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <textarea id="editor">{
-    "hello": "world"
-}</textarea>
-        </div>
-        <div class="col-md-6">
-            <ul id="errors">
-            </ul>
+            <h1>
+                Demo Incremental Parser
+            </h1>
         </div>
     </div>
 </div>
+
+<div class="container hidden" id="main">
+    <div class="row">
+        <div class="col-md-6">
+            <textarea id="editor"></textarea>
+        </div>
+        <div class="col-md-6">
+        </div>
+    </div>
+    <br>
+
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs">
+                <li><a href="#about" data-toggle="tab"
+                       id="about-tab">About</a></li>
+                <li class="active"><a href="#logs" data-toggle="tab"
+                       id="logs-tab">Logs</a></li>
+                <li><a href="#errors" data-toggle="tab"
+                                      id="errors-tab">Errors <span class="text-danger hidden" id="errors-counter">(0)</span></a></li>
+            </ul>
+        </div>
+        <div class="col-md-12 tab-content">
+            <div class="tab-pane" id="about">
+
+            </div>
+            <div class="tab-pane active" id="logs">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <h4>Statistics:</h4>
+                        <ul>
+                            <li>
+                                <span class="text-muted">Initial parsing time:</span>
+                                <span class="text-info"
+                                      id="stats-init-time"></span>&#181;
+                            </li>
+                            <li>
+                                <span class="text-muted">Last modification parsing time:</span>
+                                <span class="text-info"
+                                      id="stats-last-time"></span>&#181;
+                            </li>
+                            <li>
+                                <span class="text-muted">Lines parsed:</span>
+                                <span class="text-info"
+                                      id="stats-lines"></span>
+                            </li>
+                            <li>
+                                <span class="text-muted">Characters parsed:</span>
+                                <span class="text-info"
+                                      id="stats-chars"></span>
+                            </li>
+                            <li>
+                                <span class="text-muted">AST nodes:</span>
+                                <span class="text-info"
+                                      id="stats-ast"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="errors">
+                <table class="table table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Position</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="loading">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="progress progress-striped active">
+                <div class="progress-bar" role="progressbar" aria-valuenow="60"
+                     aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+                     id="progress">
+                    Loading JavaScripts files...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-right">
+            <a class="navbar-brand"
+               title="Opens new tab"
+               href="http://lakhin.com/projects/papa-carlo/"
+               target="_blank">Based on Papa Carlo library</a>.
+        </div>
+    </div>
+</nav>
+
+<script type="text/javascript">
+    var progressBar = document.getElementById('progress');
+    progressBar.style.width = '10%';
+</script>
+<script type="text/javascript"
+        src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript">
+    progressBar.style.width = '20%';
+</script>
+<script type="text/javascript"
+        src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/codemirror.min.js"></script>
+<script type="text/javascript">
+    progressBar.style.width = '30%';
+</script>
+<script type="text/javascript"
+        src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/mode/javascript/javascript.min.js"></script>
+<script type="text/javascript">
+    progressBar.style.width = '40%';
+</script>
+<script type="text/javascript"
+        src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo-extdeps.js"></script>-->
+<!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo-intdeps.js"></script>-->
+<!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo.js"></script>-->
+
+<!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo-preopt.js"></script>-->
+
+<script type="text/javascript"
+        src="./target/scala-2.10/papa-carlo-opt.js"></script>
+<script type="text/javascript">
+    progressBar.style.width = '60%';
+    progressBar.innerHTML = 'Parser initialization...';
+</script>
+
+<script type="text/javascript" src="./index.js"></script>
 
 </body>
 </html>

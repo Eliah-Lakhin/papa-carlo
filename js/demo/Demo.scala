@@ -16,32 +16,33 @@
 
 package name.lakhin.eliah.projects.papacarlo.js.demo
 
-import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import scala.scalajs.js
+import js.annotation.{ JSName, JSExport }
 
-
+import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import name.lakhin.eliah.projects.papacarlo.examples.Json
 
+@JSExport
 object Demo {
   private val lexer = Json.lexer
   private val syntax = Json.syntax(lexer)
 
+  @JSExport
   def input(text: String) {
     lexer.input(text)
   }
 
+  @JSExport
   def input(text: String,
             fromLine: Int,
             fromChar: Int,
             toLine: Int,
             toChar: Int) {
     lexer.input(text, fromLine -> fromChar, toLine -> toChar)
-
   }
 
-  def hasErrors = syntax.getErrors.nonEmpty
-
-  def getErrors = {
+  @JSExport
+  def getErrors() = {
     val result = new js.Array[js.Dynamic]
 
     for (error <- syntax.getErrors) {
@@ -57,6 +58,12 @@ object Demo {
 
     result
   }
+
+  @JSExport
+  def getNodeCount() = syntax.nodes.size
+
+  @JSExport
+  def getRootNode() = syntax.getRootNode
 
   private def tokenCursor(token: TokenReference, after: Boolean = false) = {
     val pair = token.collection.cursor(token.index + (if (after) 1 else 0))

@@ -51,16 +51,13 @@ object PapaCarlo extends Build {
 
       sourceDirectory := (sourceDirectory in PapaCarlo).value,
 
-      unmanagedSources in (Compile, ScalaJSKeys.packageJS) +=
-        (baseDirectory in PapaCarlo).value / "js" / "entrypoints.js",
-
       excludeFilter in unmanagedSources := "test"
     )
 
   lazy val PapaCarlo: sbt.Project = Project(
     id = "root",
     base = file(".")
-  ).aggregate(JVM, JS)
+  ).aggregate(JVM, JSDemo)
 
   lazy val JVM = Project(
     id = "jvm",
@@ -107,18 +104,12 @@ object PapaCarlo extends Build {
       )
   )
 
-  lazy val JS = Project(
-    id = "js",
-    base = file("./js/"),
-    settings = jsSettings
-  )
-
   lazy val JSDemo = Project(
     id = "js-demo",
     base = file("./js/demo/"),
-    settings = jsSettings ++ Seq(
+    settings = jsSettings/* ++ Seq(
       unmanagedSources in (Compile, ScalaJSKeys.packageJS) +=
         (baseDirectory in PapaCarlo).value / "js" / "demo" / "Demo.js"
-    )
+    )                      */
   )
 }
