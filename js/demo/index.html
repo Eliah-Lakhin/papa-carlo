@@ -78,9 +78,11 @@
                 <li><a href="#about" data-toggle="tab"
                        id="about-tab">About</a></li>
                 <li class="active"><a href="#logs" data-toggle="tab"
-                       id="logs-tab">Logs</a></li>
+                                      id="logs-tab">Logs</a></li>
                 <li><a href="#errors" data-toggle="tab"
-                                      id="errors-tab">Errors <span class="text-danger hidden" id="errors-counter">(0)</span></a></li>
+                       id="errors-tab">Errors <span class="text-danger hidden"
+                                                    id="errors-counter">(0)</span></a>
+                </li>
             </ul>
         </div>
         <div class="col-md-12 tab-content">
@@ -95,12 +97,14 @@
                             <li>
                                 <span class="text-muted">Initial parsing time:</span>
                                 <span class="text-info"
-                                      id="stats-init-time"></span>&#181;
+                                      id="stats-init-time"></span><span
+                                    class="text-muted">&#181;</span>
                             </li>
                             <li>
                                 <span class="text-muted">Last modification parsing time:</span>
                                 <span class="text-info"
-                                      id="stats-last-time"></span>&#181;
+                                      id="stats-last-time"></span><span
+                                    class="text-muted">&#181;</span>
                             </li>
                             <li>
                                 <span class="text-muted">Lines parsed:</span>
@@ -166,10 +170,15 @@
 
 <script type="text/javascript">
     var progressBar = document.getElementById('progress');
+    progressBar.style.width = '5%';
+</script>
+<script type="text/javascript"
+        src="//cdnjs.cloudflare.com/ajax/libs/sizzle/1.10.18/sizzle.min.js"></script>
+<script type="text/javascript">
     progressBar.style.width = '10%';
 </script>
 <script type="text/javascript"
-        src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+        src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.2/d3.min.js"></script>
 <script type="text/javascript">
     progressBar.style.width = '20%';
 </script>
