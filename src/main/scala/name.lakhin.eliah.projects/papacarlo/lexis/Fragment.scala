@@ -58,7 +58,7 @@ final case class Fragment(id: Int,
   begin.onRemove.bind(tokenRemoveReaction)
   end.onRemove.bind(tokenRemoveReaction)
 
-  private[papacarlo] def getTokens =
+  def getTokens =
     Bounds(begin.index, end.index + 1).slice(begin.collection.descriptions)
 
   def highlight(limit: Option[Int] = None): String =
