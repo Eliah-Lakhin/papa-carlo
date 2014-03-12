@@ -14,113 +14,114 @@
  limitations under the License.
  */
 
-$(function() {
-  var $progressBar = $('#progress');
-  var $editor = $('#editor');
-  var $errors = $('#errors').find('tbody');
-  var $errorsCounter = $('#errors-counter');
-  var $stats = {
-    initTime: $('#stats-init-time'),
-    lastTime: $('#stats-last-time'),
-    lines: $('#stats-lines'),
-    chars: $('#stats-chars'),
-    ast: $('#stats-ast')
-  };
+var $progressBar = d3.select('#progress');
+var $editor = d3.select('#editor');
+var $errors = d3.select('#errors').select('tbody');
+var $errorsCounter = d3.select('#errors-counter');
+var $stats = {
+  initTime: d3.select('#stats-init-time'),
+  lastTime: d3.select('#stats-last-time'),
+  lines: d3.select('#stats-lines'),
+  chars: d3.select('#stats-chars'),
+  ast: d3.select('#stats-ast')
+};
 
-  var lastTime = -1;
+var lastTime = -1;
 
-  var parser = Demo();
+var parser = Demo();
 
-  $progressBar.css('width', '70%');
-  $progressBar.text('User interface initialization...');
+$progressBar.style('width', '70%');
+$progressBar.text('User interface initialization...');
 
-  $('#main').removeClass('hidden');
+d3.select('#main').classed('hidden', false);
 
-  var editor = CodeMirror.fromTextArea($editor[0], {
-    mode: 'javascript',
-    lineNumbers: true,
-    styleActiveLine: true,
-    matchBrackets: true,
-    theme: 'mbo'
-  });
-
-  editor.on('change', function(self, changes) {
-    var start = new Date().getTime();
-    parser.input(
-      changes.text.join("\n"),
-      changes.from.line, changes.from.ch,
-      changes.to.line, changes.to.ch
-    );
-    var end = new Date().getTime();
-
-    if (lastTime < 0) {
-      lastTime = end - start;
-      $stats.initTime.text(lastTime);
-    } else {
-      lastTime = end - start;
-    }
-
-    updateStats();
-    markErrors();
-  });
-
-  $progressBar.css('width', '85%');
-  $progressBar.text('Parsing bootstrap input code...');
-
-  $.get('./input.json', function(code) {
-    $progressBar.css('width', '90%');
-    setTimeout(function() {
-      editor.setValue(code);
-
-      $progressBar.css('width', '100%');
-      $('#loading').hide();
-    }, 500);
-  }, 'text');
-
-  var updateStats = function() {
-    $stats.lastTime.text(lastTime);
-    $stats.lines.text(editor.lineCount());
-    $stats.chars.text(editor.getValue().length);
-    $stats.ast.text(parser.getNodeCount());
-  };
-
-  var markErrors = (function() {
-    var errorMarkers = [];
-
-    return function() {
-      var errors = parser.getErrors();
-
-      for (var marker; marker = errorMarkers.pop();) marker.clear();
-      $errors.empty();
-
-      if (errors.length > 0) {
-        $errorsCounter
-          .text('(' + errors.length + ')')
-          .removeClass('hidden');
-
-        errors.forEach(function(error, index) {
-          errorMarkers.push(editor.markText(error.from, error.to, {
-            className: 'cm-error',
-            title: error.description
-          }));
-
-          var errorRow = $('<tr>');
-
-          errorRow
-            .append($('<td>').text(index + 1))
-            .append($('<td>').text((error.from.line + 1) + ':' +
-              (error.from.ch + 1)))
-            .append($('<td>').text(error.description))
-            .bind('click', function() {
-              editor.setCursor(error.from);
-              editor.focus();
-            });
-
-          $errors.append(errorRow);
-        });
-      } else {
-        $errorsCounter.addClass('hidden');
-      }
-    }
-  })();
+var editor = CodeMirror.fromTextArea($editor.node(), {
+  mode: 'javascript',
+  lineNumbers: true,
+  styleActiveLine: true,
+  matchBrackets: true,
+  theme: 'mbo'
 });
+
+editor.on('change', function(self, changes) {
+  var start = new Date().getTime();
+  parser.input(
+    changes.text.join("\n"),
+    changes.from.line, changes.from.ch,
+    changes.to.line, changes.to.ch
+  );
+  var end = new Date().getTime();
+
+  if (lastTime < 0) {
+    lastTime = end - start;
+    $stats.initTime.text(lastTime);
+  } else {
+    lastTime = end - start;
+  }
+
+  updateStats();
+  markErrors();
+});
+
+$progressBar.style('width', '85%');
+$progressBar.text('Parsing bootstrap input code...');
+
+d3.text('./input.json', function(error, code) {
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  $progressBar.style('width', '90%');
+  setTimeout(function() {
+    editor.setValue(code);
+
+    $progressBar.style('width', '100%');
+    d3.select('#loading').classed('hidden', true);
+  }, 500);
+});
+
+var updateStats = function() {
+  $stats.lastTime.text(lastTime);
+  $stats.lines.text(editor.lineCount());
+  $stats.chars.text(editor.getValue().length);
+  $stats.ast.text(parser.getNodeCount());
+};
+
+var markErrors = (function() {
+  var errorMarkers = [];
+
+  return function() {
+    var errors = parser.getErrors();
+
+    for (var marker; marker = errorMarkers.pop();) marker.clear();
+    $errors.selectAll('*').remove();
+
+    if (errors.length > 0) {
+      $errorsCounter
+        .text('(' + errors.length + ')')
+        .classed('hidden', false);
+
+      errors.forEach(function(error, index) {
+        errorMarkers.push(editor.markText(error.from, error.to, {
+          className: 'cm-error',
+          title: error.description
+        }));
+
+        var errorRow = $errors.append('tr');
+
+        errorRow.append('td').text(index + 1);
+        errorRow.append('td').text((error.from.line + 1) + ':' +
+          (error.from.ch + 1));
+        errorRow.append('td').text(error.description);
+
+        errorRow.on('click', function() {
+            editor.setCursor(error.from);
+            editor.focus();
+          });
+      });
+    } else {
+      $errorsCounter.classed('hidden', true);
+    }
+  }
+})();
