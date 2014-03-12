@@ -14,114 +14,130 @@
  limitations under the License.
  */
 
-var $progressBar = d3.select('#progress');
-var $editor = d3.select('#editor');
-var $errors = d3.select('#errors').select('tbody');
-var $errorsCounter = d3.select('#errors-counter');
-var $stats = {
-  initTime: d3.select('#stats-init-time'),
-  lastTime: d3.select('#stats-last-time'),
-  lines: d3.select('#stats-lines'),
-  chars: d3.select('#stats-chars'),
-  ast: d3.select('#stats-ast')
-};
+initParser(function(parser) {
+  var lastTime = -1,
+    retain = 0;
 
-var lastTime = -1;
+  parser.response = function(delta, data) {
+    if (lastTime < 0) {
+      lastTime = delta;
+      $stats.initTime.text(lastTime);
+      $progressBar.style('width', '100%');
+      d3.select('#loading')
+        .transition().delay(1000).style('opacity', 0)
+        .transition().style('display', 'none');
+    } else {
+      lastTime = delta;
+    }
 
-var parser = Demo();
+    retain--;
 
-$progressBar.style('width', '70%');
-$progressBar.text('User interface initialization...');
+    updateStats(data);
+    markErrors(data);
+  };
 
-d3.select('#main').classed('hidden', false);
+  var $progressBar = d3.select('#progress');
+  var $editor = d3.select('#editor');
+  var $errors = d3.select('#errors').select('tbody');
+  var $errorsCounter = d3.select('#errors-counter');
+  var $stats = {
+    ready: d3.select('#stats-ready'),
+    mode: d3.select('#stats-mode'),
+    initTime: d3.select('#stats-init-time'),
+    lastTime: d3.select('#stats-last-time'),
+    lines: d3.select('#stats-lines'),
+    chars: d3.select('#stats-chars'),
+    ast: d3.select('#stats-ast'),
+    performance: d3.select('#performance')
+  };
 
-var editor = CodeMirror.fromTextArea($editor.node(), {
-  mode: 'javascript',
-  lineNumbers: true,
-  styleActiveLine: true,
-  matchBrackets: true,
-  theme: 'mbo'
-});
+  $progressBar.style('width', '70%');
+  $progressBar.text('User interface initialization...');
 
-editor.on('change', function(self, changes) {
-  var start = new Date().getTime();
-  parser.input(
-    changes.text.join("\n"),
-    changes.from.line, changes.from.ch,
-    changes.to.line, changes.to.ch
-  );
-  var end = new Date().getTime();
+  d3.select('#main').classed('hidden', false);
 
-  if (lastTime < 0) {
-    lastTime = end - start;
-    $stats.initTime.text(lastTime);
+  if (parser.async) {
+      $stats.mode.text('Asynchronous. Parser works in WebWorker');
   } else {
-    lastTime = end - start;
+      $stats.mode.text('Synchronous. WebWorkers unavailable');
   }
 
-  updateStats();
-  markErrors();
-});
+  var editor = CodeMirror.fromTextArea($editor.node(), {
+    mode: 'javascript',
+    lineNumbers: true,
+    styleActiveLine: true,
+    matchBrackets: true,
+    theme: 'mbo'
+  });
 
-$progressBar.style('width', '85%');
-$progressBar.text('Parsing bootstrap input code...');
+  editor.on('change', function(self, changes) {
+    $stats.ready.text('busy');
+    retain++;
+    parser([
+      changes.text.join("\n"),
+      changes.from.line, changes.from.ch,
+      changes.to.line, changes.to.ch
+    ]);
+  });
 
-d3.text('./input.json', function(error, code) {
-  if (error) {
-    console.error(error);
-    return;
-  }
+  $progressBar.style('width', '85%');
+  $progressBar.text('Parsing bootstrap input code...');
 
-  $progressBar.style('width', '90%');
-  setTimeout(function() {
+  d3.text('./input.json', function(error, code) {
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    $progressBar.style('width', '90%');
     editor.setValue(code);
+  });
 
-    $progressBar.style('width', '100%');
-    d3.select('#loading').classed('hidden', true);
-  }, 500);
-});
+  var updateStats = function(data) {
+    if (retain <= 0) {
+      $stats.ready.text('ready');
+    }
+    $stats.lastTime.text(lastTime);
+    $stats.lines.text(editor.lineCount());
+    $stats.chars.text(editor.getValue().length);
+    $stats.ast.text(data.nodeCount);
+  };
 
-var updateStats = function() {
-  $stats.lastTime.text(lastTime);
-  $stats.lines.text(editor.lineCount());
-  $stats.chars.text(editor.getValue().length);
-  $stats.ast.text(parser.getNodeCount());
-};
+  var markErrors = (function() {
+    var errorMarkers = [];
 
-var markErrors = (function() {
-  var errorMarkers = [];
+    return function(data) {
+      var errors = data.errors;
 
-  return function() {
-    var errors = parser.getErrors();
+      for (var marker; marker = errorMarkers.pop();) marker.clear();
+      $errors.selectAll('*').remove();
 
-    for (var marker; marker = errorMarkers.pop();) marker.clear();
-    $errors.selectAll('*').remove();
+      if (errors.length > 0) {
+        $errorsCounter
+          .text('(' + errors.length + ')')
+          .classed('hidden', false);
 
-    if (errors.length > 0) {
-      $errorsCounter
-        .text('(' + errors.length + ')')
-        .classed('hidden', false);
+        errors.forEach(function(error, index) {
+          errorMarkers.push(editor.markText(error.from, error.to, {
+            className: 'cm-error',
+            title: error.description
+          }));
 
-      errors.forEach(function(error, index) {
-        errorMarkers.push(editor.markText(error.from, error.to, {
-          className: 'cm-error',
-          title: error.description
-        }));
+          var errorRow = $errors.append('tr');
 
-        var errorRow = $errors.append('tr');
+          errorRow.append('td').text(index + 1);
+          errorRow.append('td').text((error.from.line + 1) + ':' +
+            (error.from.ch + 1));
+          errorRow.append('td').text(error.description);
 
-        errorRow.append('td').text(index + 1);
-        errorRow.append('td').text((error.from.line + 1) + ':' +
-          (error.from.ch + 1));
-        errorRow.append('td').text(error.description);
-
-        errorRow.on('click', function() {
+          errorRow.on('click', function() {
             editor.setCursor(error.from);
             editor.focus();
           });
-      });
-    } else {
-      $errorsCounter.classed('hidden', true);
+        });
+      } else {
+        $errorsCounter.classed('hidden', true);
+      }
     }
-  }
-})();
+  })();
+});

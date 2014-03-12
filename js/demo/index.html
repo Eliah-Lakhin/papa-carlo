@@ -41,6 +41,22 @@
         #errors tbody tr {
             cursor: pointer;
         }
+
+        #performance {
+            height: 150px;
+        }
+
+        #loading {
+            z-index: 1000;
+            position: absolute;
+            overflow: hidden;
+            padding-top: 150px;
+            top: 130px;
+            left: 10%;
+            width: 80%;
+            height: 600px;
+            background: white;
+        }
     </style>
 </head>
 <body>
@@ -52,12 +68,26 @@
         alt="Fork me on GitHub"
         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
 
-<div class="container">
+<div class="container top-element">
     <div class="row">
         <div class="col-md-12 page-header">
             <h1>
                 Demo Incremental Parser
             </h1>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="loading">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="progress progress-striped active">
+                <div class="progress-bar" role="progressbar" aria-valuenow="60"
+                     aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+                     id="progress">
+                    Loading JavaScripts files...
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -78,7 +108,7 @@
                 <li><a href="#about" data-toggle="tab"
                        id="about-tab">About</a></li>
                 <li class="active"><a href="#logs" data-toggle="tab"
-                                      id="logs-tab">Logs</a></li>
+                                      id="logs-tab">Status</a></li>
                 <li><a href="#errors" data-toggle="tab"
                        id="errors-tab">Errors <span class="text-danger hidden"
                                                     id="errors-counter">(0)</span></a>
@@ -92,8 +122,18 @@
             <div class="tab-pane active" id="logs">
                 <div class="row">
                     <div class="col-xs-4">
-                        <h4>Statistics:</h4>
+                        <h4>Status:</h4>
                         <ul>
+                            <li>
+                                <span class="text-muted">Parser is</span>
+                                <span class="text-info"
+                                      id="stats-ready">busy</span>
+                            </li>
+                            <li>
+                                <span class="text-muted">Mode:</span>
+                                <span class="text-info"
+                                      id="stats-mode"></span>
+                            </li>
                             <li>
                                 <span class="text-muted">Initial parsing time:</span>
                                 <span class="text-info"
@@ -123,6 +163,9 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="col-xs-8">
+                        <svg id="performance"></svg>
+                    </div>
                 </div>
             </div>
             <div class="tab-pane" id="errors">
@@ -134,24 +177,8 @@
                         <th>Description</th>
                     </tr>
                     </thead>
-                    <tbody>
-
-                    </tbody>
+                    <tbody></tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container" id="loading">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="progress progress-striped active">
-                <div class="progress-bar" role="progressbar" aria-valuenow="60"
-                     aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
-                     id="progress">
-                    Loading JavaScripts files...
-                </div>
             </div>
         </div>
     </div>
@@ -205,14 +232,7 @@
     progressBar.style.width = '50%';
 </script>
 
-<!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo-extdeps.js"></script>-->
-<!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo-intdeps.js"></script>-->
-<!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo.js"></script>-->
-
-<!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo-preopt.js"></script>-->
-
-<script type="text/javascript"
-        src="./target/scala-2.10/papa-carlo-opt.js"></script>
+<script type="text/javascript" src="./client.js"></script>
 <script type="text/javascript">
     progressBar.style.width = '60%';
     progressBar.innerHTML = 'Parser initialization...';
