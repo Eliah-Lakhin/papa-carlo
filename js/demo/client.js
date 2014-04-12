@@ -45,7 +45,7 @@ var initParser = function(main) {
             var end = new Date().getTime();
             if (!!api.response) {
               api.response(end - start, {
-                nodeCount: parser.getNodeCount(),
+                nodes: parser.getNodeStats(),
                 errors: parser.getErrors()
               });
             }
@@ -58,3 +58,4 @@ var initParser = function(main) {
     );
   }
 };
+

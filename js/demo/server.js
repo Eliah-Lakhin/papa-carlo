@@ -4,7 +4,7 @@ var parser = Demo();
 
 function getStats() {
   return {
-    nodeCount: parser.getNodeCount(),
+    nodes: parser.getNodeStats(),
     errors: parser.getErrors()
   }
 }
@@ -21,3 +21,4 @@ onmessage = function(event) {
 };
 
 postMessage({kind: 'ready'});
+

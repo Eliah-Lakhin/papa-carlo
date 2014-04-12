@@ -34,6 +34,7 @@ initParser(function(parser) {
 
     updateStats(data);
     markErrors(data);
+    logPerformance(delta, data);
   };
 
   var $progressBar = d3.select('#progress');
@@ -100,7 +101,7 @@ initParser(function(parser) {
     $stats.lastTime.text(lastTime);
     $stats.lines.text(editor.lineCount());
     $stats.chars.text(editor.getValue().length);
-    $stats.ast.text(data.nodeCount);
+    $stats.ast.text(data.nodes.total);
   };
 
   var markErrors = (function() {
@@ -140,4 +141,22 @@ initParser(function(parser) {
       }
     }
   })();
+
+  var logPerformance = (function() {
+    var logs = [];
+
+    return function(delta, data) {
+      console.log(data);
+      $stats.performance
+        .selectAll('.bar')
+        .data(data)
+        .enter()
+        .append('rect')
+        .attr('class', '.bar')
+        .attr('x', function(d) { return d * 100; })
+        .attr('width', 75)
+        .attr('height', 50);
+    };
+  })();
 });
+
