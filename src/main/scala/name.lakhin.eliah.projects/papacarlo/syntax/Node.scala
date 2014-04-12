@@ -55,7 +55,7 @@ final class Node(private[syntax] var kind: String,
     case (tag, tokens) =>
       tag -> constants
         .get(tag).map(constant => List(constant))
-        .getOrElse(tokens.map(_.token.value))
+        .getOrElse(tokens.filter(_.exists).map(_.token.value))
   }
 
   def getParent = parent
