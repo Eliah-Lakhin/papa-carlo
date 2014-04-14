@@ -143,19 +143,82 @@ initParser(function(parser) {
   })();
 
   var logPerformance = (function() {
-    var logs = [];
+    var
+      nodes = 0,
+      logs = [],
+      density = 3,
+      container = $stats.performance.node(),
+      mainGroup = $stats.performance.append('g'),
+      graphGroup = mainGroup.append('g'),
+      graph = graphGroup.append('path').attr('class', 'graph'),
+      nodeAxis = d3.svg.axis()
+        .tickFormat(function(d) { return d + 'n'; }),
+      nodeGroup = graphGroup.append('g').attr('class', 'axis'),
+      timeAxis = d3.svg.axis()
+        .ticks(3)
+        .tickFormat(function(d) { return d + 'µ'; }),
+      timeGroup = mainGroup.append('g').attr('class', 'axis'),
+      marginV = 20,
+      marginH = 40,
+      width,
+      height;
+
+    nodeAxis.orient('bottom');
+    timeAxis.orient('left');
+
+    var
+      byX = function(d) { return d.x; },
+      byY = function(d) { return d.y; };
+
+    mainGroup.attr('transform', 'translate(' + marginH + ',' + marginV + ')');
+
+    logs.push({x: 0, y: 0});
+
+    graphGroup.append('defs').append('clippath')
+      .attr('id', 'performanceGraphClip')
+      .append('rect')
+      .attr('width', '1200')
+      .attr('height', '300');
+
+    graphGroup.attr('clip-path', 'url(#performanceGraphClip)');
 
     return function(delta, data) {
-      console.log(data);
-      $stats.performance
-        .selectAll('.bar')
-        .data(data)
-        .enter()
-        .append('rect')
-        .attr('class', '.bar')
-        .attr('x', function(d) { return d * 100; })
-        .attr('width', 75)
-        .attr('height', 50);
+      width = container.clientWidth - marginH * 2;
+      height = container.clientHeight - marginV * 2;
+
+      nodes += data.nodes.removed.length + data.nodes.added.length + 1;
+
+      logs.push({
+        x: nodes,
+        y: delta
+      });
+
+      var
+        x = d3.scale.linear()
+          .domain([d3.min(logs, byX), d3.max(logs, byX)])
+          .range([0, nodes * density]);
+        y = d3.scale.linear()
+          .domain([d3.min(logs, byY), d3.max(logs, byY)])
+          .range([height, 0]),
+        xOffset = Math.min(0, width - nodes * density);
+
+      timeAxis.scale(y);
+      timeGroup.call(timeAxis);
+
+      nodeAxis.scale(x);
+      nodeGroup.call(nodeAxis);
+      nodeGroup
+        .attr('transform', 'translate(' + xOffset+ ',' + y(0) + ')');
+
+      var line = d3.svg.line()
+        .x(function(d) { return x(d.x); })
+        .y(function(d) { return y(d.y); })
+        .interpolate('linear');
+
+      graph
+        .attr('d', line(logs))
+        .transition()
+        .attr('transform', 'translate(' + xOffset+ ',0)');
     };
   })();
 });
