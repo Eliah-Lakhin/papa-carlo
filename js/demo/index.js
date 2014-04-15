@@ -144,81 +144,139 @@ initParser(function(parser) {
 
   var logPerformance = (function() {
     var
-      nodes = 0,
       logs = [],
-      density = 3,
+      barWidth = 20,
       container = $stats.performance.node(),
       mainGroup = $stats.performance.append('g'),
-      graphGroup = mainGroup.append('g'),
-      graph = graphGroup.append('path').attr('class', 'graph'),
-      nodeAxis = d3.svg.axis()
-        .tickFormat(function(d) { return d + 'n'; }),
-      nodeGroup = graphGroup.append('g').attr('class', 'axis'),
+      barGroup = mainGroup.append('g'),
       timeAxis = d3.svg.axis()
         .ticks(3)
         .tickFormat(function(d) { return d + 'µ'; }),
       timeGroup = mainGroup.append('g').attr('class', 'axis'),
       marginV = 20,
-      marginH = 40,
-      width,
-      height;
+      marginH = 40;
 
-    nodeAxis.orient('bottom');
     timeAxis.orient('left');
-
-    var
-      byX = function(d) { return d.x; },
-      byY = function(d) { return d.y; };
 
     mainGroup.attr('transform', 'translate(' + marginH + ',' + marginV + ')');
 
-    logs.push({x: 0, y: 0});
+    var
+      index = 0,
+      skipped = 0;
+    logs.push({index: 0, time: 0, nodes: {total: 0, added: 0, removed: 0}});
 
-    graphGroup.append('defs').append('clippath')
-      .attr('id', 'performanceGraphClip')
+    var clip = barGroup
+      .append('defs').append('clipPath')
+      .attr('id', 'perf-clip')
       .append('rect')
-      .attr('width', '1200')
-      .attr('height', '300');
+      .attr('width', 2000)
+      .attr('height', 500);
 
-    graphGroup.attr('clip-path', 'url(#performanceGraphClip)');
+    barGroup.attr('clip-path', 'url("#perf-clip")');
 
     return function(delta, data) {
-      width = container.clientWidth - marginH * 2;
-      height = container.clientHeight - marginV * 2;
-
-      nodes += data.nodes.removed.length + data.nodes.added.length + 1;
-
       logs.push({
-        x: nodes,
-        y: delta
+        index: ++index,
+        time: delta,
+        nodes: {
+          total: data.nodes.total,
+          added: data.nodes.added.length,
+          removed: data.nodes.removed.length
+        }
       });
 
       var
-        x = d3.scale.linear()
-          .domain([d3.min(logs, byX), d3.max(logs, byX)])
-          .range([0, nodes * density]);
-        y = d3.scale.linear()
-          .domain([d3.min(logs, byY), d3.max(logs, byY)])
-          .range([height, 0]),
-        xOffset = Math.min(0, width - nodes * density);
+        width = container.clientWidth - marginH * 2,
+        height = container.clientHeight - marginV * 2,
+        nodes = data.nodes.removed.length + data.nodes.added.length + 1;
+
+      clip.attr('width', width);
+
+      while (logs.length > width / barWidth * 1.5) {
+        logs.shift();
+        skipped++;
+      }
+
+      var y = d3.scale.linear()
+        .domain([0, d3.max(logs, function(d) { return d.time; })])
+        .range([height, 0]);
 
       timeAxis.scale(y);
       timeGroup.call(timeAxis);
 
-      nodeAxis.scale(x);
-      nodeGroup.call(nodeAxis);
-      nodeGroup
-        .attr('transform', 'translate(' + xOffset+ ',' + y(0) + ')');
+      function translateGroups(addition) {
+        var
+          localClip = clip,
+          localBars = barGroup,
+          offset = width - (index - skipped) * barWidth;
 
-      var line = d3.svg.line()
-        .x(function(d) { return x(d.x); })
-        .y(function(d) { return y(d.y); })
-        .interpolate('linear');
+        if (!addition) {
+          localClip = localClip.transition();
+          localBars = localBars.transition();
+        } else {
+          offset += barWidth * addition
+        }
 
-      graph
-        .attr('d', line(logs))
-        .transition()
-        .attr('transform', 'translate(' + xOffset+ ',0)');
+        offset = Math.min(0, offset);
+
+        localClip.attr('transform', 'translate(' + (-offset) + ',0)');
+        localBars.attr('transform', 'translate(' + offset + ',0)');
+      }
+
+      if (skipped > 0) {
+        translateGroups(1);
+      }
+
+      translateGroups();
+
+      var bars = barGroup
+        .selectAll('.bar')
+        .data(logs, function(d) { return d.index; });
+
+      function updateHeight(bar) {
+        bar
+          .transition()
+          .attr('y', function(d) { return y(d.time); })
+          .attr('height', function(d) { return height - y(d.time); });
+      }
+
+      function updateOffset(barGroup) {
+        barGroup = barGroup.attr('transform', function(d) {
+          return 'translate(' + ((d.index - skipped) * barWidth) + ',0)';
+        });
+      }
+
+      updateOffset(bars);
+      updateHeight(bars.select('rect'));
+
+      var newBar = bars
+        .enter()
+        .append('g')
+        .attr('class', 'bar')
+        .call(updateOffset, true);
+
+      newBar
+        .append('title')
+        .text(function(d) {
+          return 'AST total node count: ' + d.nodes.total +
+            '; new nodes: ' + d.nodes.added +
+            '; removed nodes: ' + d.nodes.removed +
+            '; affected: ' + (d.nodes.added + d.nodes.removed + 1);
+        });
+
+      newBar
+        .append('rect')
+        .attr('x', 1)
+        .attr('width', barWidth - 1)
+        .call(updateHeight);
+
+      newBar
+        .append('text')
+        .text(function(d) { return d.nodes.added + d.nodes.removed + 1; })
+        .attr('x', barWidth / 2)
+        .attr('y', function() { return y(0) + 20; });
+
+      bars.exit().remove();
     };
   })();
 });
