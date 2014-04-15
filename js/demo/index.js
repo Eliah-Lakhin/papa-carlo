@@ -15,8 +15,10 @@
  */
 
 initParser(function(parser) {
-  var lastTime = -1,
-    retain = 0;
+  var
+    lastTime = -1,
+    retain = 0,
+    selectedNode = -1;
 
   parser.response = function(delta, data) {
     if (lastTime < 0) {
@@ -98,7 +100,7 @@ initParser(function(parser) {
     }
 
     $progressBar.style('width', '90%');
-    editor.setValue('{}');//code);
+    editor.setValue(code);
   });
 
   var updateStats = function(data) {
@@ -297,8 +299,8 @@ initParser(function(parser) {
       $svg = d3.select('#ast'),
       force = d3.layout.force()
         .linkDistance(20)
-        .charge(-60)
-        .gravity(0)
+        .charge(-90)
+        .gravity(0.1)
         .size([$svg.node().clientWidth, $svg.node().clientHeight]),
       nodes = force.nodes(),
       links = force.links(),
@@ -331,14 +333,38 @@ initParser(function(parser) {
       link.enter().insert('line', '.node').attr('class', 'link');
 
       node = node.data(nodes);
+
+      setColor(node.selectAll('circle'));
+
       var newNode = node
         .enter()
         .append('g').attr('class', 'node')
         .call(force.drag)
 
+      newNode.on('click', function(d) {
+        selectedNode = d.orig.id;
+        restart();
+      });
+
+      function setColor(node, transition) {
+        if (transition) {
+          node = node.transition().duration(3000);
+        }
+
+        node.attr('fill', function(d) {
+          if (d.orig.id == selectedNode) {
+            return '#3c763d';
+          }
+
+          return d.fixed ? '#ffcf6c' : '#ffffff';
+        });
+      }
+
       newNode
         .append('circle')
-        .attr('r', 10);
+        .attr('r', 10)
+        .attr('fill', '#31708f')
+        .call(setColor, true);
 
       newNode
         .append('text')
@@ -400,7 +426,8 @@ initParser(function(parser) {
       for (var index = links.length - 1; index >=0; index--) {
         var
           link = links[index],
-          exists = !!ids[link.source.orig.id] && !!ids[link.target.orig.id];
+          exists = ids.hasOwnProperty(link.source.orig.id)
+            && ids.hasOwnProperty(link.target.orig.id);
 
         if (!exists) links.splice(index, 1);
       }
