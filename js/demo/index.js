@@ -35,6 +35,8 @@ initParser(function(parser) {
     updateStats(data);
     markErrors(data);
     logPerformance(delta, data);
+    ast.remove(data.nodes.removed);
+    ast.add(data.nodes.added);
   };
 
   var $progressBar = d3.select('#progress');
@@ -96,7 +98,7 @@ initParser(function(parser) {
     }
 
     $progressBar.style('width', '90%');
-    editor.setValue(code);
+    editor.setValue('{}');//code);
   });
 
   var updateStats = function(data) {
@@ -287,6 +289,128 @@ initParser(function(parser) {
         .attr('y', function() { return y(0) + 20; });
 
       bars.exit().remove();
+    };
+  })();
+
+  var ast = (function() {
+    var
+      $svg = d3.select('#ast'),
+      force = d3.layout.force()
+        .linkDistance(20)
+        .charge(-60)
+        .gravity(0)
+        .size([$svg.node().clientWidth, $svg.node().clientHeight]),
+      nodes = force.nodes(),
+      links = force.links(),
+      node = $svg.selectAll('.node'),
+      link = $svg.selectAll('.link'),
+      ids = {1: 0};
+
+    nodes.push({
+      index: 0,
+      x: force.size()[0] / 2,
+      y: force.size()[1] / 2,
+      fixed: true,
+      orig: {id: 1}
+    });
+
+    force.on('tick', function() {
+      link
+        .attr('x1', function(d) { return d.source.x; })
+        .attr('y1', function(d) { return d.source.y; })
+        .attr('x2', function(d) { return d.target.x; })
+        .attr('y2', function(d) { return d.target.y; });
+
+      node.attr('transform', function(d) {
+        return 'translate(' + d.x + ',' + d.y + ')';
+      });
+    });
+
+    function restart() {
+      link = link.data(links);
+      link.enter().insert('line', '.node').attr('class', 'link');
+
+      node = node.data(nodes);
+      var newNode = node
+        .enter()
+        .append('g').attr('class', 'node')
+        .call(force.drag)
+
+      newNode
+        .append('circle')
+        .attr('r', 10);
+
+      newNode
+        .append('text')
+        .attr('y', 3)
+        .text(function(d) { return d.orig.id; });
+
+      link.exit().remove();
+      node.exit().remove();
+
+      force.start();
+    }
+
+    restart();
+
+    function add(added) {
+      added.forEach(function(node) {
+        ids[node.id] = nodes.push({orig: node}) - 1;
+      });
+
+      added.forEach(function(node) {
+        var parent = nodes[ids[node.parent]];
+
+        node = nodes[ids[node.id]];
+        node.x = parent.x + Math.random() * 20 - 10;
+        node.y = parent.y + Math.random() * 20 - 10;
+      });
+
+      force.start();
+
+      added.forEach(function(node) {
+        links.push({
+          source: ids[node.id],
+          target: ids[node.parent]
+        });
+      });
+
+      restart();
+    }
+
+    function remove(removed) {
+      removed.forEach(function(id) {
+        var index = ids[id];
+
+        nodes.splice(index, 1);
+        delete ids[id];
+
+        for (var id in ids)
+          if (ids.hasOwnProperty(id)) {
+            var candidate = ids[id];
+
+            if (candidate >= index) {
+              ids[id]--;
+            }
+          }
+
+        return index;
+      });
+
+      for (var index = links.length - 1; index >=0; index--) {
+        var
+          link = links[index],
+          exists = !!ids[link.source.orig.id] && !!ids[link.target.orig.id];
+
+        if (!exists) links.splice(index, 1);
+      }
+
+      restart();
+    }
+
+    return {
+      add: add,
+      remove: remove
     };
   })();
 });

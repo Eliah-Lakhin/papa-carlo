@@ -28,10 +28,10 @@ object Demo {
   private val lexer = Json.lexer
   private val syntax = Json.syntax(lexer)
   private var addedNodes = List.empty[Node]
-  private var removedNodes = List.empty[Node]
+  private var removedNodes = List.empty[Int]
   
   syntax.onNodeCreate.bind { node => addedNodes ::= node }
-  syntax.onNodeRemove.bind { node => removedNodes ::= node }
+  syntax.onNodeRemove.bind { node => removedNodes ::= node.getId }
 
   @JSExport
   def input(text: String) {
@@ -66,8 +66,8 @@ object Demo {
   def getNodeStats() = {
     val result = js.Dynamic.literal(
       "total" -> syntax.nodes.size,
-      "added" -> listToArray(addedNodes.map(exportNode)),
-      "removed" -> listToArray(removedNodes.map(exportNode))
+      "added" -> listToArray(addedNodes.reverse.map(exportNode)),
+      "removed" -> listToArray(removedNodes.map(x => x: js.Any))
     )
 
     addedNodes = Nil

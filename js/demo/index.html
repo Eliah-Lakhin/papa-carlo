@@ -32,6 +32,14 @@
           href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/theme/mbo.min.css"/>
 
     <style type="text/css">
+        .page-header {
+            margin-top: 5px;
+        }
+
+        .CodeMirror, #ast {
+          height: 400px;
+        }
+
         .cm-s-mbo span.cm-error {
             background: transparent;
             color: inherit;
@@ -58,8 +66,8 @@
         }
 
         #performance .bar text {
-          font-size: 9px;
-          text-anchor: middle;
+            font-size: 9px;
+            text-anchor: middle;
         }
 
         #performance .bar rect {
@@ -76,6 +84,27 @@
             width: 80%;
             height: 600px;
             background: white;
+        }
+
+        .page-break {
+            min-height: 100px;
+        }
+
+        #ast .link {
+            stroke: #000;
+        }
+
+        #ast .node circle {
+            fill: #fff;
+            stroke: #31708f;
+            cursor: pointer;
+        }
+
+        #ast .node text {
+            fill: #000;
+            text-anchor: middle;
+            font-size: 9px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -115,9 +144,18 @@
 <div class="container hidden" id="main">
     <div class="row">
         <div class="col-md-6">
+            <h4>Source code:</h4>
             <textarea id="editor"></textarea>
         </div>
         <div class="col-md-6">
+            <h4>Abstract Syntax Tree:</h4>
+
+            <p class="text-muted" style="position: absolute;">
+                Incrementally updating while you edit the source code.
+                <br/>
+                Even if the code contains syntax errors.
+            </p>
+            <svg id="ast"></svg>
         </div>
     </div>
     <br>
@@ -204,6 +242,8 @@
         </div>
     </div>
 </div>
+
+<div class="page-break"></div>
 
 <nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse">
     <div class="container-fluid">
