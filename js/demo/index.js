@@ -49,8 +49,13 @@ initParser(function(parser) {
     lines: d3.select('#stats-lines'),
     chars: d3.select('#stats-chars'),
     ast: d3.select('#stats-ast'),
+    statsPane: d3.select('#logs'),
     performance: d3.select('#performance')
   };
+
+  $('a[href="#logs"]').bind('shown.bs.tab', function() {
+    logPerformance();
+  });
 
   $progressBar.style('width', '70%');
   $progressBar.text('User interface initialization...');
@@ -150,7 +155,7 @@ initParser(function(parser) {
       mainGroup = $stats.performance.append('g'),
       barGroup = mainGroup.append('g'),
       timeAxis = d3.svg.axis()
-        .ticks(3)
+        .ticks(4)
         .tickFormat(function(d) { return d + 'µ'; }),
       timeGroup = mainGroup.append('g').attr('class', 'axis'),
       marginV = 20,
@@ -175,20 +180,25 @@ initParser(function(parser) {
     barGroup.attr('clip-path', 'url("#perf-clip")');
 
     return function(delta, data) {
-      logs.push({
-        index: ++index,
-        time: delta,
-        nodes: {
-          total: data.nodes.total,
-          added: data.nodes.added.length,
-          removed: data.nodes.removed.length
-        }
-      });
+      if (delta > 0) {
+        logs.push({
+          index: ++index,
+          time: delta,
+          nodes: {
+            total: data.nodes.total,
+            added: data.nodes.added.length,
+            removed: data.nodes.removed.length
+          }
+        });
+      }
+
+      if (!$stats.statsPane.node().classList.contains('active')) {
+        return;
+      }
 
       var
         width = container.clientWidth - marginH * 2,
-        height = container.clientHeight - marginV * 2,
-        nodes = data.nodes.removed.length + data.nodes.added.length + 1;
+        height = container.clientHeight - marginV * 2;
 
       clip.attr('width', width);
 
