@@ -51,6 +51,8 @@ final class Node(private[syntax] var kind: String,
 
   def getBranches = branches
 
+  def getChildren = branches.map(_._2).flatten
+
   def getValues = references.map {
     case (tag, tokens) =>
       tag -> constants
@@ -156,14 +158,14 @@ final class Node(private[syntax] var kind: String,
   }
 
   private def visitBranches(current: Node, enter: (Node, Node) => Any) {
-    for (branch <- branches.map(_._2).flatten) {
+    for (branch <- getChildren) {
       enter(current, branch)
       branch.visitBranches(branch, enter)
     }
   }
 
   private def reverseVisitBranches(leave: Node => Any) {
-    for (branch <- branches.map(_._2).flatten) {
+    for (branch <- getChildren) {
       branch.reverseVisitBranches(leave)
       leave(branch)
     }
