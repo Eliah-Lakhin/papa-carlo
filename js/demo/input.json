@@ -1,82 +1,40 @@
 {
-    "records": [
-        {
-            "id": 0,
-            "guid": "0034679b-896c-4876-b87a-fd324b916b8d",
-            "isActive": true,
-            "balance": "$2,260.00",
-            "picture": "http://placehold.it/32x32",
-            "age": 22,
-            "name": "Miller Frank",
-            "gender": "male",
-            "company": "Elita",
-            "email": "millerfrank@elita.com",
-            "phone": "+1 (808) 455-3811",
-            "registered": "2013-07-14T12:27:52 -07:00",
-            "latitude": -22.423631,
-            "longitude": -116.959943,
-            "tags": [
-                "sunt",
-                "veniam",
-                "nisi",
-                "ea",
-                "dolor",
-                "pariatur",
-                "eu"
-            ],
-            "friends": [
-                {
-                    "id": 0,
-                    "name": "Sharp Newman"
-                },
-                {
-                    "id": 1,
-                    "name": "Corrine Odom"
-                },
-                {
-                    "id": 2,
-                    "name": "Vicky Conner"
-                }
-            ]
-        },
-        {
-            "id": 1,
-            "guid": "866b81f6-dda1-4c47-945a-005ae6f55996",
-            "isActive": true,
-            "balance": "$1,832.00",
-            "picture": "http://placehold.it/32x32",
-            "age": 34,
-            "name": "Joyce Sargent",
-            "gender": "female",
-            "company": "Hometown",
-            "email": "joycesargent@hometown.com",
-            "phone": "+1 (937) 515-2457",
-            "registered": "2005-11-02T22:22:53 -07:00",
-            "latitude": 67.658935,
-            "longitude": 164.839993,
-            "tags": [
-                "nisi",
-                "est",
-                "eu",
-                "amet",
-                "aute",
-                "enim",
-                "ipsum"
-            ],
-            "friends": [
-                {
-                    "id": 0,
-                    "name": "Minerva Hahn"
-                },
-                {
-                    "id": 1,
-                    "name": "Brandy Jacobson"
-                },
-                {
-                    "id": 2,
-                    "name": "Lillie Kent"
-                }
-            ]
-        }
-    ]
+  "id": 1,
+  "guid": "866b81f6-dda1-4c47-945a-005ae6f55996",
+  "isActive": true,
+  "balance": "$1,832.00",
+  "picture": "http://placehold.it/32x32",
+  "age": 34,
+  "name": "Joyce Sargent",
+  "gender": "female",
+  "company": "Hometown",
+  "email": "joycesargent@hometown.com",
+  "phone": "+1 (937) 515-2457",
+  "registered": "2005-11-02T22:22:53 -07:00",
+  "latitude": 67.658935,
+  "longitude": 164.839993,
+  "tags": [
+    "nisi",
+    "est",
+    "eu",
+    "amet",
+    "aute",
+    "enim",
+    "ipsum"
+  ],
+  "friends": [
+    {
+      "id": 0,
+      "name": "Minerva Hahn"
+    },
+    {
+      "id": 1,
+      "name": "Brandy Jacobson"
+    },
+    {
+      "id": 2,
+      "name": "Lillie Kent"
+    }
+  ]
 }
+

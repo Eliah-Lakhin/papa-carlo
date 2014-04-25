@@ -17,7 +17,6 @@
 initParser(function(parser) {
   var
     lastTime = -1,
-    retain = 0,
     selectedNode = -1;
 
   parser.response = function(delta, data) {
@@ -32,13 +31,12 @@ initParser(function(parser) {
       lastTime = delta;
     }
 
-    retain--;
-
     updateStats(data);
     markErrors(data);
     logPerformance(delta, data);
-    ast.remove(data.nodes.removed);
-    ast.add(data.nodes.added);
+    if (data.nodes.all) {
+      ast(data.nodes.all, data.nodes.added, data.nodes.removed);
+    }
   };
 
   var $progressBar = d3.select('#progress');
@@ -82,12 +80,7 @@ initParser(function(parser) {
 
   editor.on('change', function(self, changes) {
     $stats.ready.text('busy');
-    retain++;
-    parser([
-      changes.text.join("\n"),
-      changes.from.line, changes.from.ch,
-      changes.to.line, changes.to.ch
-    ]);
+    parser(self.getValue('\n'));
   });
 
   $progressBar.style('width', '85%');
@@ -104,9 +97,10 @@ initParser(function(parser) {
   });
 
   var updateStats = function(data) {
-    if (retain <= 0) {
+    if (!parser.busy) {
       $stats.ready.text('ready');
     }
+
     $stats.lastTime.text(lastTime);
     $stats.lines.text(editor.lineCount());
     $stats.chars.text(editor.getValue().length);
@@ -297,16 +291,16 @@ initParser(function(parser) {
   var ast = (function() {
     var
       $svg = d3.select('#ast'),
+      distance = 20
       force = d3.layout.force()
-        .linkDistance(20)
+        .linkDistance(distance)
         .charge(-90)
         .gravity(0.1)
         .size([$svg.node().clientWidth, $svg.node().clientHeight]),
       nodes = force.nodes(),
       links = force.links(),
       node = $svg.selectAll('.node'),
-      link = $svg.selectAll('.link'),
-      ids = {1: 0};
+      link = $svg.selectAll('.link');
 
     nodes.push({
       index: 0,
@@ -332,7 +326,7 @@ initParser(function(parser) {
       link = link.data(links);
       link.enter().insert('line', '.node').attr('class', 'link');
 
-      node = node.data(nodes);
+      node = node.data(nodes, function(d) { return d.orig.id; });
 
       setColor(node.selectAll('circle'));
 
@@ -379,65 +373,50 @@ initParser(function(parser) {
 
     restart();
 
-    function add(added) {
-      added.forEach(function(node) {
-        ids[node.id] = nodes.push({orig: node}) - 1;
-      });
-
-      added.forEach(function(node) {
-        var parent = nodes[ids[node.parent]];
-
-        node = nodes[ids[node.id]];
-        node.x = parent.x + Math.random() * 20 - 10;
-        node.y = parent.y + Math.random() * 20 - 10;
-      });
-
-      force.start();
-
-      added.forEach(function(node) {
-        links.push({
-          source: ids[node.id],
-          target: ids[node.parent]
-        });
-      });
-
-      restart();
-    }
-
-    function remove(removed) {
-      removed.forEach(function(id) {
-        var index = ids[id];
-
-        nodes.splice(index, 1);
-        delete ids[id];
-
-        for (var id in ids)
-          if (ids.hasOwnProperty(id)) {
-            var candidate = ids[id];
-
-            if (candidate >= index) {
-              ids[id]--;
-            }
-          }
-
-        return index;
-      });
-
-      for (var index = links.length - 1; index >=0; index--) {
-        var
-          link = links[index],
-          exists = ids.hasOwnProperty(link.source.orig.id)
-            && ids.hasOwnProperty(link.target.orig.id);
-
-        if (!exists) links.splice(index, 1);
+    function nodeIndex(id) {
+      for (var index = 0, length = nodes.length; index < length; index++) {
+        if (nodes[index].orig.id === id) {
+          return index;
+        }
       }
 
-      restart();
+      return -1;
     }
 
-    return {
-      add: add,
-      remove: remove
+    function removeNode(idToRemove) {
+      nodes.splice(nodeIndex(idToRemove), 1);
+    }
+
+    function addNode(node) {
+      var
+        index = nodes.length,
+        parent = nodes[nodeIndex(node.parent)];
+
+      nodes.push({
+        index: index,
+        x: parent.x + (Math.random() - 0.5) * distance,
+        y: parent.y + (Math.random() - 0.5) * distance,
+        orig: node
+      });
+    }
+
+    return function(tree, added, removed) {
+      removed.forEach(removeNode);
+      added.map(function(id) {return tree[id]; }).forEach(addNode);
+      
+      links.splice(0, links.length);
+
+      nodes.forEach(function(node, index) {
+        node.orig = tree[node.orig.id];
+
+        var parentIndex = nodeIndex(node.orig.parent);
+
+        if (parentIndex >= 0) {
+          links.push({source: index, target: parentIndex});
+        }
+      });
+
+      restart();
     };
   })();
 });

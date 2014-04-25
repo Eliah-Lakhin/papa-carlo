@@ -1,14 +1,26 @@
 var initParser = function(main) {
   if (!!window.Worker) {
-    var worker = new Worker('./server.js'),
-      api = function(params) {
+    var
+      worker = new Worker('./server.js'),
+      buffer = null,
+      api = function(code) {
+        if (api.busy) {
+          buffer = code;
+          return;
+        }
+
+        api.busy = true;
+
         worker.postMessage({
           kind: 'input',
-          params: params
+          code: code,
+          ast: api.ast
         });
       };
 
+    api.ast = true;
     api.async = true;
+    api.busy = false;
 
     worker.onerror = function(error) {
       console.error(error);
@@ -22,6 +34,14 @@ var initParser = function(main) {
           break;
 
         case 'response':
+          api.busy = false;
+
+          if (buffer !== null) {
+            var code = buffer;
+            buffer = null;
+            api(code);
+          }
+
           if (!!api.response) {
             api.response(event.data.delta, event.data.stats);
           }
@@ -38,20 +58,38 @@ var initParser = function(main) {
 
         eval(parserCode);
 
-        var parser = Demo(),
-          api = function(params) {
+        var
+          parser = Demo(),
+          buffer = null,
+          api = function(code) {
+            if (api.busy) {
+              buffer = true;
+              return;
+            }
+
+            api.busy = true;
             var start = new Date().getTime();
-            parser.input.apply(parser, params);
+            parser.inputAll(code);
             var end = new Date().getTime();
+            api.busy = false;
+
             if (!!api.response) {
               api.response(end - start, {
-                nodes: parser.getNodeStats(),
+                nodes: parser.getNodeStats(true),
                 errors: parser.getErrors()
               });
             }
+
+            if (buffer !== null) {
+              code = buffer;
+              buffer = null;
+              api(code);
+            }
           };
 
+        api.ast = true;
         api.async = false;
+        api.busy = false;
 
         main(api);
       }

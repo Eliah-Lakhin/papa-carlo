@@ -51,8 +51,6 @@ final class Node(private[syntax] var kind: String,
 
   def getBranches = branches
 
-  def getChildren = branches.map(_._2).flatten
-
   def getValues = references.map {
     case (tag, tokens) =>
       tag -> constants
@@ -78,6 +76,8 @@ final class Node(private[syntax] var kind: String,
     if (onChange.nonEmpty && !ancestor) onChange.trigger(this)
     else for (parent <- parent) parent.update(ancestor)
   }
+
+  private def getChildren = branches.map(_._2).flatten
 
   private[syntax] def remove(registry: Registry[Node]) {
     if (bound) {

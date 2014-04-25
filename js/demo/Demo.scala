@@ -27,14 +27,14 @@ import name.lakhin.eliah.projects.papacarlo.examples.Json
 object Demo {
   private val lexer = Json.lexer
   private val syntax = Json.syntax(lexer)
-  private var addedNodes = List.empty[Node]
+  private var addedNodes = List.empty[Int]
   private var removedNodes = List.empty[Int]
   
-  syntax.onNodeCreate.bind { node => addedNodes ::= node }
+  syntax.onNodeCreate.bind { node => addedNodes ::= node.getId }
   syntax.onNodeRemove.bind { node => removedNodes ::= node.getId }
 
   @JSExport
-  def input(text: String) {
+  def inputAll(text: String) {
     lexer.input(text)
   }
 
@@ -49,7 +49,7 @@ object Demo {
 
   @JSExport
   def getErrors() = {
-    listToArray(syntax.getErrors.map {
+    toJsArray(syntax.getErrors.map {
       error =>
         val from = tokenCursor(error.from)
         val to = tokenCursor(error.to, after = true)
@@ -63,12 +63,22 @@ object Demo {
   }
 
   @JSExport
-  def getNodeStats() = {
-    val result = js.Dynamic.literal(
-      "total" -> syntax.nodes.size,
-      "added" -> listToArray(addedNodes.reverse.map(exportNode)),
-      "removed" -> listToArray(removedNodes.map(x => x: js.Any))
-    )
+  def getNodeStats(ast: Boolean = false) = {
+    val result = js.Dictionary.empty[js.Any]
+
+    result("total") = syntax.nodes.size
+    result("added") = toJsArray(addedNodes.reverse.map(x => x: js.Any))
+    result("removed") = toJsArray(removedNodes.reverse.map(x => x: js.Any))
+
+    if (ast) {
+      var ast = js.Dictionary.empty[js.Any]
+
+      for (node <- syntax.nodes.elements) {
+        ast(node.getId.toString) = exportNode(node)
+      }
+
+      result("all") = ast
+    }
 
     addedNodes = Nil
     removedNodes = Nil
@@ -76,10 +86,10 @@ object Demo {
     result
   }
 
-  private def listToArray(list: List[js.Any]) = {
+  private def toJsArray(iterable: Iterable[js.Any]) = {
     val result = new js.Array[js.Any]
 
-    for (element <- list) result.push(element)
+    for (element <- iterable) result.push(element)
 
     result
   }
@@ -98,11 +108,13 @@ object Demo {
     js.Dynamic.literal(
       "id" -> node.getId,
       "parent" -> parentId,
+      "children" ->
+        toJsArray(node.getBranches.map(_._2).flatten.map(_.getId: js.Any)),
       "kind" -> node.getKind,
       "values" -> mapToObject(node.getValues
         .map {
           case (key, values) =>
-            key -> listToArray(values.map(s => s.asInstanceOf[js.String]))
+            key -> toJsArray(values.map(s => s: js.String))
         }
       )
     )
