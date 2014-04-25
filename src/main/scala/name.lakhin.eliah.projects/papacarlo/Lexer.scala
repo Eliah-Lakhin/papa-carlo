@@ -35,9 +35,9 @@ final class Lexer(tokenizer: Tokenizer,
     else {
       val actualCode = code.substring(0, code.length - 1)
       if (newCode != actualCode) {
-        val difference = computeDifference(actualCode, newCode)
+        val difference = computeDifference(actualCode, prepared)
         inputPrepared(
-          newCode.substring(difference._1, newCode.length - difference._2),
+          newCode.substring(difference._1, prepared.length - difference._2),
           Bounds(difference._1, actualCode.length - difference._2)
         )
       }
@@ -75,7 +75,10 @@ final class Lexer(tokenizer: Tokenizer,
   }
 
   private def prepareCode(source: String) =
-    source.replace("\r\n", "\n").replace("\r", "\n")
+    source
+      .replace("\r\n", "\n")
+      .replace("\r", "\n")
+      .replaceAll("\n+$", "")
 
   private def cursorToOffset(cursor: (Int, Int)) = {
     var offset = 0
