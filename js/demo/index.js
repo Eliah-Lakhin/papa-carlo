@@ -39,6 +39,31 @@ initParser(function(parser) {
     }
   };
 
+  parser.receiveFragment = (function() {
+    var
+      fragment = null,
+      marker = null;
+
+    return function(data) {
+      fragment = data;
+
+      if (marker) {
+        marker.clear();
+        marker = null;
+      }
+
+      if (fragment && fragment.exists && fragment.id === selectedNode) {
+        marker = editor.markText(fragment.from, fragment.to, {
+          className: 'cm-node',
+          title: 'Node: ' + fragment.id
+        });
+
+        editor.setCursor(fragment.from);
+        editor.focus();
+      }
+    };
+  })();
+
   var $progressBar = d3.select('#progress');
   var $editor = d3.select('#editor');
   var $errors = d3.select('#errors').select('tbody');
@@ -322,13 +347,18 @@ initParser(function(parser) {
       });
     });
 
+    function getNodeId(node) {
+      return node.orig.id;
+    }
+
     function restart() {
       link = link.data(links);
       link.enter().insert('line', '.node').attr('class', 'link');
+      link.exit().remove();
 
-      node = node.data(nodes, function(d) { return d.orig.id; });
+      node = node.data(nodes, getNodeId);
 
-      setColor(node.selectAll('circle'));
+      setColor(node);
 
       var newNode = node
         .enter()
@@ -337,35 +367,42 @@ initParser(function(parser) {
 
       newNode.on('click', function(d) {
         selectedNode = d.orig.id;
-        restart();
+        setColor(node, 250);
+        parser.getFragment(selectedNode);
       });
 
       function setColor(node, transition) {
-        if (transition) {
-          node = node.transition().duration(3000);
-        }
+        node = node.transition().duration(transition || 3000);
 
-        node.attr('fill', function(d) {
-          if (d.orig.id == selectedNode) {
-            return '#3c763d';
-          }
+        node
+          .selectAll('circle')
+          .attr('fill', function(d) {
+            if (d.orig.id === selectedNode) {
+              return '#3c763d';
+            }
 
-          return d.fixed ? '#ffcf6c' : '#ffffff';
-        });
+            return d.fixed ? '#ffcf6c' : '#ffffff';
+          });
+
+        node
+          .selectAll('text')
+          .attr('fill', function(d) {
+            return d.orig.id === selectedNode ? '#fff' : '#000';
+          });
       }
 
       newNode
         .append('circle')
         .attr('r', 10)
-        .attr('fill', '#31708f')
-        .call(setColor, true);
+        .attr('fill', '#31708f');
 
       newNode
         .append('text')
         .attr('y', 3)
         .text(function(d) { return d.orig.id; });
 
-      link.exit().remove();
+      setColor(newNode);
+
       node.exit().remove();
 
       force.start();
@@ -415,6 +452,11 @@ initParser(function(parser) {
           links.push({source: index, target: parentIndex});
         }
       });
+
+      if (selectedNode && !tree[selectedNode]) {
+        selectedNode = false;
+        parser.receiveFragment();
+      }
 
       restart();
     };

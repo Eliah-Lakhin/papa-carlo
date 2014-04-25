@@ -36,14 +36,23 @@
             margin-top: 5px;
         }
 
+        .CodeMirror {
+            line-height: 1.25;
+        }
+
         .CodeMirror, #ast {
-          height: 400px;
+            height: 450px;
+        }
+
+        .cm-s-mbo span.cm-node {
+            background: #3c763d;
+            color: inherit;
         }
 
         .cm-s-mbo span.cm-error {
             background: transparent;
             color: inherit;
-            border-bottom: 1px solid #ff7f7f;
+            border-bottom: 1px solid #ff4f4f;
         }
 
         #errors tbody tr {
@@ -100,7 +109,6 @@
         }
 
         #ast .node text {
-            fill: #000;
             text-anchor: middle;
             font-size: 9px;
             cursor: pointer;
@@ -148,12 +156,6 @@
         </div>
         <div class="col-md-6">
             <h4>Abstract Syntax Tree:</h4>
-
-            <p class="text-muted" style="position: absolute;">
-                Incrementally updating while you edit the source code.
-                <br/>
-                Even if the code contains syntax errors.
-            </p>
             <svg id="ast"></svg>
         </div>
     </div>

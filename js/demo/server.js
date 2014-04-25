@@ -4,13 +4,21 @@ var parser = Demo();
 
 function getStats(data) {
   return {
-    nodes: parser.getNodeStats(data.ast),
+    nodes: parser.getAST(data.ast),
     errors: parser.getErrors()
   }
 }
 
 onmessage = function(event) {
   switch (event.data.kind) {
+    case 'fragment':
+      postMessage({
+        kind: 'fragment',
+        response: parser.getNodeFragment(event.data.id)
+      });
+
+      break;
+
     case 'input':
       var start = new Date().getTime();
       parser.inputAll(event.data.code);

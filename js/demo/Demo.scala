@@ -63,15 +63,33 @@ object Demo {
   }
 
   @JSExport
-  def getNodeStats(ast: Boolean = false) = {
+  def getNodeFragment(id: Int) = {
+    syntax.nodes.get(id) match {
+      case Some(node) =>
+        js.Dynamic.literal(
+          "exists" -> true,
+          "id" -> id,
+          "from" -> tokenCursor(node.getBegin),
+          "to" -> tokenCursor(node.getEnd, after = true)
+        )
+
+      case None => js.Dynamic.literal(
+        "exists" -> false,
+        "id" -> id
+      )
+    }
+  }
+
+  @JSExport
+  def getAST(graph: Boolean = false) = {
     val result = js.Dictionary.empty[js.Any]
 
     result("total") = syntax.nodes.size
     result("added") = toJsArray(addedNodes.reverse.map(x => x: js.Any))
     result("removed") = toJsArray(removedNodes.reverse.map(x => x: js.Any))
 
-    if (ast) {
-      var ast = js.Dictionary.empty[js.Any]
+    if (graph) {
+      val ast = js.Dictionary.empty[js.Any]
 
       for (node <- syntax.nodes.elements) {
         ast(node.getId.toString) = exportNode(node)

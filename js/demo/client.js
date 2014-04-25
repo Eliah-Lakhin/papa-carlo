@@ -22,6 +22,13 @@ var initParser = function(main) {
     api.async = true;
     api.busy = false;
 
+    api.getFragment = function(id) {
+      worker.postMessage({
+        kind: 'fragment',
+        id: id
+      });
+    }
+
     worker.onerror = function(error) {
       console.error(error);
     };
@@ -30,6 +37,13 @@ var initParser = function(main) {
       switch (event.data.kind) {
         case 'ready':
           main(api);
+
+          break;
+
+        case 'fragment':
+          if (!!api.receiveFragment) {
+            api.receiveFragment(event.data.response);
+          }
 
           break;
 
@@ -75,7 +89,7 @@ var initParser = function(main) {
 
             if (!!api.response) {
               api.response(end - start, {
-                nodes: parser.getNodeStats(true),
+                nodes: parser.getAST(true),
                 errors: parser.getErrors()
               });
             }
@@ -90,6 +104,12 @@ var initParser = function(main) {
         api.ast = true;
         api.async = false;
         api.busy = false;
+
+        api.getFragment = function(id) {
+          if (!!api.receiveFragment) {
+            api.receiveFragment(parser.getNodeFragment(id));
+          }
+        }
 
         main(api);
       }
