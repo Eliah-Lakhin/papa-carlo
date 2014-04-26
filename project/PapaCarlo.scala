@@ -20,7 +20,7 @@ import scala.scalajs.sbtplugin.ScalaJSPlugin._
 import ScalaJSKeys._
 
 object PapaCarlo extends Build {
-  val papaCarloVersion = "0.7.0-SNAPSHOT"
+  val papaCarloVersion = "0.7.0"
   
   val baseSettings = Seq(
     name := "Papa Carlo",
