@@ -24,9 +24,18 @@ initParser(function(parser) {
       lastTime = delta;
       $stats.initTime.text(lastTime);
       $progressBar.style('width', '100%');
-      d3.select('#loading')
+      var $progress = d3.select('.progress');
+      $progress
         .transition().delay(1000).style('opacity', 0)
-        .transition().style('display', 'none');
+        .transition().each('end', function() {
+          $progress.classed('hidden', true);
+          d3.select('#start')
+            .classed('hidden', false)
+            .on('click', function() {
+              d3.select('#loading').classed('hidden', true);
+            });
+        });
+        
     } else {
       lastTime = delta;
     }

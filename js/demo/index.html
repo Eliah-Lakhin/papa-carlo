@@ -88,8 +88,9 @@
       position: absolute;
       overflow: hidden;
       top: 200px;
-      left: 20%;
-      width: 60%;
+      left: 30%;
+      width: 40%;
+      min-height: 303px;
     }
 
     .page-break {
@@ -184,9 +185,21 @@
 </div>
 
 <div class="panel panel-success" id="loading">
-  <div class="panel-heading">Loading status</div>
+  <div class="panel-heading">Loading</div>
   <div class="row panel-body">
     <div class="col-md-10 col-md-offset-1">
+      <br>
+      <p>
+        This is an example of my awesome JSON parser.
+      </p>
+      <p>
+        You can see it in action: when you edit the file on the left side the
+        parser processes it in real time, and modifies the graph on the right
+        side. But the parser does it incrementally.
+      </p>
+      <p>
+        Edit the file and see what happens.
+      </p>
       <br>
       <div class="progress progress-striped active">
         <div class="progress-bar" role="progressbar" aria-valuenow="60"
@@ -195,6 +208,10 @@
           Loading JavaScripts files...
         </div>
       </div>
+      <button id="start" type="button" class="btn btn-primary btn-lg hidden">
+        Let's play!
+      </button>
+      <br>
     </div>
   </div>
 </div>
@@ -207,204 +224,208 @@
     <div class="col-md-6">
       <svg id="ast"></svg>
     </div>
-</div>
-<br>
-
-<div class="row">
-  <div class="col-md-12">
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="#about" data-toggle="tab"
-          id="about-tab">About</a></li>
-      <li><a href="#logs" data-toggle="tab" id="logs-tab">Status</a></li>
-      <li><a href="#errors" data-toggle="tab"
-             id="errors-tab">Errors <span class="text-danger hidden"
-                                          id="errors-counter">(0)</span></a>
-      </li>
-    </ul>
   </div>
-  <div class="col-md-12 tab-content">
-    <div class="tab-pane active" id="about">
-      <br/>
-      <div class="row">
-        <div class="col-xs-9 col-xs-offset-1">
-          <div class="panel panel-default">
-            <div class="panel-body">
+
+  <br>
+
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#about" data-toggle="tab"
+            id="about-tab">About</a></li>
+        <li><a href="#logs" data-toggle="tab" id="logs-tab">Status</a></li>
+        <li><a href="#errors" data-toggle="tab"
+               id="errors-tab">Errors <span class="text-danger hidden"
+                                            id="errors-counter">(0)</span></a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-12 tab-content">
+      <div class="tab-pane active" id="about">
+        <br/>
+        <div class="row">
+          <div class="col-xs-9 col-xs-offset-1">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <p>
+                  This little demo application illustrates the idea of
+                  <a href="http://en.wikipedia.org/wiki/Incremental_compiler#Definition"
+                     target="_blank">incremental compilation</a>
+                  in action.
+                </p>
+                <p>
+                  The compiler of JSON language is written using
+                  <a href="https://github.com/Eliah-Lakhin/papa-carlo"
+                     target="_blank">Papa Carlo</a>
+                  parser framework in Scala, and compiled to JavaScript using
+                  ScalaJS. So the demo works completely in the web browser.
+                  There is no server-side processing at all.
+                </p>
+                <p>
+                  You can type something to the source code pane on the left side.
+                  And the changes will be applied immediately to the Abstract
+                  Syntax Tree visual represenation on the right side.
+                </p>
+                <p>
+                  Also if you click on any AST node, the application highlights
+                  fragment of the source code corresponding to that Node.
+                </p>
+              </div>
+            </div>
+
+            <div class="callout callout-info">
+              <h4>What's so special about "incremental"?</h4>
               <p>
-                This little demo application illustrates the idea of
-                <a href="http://en.wikipedia.org/wiki/Incremental_compiler#Definition"
-                   target="_blank">incremental compilation</a>
-                in action.
+                An incremental compiler is one that can recompile only those
+                portions of a program that have been modified. Ordinary compilers
+                must process entire source code file.
               </p>
               <p>
-                The compiler of JSON language is written using
-                <a href="https://github.com/Eliah-Lakhin/papa-carlo"
-                   target="_blank">Papa Carlo</a>
-                parser framework in Scala, and compiled to JavaScript using
-                ScalaJS. So the demo works completely in the web browser.
-                There is no server-side processing at all.
+                Therefore, when the end user makes small and frequent changes to
+                the source code, the incremental compiler usually indexes them
+                immediately, without any significant time delays. Even if the
+                program consists of thousands lines of source code.
               </p>
               <p>
-                You can type something to the source code pane on the left side.
-                And the changes will be applied immediately to the Abstract
-                Syntax Tree visual represenation on the right side.
+                More interesting is that the compiler updates resulting
+                Abstract Syntax Tree in incremental fashion too by invalidating
+                only affected parts of the Tree. An incremental compiler should be
+                able to perform these updates even if the source code contains
+                syntax errors.
               </p>
               <p>
-                Also if you click on any AST node, the application highlights
-                fragment of the source code corresponding to that Node.
+                These properties are very important in development
+                of source code analysis tools.
+              </p>
+            </div>
+
+            <div class="callout callout-info">
+              <h4>What are use cases?</h4>
+              <p>
+                Of course, JSON parser is just a conceptual example. However,
+                Papa Carlo framework can be used to build incremental compilers 
+                of major programming language such as Java, C#, Objective-C,
+                etc.
+              </p>
+              <p>
+                For example, these compilers can serve as core components in
+                development of full featured in-browser Web IDE with code
+                analysis and refactoring tools comparable to the class of modern
+                desktop IDEs like Eclipse, Visual Studio or IntelliJ Idea.
+              </p>
+            </div>
+
+            <div class="callout callout-info">
+              <h4>Is it hard to implement incremental compiler?</h4>
+              <p>
+                This JSON compiler consists of just a few lines of
+                <a href="https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Json.scala"
+                   target="_blank">source code</a>
+                written in Scala. The structure of the compiler code should
+                be familiar to developers who have ever worked with ordinary
+                PEG/CFG parser combinator libraries.
+              </p>
+              <p>
+                Fortunately, all of the incremental "magic" is hidden inside the
+                Papa Carlo internals. So the developer may leverage these
+                features out of the box.
+              </p>
+            </div>
+
+            <div class="callout callout-warning">
+              <h4>Further reading</h4>
+              <p>
+                <ul>
+                  <li>
+                    An article about client-server incremental compilation
+                    architecture:
+                    <a href="http://lakhin.com/blog/15.11.2013-handy-incremental-parser/"
+                       target="_blank">Handy incremental parser</a>.
+                  </li>
+                  <li>
+                    Papa Carlo on Github:
+                    <a href="https://github.com/Eliah-Lakhin/papa-carlo"
+                       target="_blank">Eliah-Lakhin/papa-carlo</a>. Support the
+                       project, give it a star.
+                  </li>
+                  <li>
+                    Project's website, documentation, tutorials:
+                    <a href="http://lakhin.com/projects/papa-carlo/"
+                       target="_blank">http://lakhin.com/projects/papa-carlo/</a>.
+                  </li>
+                  <li>
+                    User support forum:
+                    <a href="https://groups.google.com/forum/#!forum/papa-carlo"
+                       target="_blank">papa-carlo@googlegroups</a>.
+                  </li>
+                </ul>
               </p>
             </div>
           </div>
-
-          <div class="callout callout-info">
-            <h4>What's so special about "incremental"?</h4>
-            <p>
-              An incremental compiler is one that can recompile only those
-              portions of a program that have been modified. Ordinary compilers
-              must process entire source code file.
-            </p>
-            <p>
-              Therefore, when the end user makes small and frequent changes to
-              the source code, the incremental compiler usually indexes them
-              immediately, without any significant time delays. Even if the
-              program consists of thousands lines of source code.
-            </p>
-            <p>
-              More interesting is that the compiler updates resulting
-              Abstract Syntax Tree in incremental fashion too by invalidating
-              only affected parts of the Tree. An incremental compiler should be
-              able to perform these updates even if the source code contains
-              syntax errors.
-            </p>
-            <p>
-              These properties are very important in development
-              of source code analysis tools.
-            </p>
-          </div>
-
-          <div class="callout callout-info">
-            <h4>What are use cases?</h4>
-            <p>
-              Of course JSON parser is just a conceptual example. However,
-              Papa Carlo framework can be used to build incremental compilers 
-              of major programming language such as Java, C#, Objective-C etc.
-            </p>
-            <p>
-              For example, these compilers can serve as a core components in
-              development of full featured in-browser Web IDEs with code
-              analysis and refactoring tools comparable to the class of modern
-              desktop base IDEs like Eclipse, Visual Studio or IntelliJ Idea.
-            </p>
-          </div>
-
-          <div class="callout callout-info">
-            <h4>Is it hard to implement incremental compiler?</h4>
-            <p>
-              This JSON compiler consists just a few lines of
-              <a href="https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Json.scala"
-                 target="_blank">source code</a>
-              written in Scala. And the structure of the compiler's code should
-              be familiar to developers who have ever work with the ordinary
-              PEG/CFG parser combinator libraries.
-            </p>
-            <p>
-              Fortunately, all of the incremental "magic" is hidden inside the
-              Papa Carlo internals. So the developer can gain these features out
-              of the box.
-            </p>
-          </div>
-
-          <div class="callout callout-warning">
-            <h4>Further reading</h4>
-            <p>
+        </div>
+      </div>
+      <div class="tab-pane" id="logs">
+        <div class="row">
+          <div class="col-xs-4">
+            <h4>Summary:</h4>
               <ul>
                 <li>
-                  An article about client-server incremental compilation
-                  architecture:
-                  <a href="http://lakhin.com/blog/15.11.2013-handy-incremental-parser/"
-                     target="_blank">Handy incremental parser</a>.
+                  <span class="text-muted">Parser is</span>
+                  <span class="text-info"
+                        id="stats-ready">busy</span>
                 </li>
                 <li>
-                  Star Papa Carlo on Github:
-                  <a href="https://github.com/Eliah-Lakhin/papa-carlo"
-                     target="_blank">Eliah-Lakhin/papa-carlo</a>.
+                  <span class="text-muted">Mode:</span>
+                  <span class="text-info"
+                        id="stats-mode"></span>
                 </li>
                 <li>
-                  Project's website, documentation, tutorials:
-                  <a href="http://lakhin.com/projects/papa-carlo/"
-                     target="_blank">http://lakhin.com/projects/papa-carlo/</a>.
+                  <span class="text-muted">Initial parsing time:</span>
+                  <span class="text-info"
+                        id="stats-init-time"></span><span
+                        class="text-muted">&#181;</span>
                 </li>
                 <li>
-                  User support forum:
-                  <a href="https://groups.google.com/forum/#!forum/papa-carlo"
-                     target="_blank">papa-carlo@googlegroups</a>.
+                  <span class="text-muted">Last modification parsing time:</span>
+                  <span class="text-info"
+                        id="stats-last-time"></span><span
+                        class="text-muted">&#181;</span>
+                </li>
+                <li>
+                  <span class="text-muted">Lines parsed:</span>
+                  <span class="text-info"
+                        id="stats-lines"></span>
+                </li>
+                <li>
+                  <span class="text-muted">Characters parsed:</span>
+                  <span class="text-info"
+                        id="stats-chars"></span>
+                </li>
+                <li>
+                  <span class="text-muted">AST nodes:</span>
+                  <span class="text-info"
+                        id="stats-ast"></span>
                 </li>
               </ul>
-            </p>
+            </div>
+            <div class="col-xs-8">
+              <h4>Performance Graph:</h4>
+              <svg id="performance"></svg>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="tab-pane" id="logs">
-      <div class="row">
-        <div class="col-xs-4">
-          <h4>Summary:</h4>
-            <ul>
-              <li>
-                <span class="text-muted">Parser is</span>
-                <span class="text-info"
-                      id="stats-ready">busy</span>
-              </li>
-              <li>
-                <span class="text-muted">Mode:</span>
-                <span class="text-info"
-                      id="stats-mode"></span>
-              </li>
-              <li>
-                <span class="text-muted">Initial parsing time:</span>
-                <span class="text-info"
-                      id="stats-init-time"></span><span
-                      class="text-muted">&#181;</span>
-              </li>
-              <li>
-                <span class="text-muted">Last modification parsing time:</span>
-                <span class="text-info"
-                      id="stats-last-time"></span><span
-                      class="text-muted">&#181;</span>
-              </li>
-              <li>
-                <span class="text-muted">Lines parsed:</span>
-                <span class="text-info"
-                      id="stats-lines"></span>
-              </li>
-              <li>
-                <span class="text-muted">Characters parsed:</span>
-                <span class="text-info"
-                      id="stats-chars"></span>
-              </li>
-              <li>
-                <span class="text-muted">AST nodes:</span>
-                <span class="text-info"
-                      id="stats-ast"></span>
-              </li>
-            </ul>
-          </div>
-          <div class="col-xs-8">
-            <h4>Performance Graph:</h4>
-            <svg id="performance"></svg>
-          </div>
+        <div class="tab-pane" id="errors">
+          <table class="table table-condensed table-hover">
+            <thead>
+              <tr>
+                <th>#i</th>
+                <th>Position</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
-      </div>
-      <div class="tab-pane" id="errors">
-        <table class="table table-condensed table-hover">
-          <thead>
-            <tr>
-              <th>#i</th>
-              <th>Position</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
       </div>
     </div>
   </div>
@@ -418,7 +439,7 @@
       <a class="navbar-brand"
          title="Opens new tab"
          href="http://lakhin.com/projects/papa-carlo/"
-         target="_blank">Based on Papa Carlo library</a>.
+         target="_blank">Based on the Papa Carlo library</a>.
     </div>
   </div>
 </nav>
