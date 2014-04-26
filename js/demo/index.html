@@ -17,186 +17,514 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Demo Incremental Parser</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Papa Carlo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="description"
+        content="Demo incremental parser written in Scala using the Papa Carlo library.">
+  <meta name="keywords"
+        content="compilers,ide,parsing,incremental,parsers,code editors,programming languages,papacarlo,papa carlo">
+  <meta name="author" content="Ilya Lakhin">
+  <meta name="charset" content="UTF-8"><link rel="shortcut icon" href="/favicon.ico">
 
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css"/>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap-theme.min.css"/>
+  <link rel="stylesheet"
+        href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css"/>
+  <link rel="stylesheet"
+        href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap-theme.min.css"/>
+  <link href='http://fonts.googleapis.com/css?family=Dancing+Script' rel='stylesheet' type='text/css'>
 
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/codemirror.min.css"/>
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/theme/mbo.min.css"/>
+  <link rel="stylesheet"
+        href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/codemirror.min.css"/>
+  <link rel="stylesheet"
+        href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/theme/mbo.min.css"/>
 
-    <style type="text/css">
-        .cm-s-mbo span.cm-error {
-            background: transparent;
-            color: inherit;
-            border-bottom: 1px solid #ff7f7f;
-        }
+  <style type="text/css">
+    .page-header {
+      margin-top: 5px;
+      border-bottom: none;
+    }
 
-        #errors tbody tr {
-            cursor: pointer;
-        }
-    </style>
+    .CodeMirror {
+      line-height: 1.25;
+    }
+
+    .CodeMirror, #ast {
+      height: 400px;
+    }
+
+    .cm-s-mbo span.cm-node {
+      background: #3c763d;
+      color: inherit;
+    }
+
+    .cm-s-mbo span.cm-error {
+      background: transparent;
+      color: inherit;
+      border-bottom: 1px solid #ff4f4f;
+    }
+
+    #errors tbody tr {
+      cursor: pointer;
+    }
+
+    #performance-container {
+      width: 100%;
+      height: 150px;
+    }
+
+    #performance .axis path,
+    #performance .axis line {
+      fill: none;
+      stroke: #999;
+      shape-rendering: crispEdges;
+    }
+
+    #performance text {
+      fill: #666;
+    }
+
+    #performance .bar text {
+      font-size: 9px;
+      text-anchor: middle;
+    }
+
+    #performance .bar rect {
+      fill: #31708f;
+    }
+
+    .page-break {
+      min-height: 100px;
+    }
+
+    #ast .link {
+      stroke: #000;
+    }
+
+    #ast .node circle {
+      stroke: #31708f;
+      cursor: pointer;
+    }
+
+    #ast .node text {
+      text-anchor: middle;
+      font-size: 9px;
+      cursor: pointer;
+    }
+
+    #about .qa {
+      margin-top: 40px;
+    }
+
+    #about .intro {
+      margin: 15px 0;
+    }
+
+    .callout {
+      margin: 20px 0;
+      padding: 15px 30px 15px 15px;
+      border-left: 5px solid #eee;
+    }
+
+    .callout h4 {
+      margin-top: 0;
+    }
+
+    .callout p:last-child {
+      margin-bottom: 0;
+    }
+
+    .callout code,
+    .callout .highlight {
+      background-color: #fff;
+    }
+     
+    .callout-danger {
+      background-color: #fcf2f2;
+      border-color: #dFb5b4;
+    }
+
+    .callout-dander h4 {
+      color: #d9534f;
+    }
+
+    .callout-warning {
+      background-color: #fefbed;
+      border-color: #f1e7bc;
+    }
+
+    .callout-warning h4 {
+      color: #f0ad4e
+    }
+
+    .callout-info {
+      background-color: #f0f7fd;
+      border-color: #d0e3f0;
+    }
+
+    .callout-info h4 {
+      color: #428bca;
+    }
+
+    #loading .modal-dialog {
+      margin-top: 200px;
+    }
+
+    #start {
+      margin-bottom: 20px;
+    }
+
+    .tab-content {
+      margin-top: 30px;
+    }
+
+    .jumbotron-body {
+      margin-top: 50px;
+    }
+
+    .jumbotron h1 {
+      font-family: 'Dancing Script', 'cursive';
+    }
+  </style>
 </head>
 <body>
 
 <a href="https://github.com/Eliah-Lakhin/papa-carlo" target="_blank"
    title="Opens new tab"><img
-        style="position: absolute; top: 0; left: 0; border: 0;"
-        src="https://github-camo.global.ssl.fastly.net/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67"
-        alt="Fork me on GitHub"
-        data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
+   style="position: absolute; top: 0; left: 0; border: 0; z-index: 500;"
+   src="https://github-camo.global.ssl.fastly.net/8b6b8ccc6da3aa5722903da7b58eb5ab1081adee/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67"
+   alt="Fork me on GitHub"
+   data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png"></a>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 page-header">
-            <h1>
-                Demo Incremental Parser
-            </h1>
-        </div>
+<div class="container" id="top-element">
+  <div class="row">
+    <div class="col-md-12 page-header">
+      <h3 class="text-left">Incremental JSON Parser</h3>
     </div>
+  </div>
+</div>
+
+<div id="loading" class="modal show">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Loading status</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-10 col-sm-offset-1">
+            <br/>
+            <p>
+              This is an example of experimental JSON parser.
+            </p>
+            <p>
+              You can see it in action: when you edit the file on the left side
+              the parser processes it in real time, and modifies the graph on
+              the right side. But the parser does it
+              <a target="_blank" href="http://en.wikipedia.org/wiki/Incremental_compiler#Definition">incrementally</a>.
+            </p>
+            <p>
+              The barchart below represents parsing performance. Bar's height
+              reflects parsing time spent to process each change in the code.
+              Small changes are always performing in relatively short time
+              regardless of the entire file size.
+            </p>
+            <p>
+              <strong>Edit the file and see what happens.</strong>
+            </p>
+            <br>
+            <div id="progress-container" class="progress progress-striped active">
+              <div class="progress-bar" role="progressbar" aria-valuenow="60"
+                   aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+                   id="progress">
+                Loading JavaScripts files...
+              </div>
+            </div>
+            <button id="start"
+                    type="button"
+                    class="btn btn-primary btn-lg hidden"
+                    data-dismiss="modal">
+              Let's play!
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="container hidden" id="main">
-    <div class="row">
-        <div class="col-md-6">
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#demo"
+                              data-toggle="tab"
+                              id="demo-tab">Demo</a></li>
+        <li><a href="#description"
+               data-toggle="tab"
+               id="description-tab">Description</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 tab-content">
+      <div class="tab-pane active" id="demo">
+        <div class="row">
+          <div class="col-md-6">
             <textarea id="editor"></textarea>
+          </div>
+          <div class="col-md-6">
+            <svg id="ast"></svg>
+          </div>
         </div>
-        <div class="col-md-6">
+        <div class="row">
+          <div class="col-xs-12">
+            <h4>Performance Graph:</h4>
+            <div id="performance-container"><svg id="performance"></svg></div>
+          </div>
         </div>
-    </div>
-    <br>
-
-    <div class="row">
-        <div class="col-md-12">
-            <ul class="nav nav-tabs">
-                <li><a href="#about" data-toggle="tab"
-                       id="about-tab">About</a></li>
-                <li class="active"><a href="#logs" data-toggle="tab"
-                       id="logs-tab">Logs</a></li>
-                <li><a href="#errors" data-toggle="tab"
-                                      id="errors-tab">Errors <span class="text-danger hidden" id="errors-counter">(0)</span></a></li>
-            </ul>
-        </div>
-        <div class="col-md-12 tab-content">
-            <div class="tab-pane" id="about">
-
+        <div class="row">
+          <div class="col-xs-4">
+            <h4>Summary:</h4>
+              <ul>
+                <li>
+                  <span class="text-muted">Parser is</span>
+                  <span class="text-info"
+                        id="stats-ready">busy</span>
+                </li>
+                <li>
+                  <span class="text-muted">Mode:</span>
+                  <span class="text-info"
+                        id="stats-mode"></span>
+                </li>
+                <li>
+                  <span class="text-muted">Initial parsing time:</span>
+                  <span class="text-info"
+                        id="stats-init-time"></span><span
+                        class="text-muted">&#181;</span>
+                </li>
+                <li>
+                  <span class="text-muted">Last modification parsing time:</span>
+                  <span class="text-info"
+                        id="stats-last-time"></span><span
+                        class="text-muted">&#181;</span>
+                </li>
+                <li>
+                  <span class="text-muted">Lines parsed:</span>
+                  <span class="text-info"
+                        id="stats-lines"></span>
+                </li>
+                <li>
+                  <span class="text-muted">Characters parsed:</span>
+                  <span class="text-info"
+                        id="stats-chars"></span>
+                </li>
+                <li>
+                  <span class="text-muted">AST nodes:</span>
+                  <span class="text-info"
+                        id="stats-ast"></span>
+                </li>
+              </ul>
             </div>
-            <div class="tab-pane active" id="logs">
-                <div class="row">
-                    <div class="col-xs-4">
-                        <h4>Statistics:</h4>
-                        <ul>
-                            <li>
-                                <span class="text-muted">Initial parsing time:</span>
-                                <span class="text-info"
-                                      id="stats-init-time"></span>&#181;
-                            </li>
-                            <li>
-                                <span class="text-muted">Last modification parsing time:</span>
-                                <span class="text-info"
-                                      id="stats-last-time"></span>&#181;
-                            </li>
-                            <li>
-                                <span class="text-muted">Lines parsed:</span>
-                                <span class="text-info"
-                                      id="stats-lines"></span>
-                            </li>
-                            <li>
-                                <span class="text-muted">Characters parsed:</span>
-                                <span class="text-info"
-                                      id="stats-chars"></span>
-                            </li>
-                            <li>
-                                <span class="text-muted">AST nodes:</span>
-                                <span class="text-info"
-                                      id="stats-ast"></span>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="col-xs-8" id="errors">
+              <h4>Syntax Errors<span class="text-danger hidden"
+                                     id="errors-counter">(0)</span>:</h4>
+              <table class="table table-condensed table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Position</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="description">
+          <div class="row">
+            <div class="col-xs-10 col-xs-offset-1">
+              <div class="jumbotron">
+                <h1>Papa Carlo Demo</h1>
+                <div class="jumbotron-body">
+                  <p>
+                    This little demo application illustrates the idea of
+                    <a href="http://en.wikipedia.org/wiki/Incremental_compiler#Definition"
+                       target="_blank">incremental compilation</a>
+                    in action.
+                  </p>
+                  <p>
+                    The compiler of JSON language is written in Scala using
+                    <a href="https://github.com/Eliah-Lakhin/papa-carlo"
+                       target="_blank">Papa Carlo</a>
+                    parser framework and compiled to JavaScript using
+                    ScalaJS. The demo works completely in the web browser.
+                    There is no server-side processing at all.
+                  </p>
+                  <p>
+                    You can type something in the source code panel on the left
+                    side. The changes will be applied immediately to the
+                    Abstract Syntax Tree visual represenation on the right side.
+                  </p>
+                  <p>
+                    Also if you click on any AST node, the application
+                    highlights fragment of the source code corresponding to that
+                    Node.
+                  </p>
                 </div>
-            </div>
-            <div class="tab-pane" id="errors">
-                <table class="table table-condensed table-hover">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Position</th>
-                        <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+              </div>
 
-                    </tbody>
-                </table>
+              <div class="callout callout-info">
+                <h4>What's so special about "incremental"?</h4>
+                <p>
+                  An incremental compiler is one that can recompile only those
+                  portions of a program that have been modified. Ordinary
+                  compilers must process entire source code file.
+                </p>
+                <p>
+                  Therefore, when the end user makes small and frequent changes
+                  in the source code, the incremental compiler usually indexes
+                  them immediately, without any significant time delays. Even if
+                  the program consists of thousands lines of code.
+                </p>
+                <p>
+                  More interesting is that this compiler updates resulting
+                  Abstract Syntax Tree incrementally too by invalidating only
+                  affected parts of the Tree. An incremental compiler should be
+                  able to perform these updates even if the source code contains
+                  syntax errors.
+                </p>
+                <p>
+                  These properties are very important in development
+                  of source code analysis tools.
+                </p>
+              </div>
+
+              <div class="callout callout-info">
+                <h4>What are use cases?</h4>
+                <p>
+                  Of course, JSON parser is just a conceptual example. However,
+                  Papa Carlo framework can be used to build incremental
+                  compilers of major programming language such as Java, C#,
+                  Objective-C, etc.
+                </p>
+                <p>
+                  For example, these compilers can serve as core components in
+                  development of full featured in-browser Web IDE with code
+                  analysis and refactoring tools comparable to the class of
+                  modern desktop IDEs like Eclipse, Visual Studio or IntelliJ
+                  Idea.
+                </p>
+              </div>
+
+              <div class="callout callout-info">
+                <h4>Is it hard to implement incremental compiler?</h4>
+                <p>
+                  This JSON compiler consists of just a few lines of
+                  <a href="https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Json.scala"
+                     target="_blank">source code</a>
+                  written in Scala. The structure of the compiler code should
+                  be familiar to developers who have ever worked with ordinary
+                  PEG/CFG parser combinator libraries.
+                </p>
+                <p>
+                  Fortunately, all of the incremental "magic" is hidden inside the
+                  Papa Carlo internals. So the developer may leverage these
+                  features out of the box.
+                </p>
+              </div>
+
+              <div class="callout callout-warning">
+                <h4>Further reading</h4>
+                <p>
+                  <ul>
+                    <li>
+                      An article about client-server incremental compilation
+                      architecture:
+                      <a href="http://lakhin.com/blog/15.11.2013-handy-incremental-parser/"
+                         target="_blank">Handy incremental parser</a>.
+                    </li>
+                    <li>
+                      Papa Carlo on Github:
+                      <a href="https://github.com/Eliah-Lakhin/papa-carlo"
+                         target="_blank">Eliah-Lakhin/papa-carlo</a>. Support the
+                         project, give it a star.
+                    </li>
+                    <li>
+                      Project's website, documentation, tutorials:
+                      <a href="http://lakhin.com/projects/papa-carlo/"
+                         target="_blank">http://lakhin.com/projects/papa-carlo/</a>.
+                    </li>
+                    <li>
+                      User support forum:
+                      <a href="https://groups.google.com/forum/#!forum/papa-carlo"
+                         target="_blank">papa-carlo@googlegroups</a>.
+                    </li>
+                  </ul>
+                </p>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
-<div class="container" id="loading">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="progress progress-striped active">
-                <div class="progress-bar" role="progressbar" aria-valuenow="60"
-                     aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
-                     id="progress">
-                    Loading JavaScripts files...
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<div class="page-break"></div>
 
 <nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-right">
-            <a class="navbar-brand"
-               title="Opens new tab"
-               href="http://lakhin.com/projects/papa-carlo/"
-               target="_blank">Based on Papa Carlo library</a>.
-        </div>
+  <div class="container-fluid">
+    <div class="navbar-right">
+      <a class="navbar-brand"
+         title="Opens new tab"
+         href="http://lakhin.com/projects/papa-carlo/"
+         target="_blank">Based on the Papa Carlo library</a>.
     </div>
+  </div>
 </nav>
 
 <script type="text/javascript">
-    var progressBar = document.getElementById('progress');
-    progressBar.style.width = '10%';
+  var progressBar = document.getElementById('progress');
+  progressBar.style.width = '5%';
 </script>
+
 <script type="text/javascript"
-        src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+        src="//cdnjs.cloudflare.com/ajax/libs/sizzle/1.10.18/sizzle.min.js"></script>
 <script type="text/javascript">
-    progressBar.style.width = '20%';
+  progressBar.style.width = '10%';
 </script>
+
+<script type="text/javascript"
+        src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.2/d3.min.js"></script>
+<script type="text/javascript">
+  progressBar.style.width = '20%';
+</script>
+
 <script type="text/javascript"
         src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/codemirror.min.js"></script>
 <script type="text/javascript">
-    progressBar.style.width = '30%';
+  progressBar.style.width = '30%';
 </script>
+
 <script type="text/javascript"
         src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/mode/javascript/javascript.min.js"></script>
 <script type="text/javascript">
-    progressBar.style.width = '40%';
+  progressBar.style.width = '40%';
 </script>
+
+<script type="text/javascript"
+        src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript"
         src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
-
-<!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo-extdeps.js"></script>-->
-<!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo-intdeps.js"></script>-->
-<!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo.js"></script>-->
-
-<!--<script type="text/javascript" src="./target/scala-2.10/papa-carlo-preopt.js"></script>-->
-
-<script type="text/javascript"
-        src="./target/scala-2.10/papa-carlo-opt.js"></script>
 <script type="text/javascript">
-    progressBar.style.width = '60%';
-    progressBar.innerHTML = 'Parser initialization...';
+  progressBar.style.width = '50%';
+</script>
+
+<script type="text/javascript" src="./client.js"></script>
+<script type="text/javascript">
+  progressBar.style.width = '60%';
+  progressBar.innerHTML = 'Parser initialization...';
 </script>
 
 <script type="text/javascript" src="./index.js"></script>

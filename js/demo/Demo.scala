@@ -20,15 +20,21 @@ import scala.scalajs.js
 import js.annotation.{ JSName, JSExport }
 
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
+import name.lakhin.eliah.projects.papacarlo.syntax.Node
 import name.lakhin.eliah.projects.papacarlo.examples.Json
 
 @JSExport
 object Demo {
   private val lexer = Json.lexer
   private val syntax = Json.syntax(lexer)
+  private var addedNodes = List.empty[Int]
+  private var removedNodes = List.empty[Int]
+  
+  syntax.onNodeCreate.bind { node => addedNodes ::= node.getId }
+  syntax.onNodeRemove.bind { node => removedNodes ::= node.getId }
 
   @JSExport
-  def input(text: String) {
+  def inputAll(text: String) {
     lexer.input(text)
   }
 
@@ -43,27 +49,94 @@ object Demo {
 
   @JSExport
   def getErrors() = {
-    val result = new js.Array[js.Dynamic]
+    toJsArray(syntax.getErrors.map {
+      error =>
+        val from = tokenCursor(error.from)
+        val to = tokenCursor(error.to, after = true)
 
-    for (error <- syntax.getErrors) {
-      val from = tokenCursor(error.from)
-      val to = tokenCursor(error.to, after = true)
+        js.Dynamic.literal(
+          "from" -> from,
+          "to" -> to,
+          "description" -> error.description
+        )
+    })
+  }
 
-      result.push(js.Dynamic.literal(
-        "from" -> from,
-        "to" -> to,
-        "description" -> error.description
-      ))
+  @JSExport
+  def getNodeFragment(id: Int) = {
+    syntax.nodes.get(id) match {
+      case Some(node) =>
+        js.Dynamic.literal(
+          "exists" -> true,
+          "id" -> id,
+          "from" -> tokenCursor(node.getBegin),
+          "to" -> tokenCursor(node.getEnd, after = true)
+        )
+
+      case None => js.Dynamic.literal(
+        "exists" -> false,
+        "id" -> id
+      )
     }
+  }
+
+  @JSExport
+  def getAST(graph: Boolean = false) = {
+    val result = js.Dictionary.empty[js.Any]
+
+    result("total") = syntax.nodes.size
+    result("added") = toJsArray(addedNodes.reverse.map(x => x: js.Any))
+    result("removed") = toJsArray(removedNodes.reverse.map(x => x: js.Any))
+
+    if (graph) {
+      val ast = js.Dictionary.empty[js.Any]
+
+      for (node <- syntax.nodes.elements) {
+        ast(node.getId.toString) = exportNode(node)
+      }
+
+      result("all") = ast
+    }
+
+    addedNodes = Nil
+    removedNodes = Nil
 
     result
   }
 
-  @JSExport
-  def getNodeCount() = syntax.nodes.size
+  private def toJsArray(iterable: Iterable[js.Any]) = {
+    val result = new js.Array[js.Any]
 
-  @JSExport
-  def getRootNode() = syntax.getRootNode
+    for (element <- iterable) result.push(element)
+
+    result
+  }
+
+  private def mapToObject(map: Map[String, js.Array[js.Any]]) = {
+    val result = js.Dictionary.empty[js.Any]
+
+    for ((key, values) <- map) result(key) = values
+
+    result
+  }
+
+  private def exportNode(node: Node) = {
+    val parentId = node.getParent.map(_.getId).getOrElse(-1)
+
+    js.Dynamic.literal(
+      "id" -> node.getId,
+      "parent" -> parentId,
+      "children" ->
+        toJsArray(node.getBranches.map(_._2).flatten.map(_.getId: js.Any)),
+      "kind" -> node.getKind,
+      "values" -> mapToObject(node.getValues
+        .map {
+          case (key, values) =>
+            key -> toJsArray(values.map(s => s: js.String))
+        }
+      )
+    )
+  }
 
   private def tokenCursor(token: TokenReference, after: Boolean = false) = {
     val pair = token.collection.cursor(token.index + (if (after) 1 else 0))
@@ -71,3 +144,4 @@ object Demo {
     js.Dynamic.literal("line" -> (pair._1 - 1), "ch" -> (pair._2 - 1))
   }
 }
+

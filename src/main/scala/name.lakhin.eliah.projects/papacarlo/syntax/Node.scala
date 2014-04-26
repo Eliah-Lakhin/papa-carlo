@@ -55,7 +55,7 @@ final class Node(private[syntax] var kind: String,
     case (tag, tokens) =>
       tag -> constants
         .get(tag).map(constant => List(constant))
-        .getOrElse(tokens.map(_.token.value))
+        .getOrElse(tokens.filter(_.exists).map(_.token.value))
   }
 
   def getParent = parent
@@ -76,6 +76,8 @@ final class Node(private[syntax] var kind: String,
     if (onChange.nonEmpty && !ancestor) onChange.trigger(this)
     else for (parent <- parent) parent.update(ancestor)
   }
+
+  private def getChildren = branches.map(_._2).flatten
 
   private[syntax] def remove(registry: Registry[Node]) {
     if (bound) {
@@ -156,14 +158,14 @@ final class Node(private[syntax] var kind: String,
   }
 
   private def visitBranches(current: Node, enter: (Node, Node) => Any) {
-    for (branch <- branches.map(_._2).flatten) {
+    for (branch <- getChildren) {
       enter(current, branch)
       branch.visitBranches(branch, enter)
     }
   }
 
   private def reverseVisitBranches(leave: Node => Any) {
-    for (branch <- branches.map(_._2).flatten) {
+    for (branch <- getChildren) {
       branch.reverseVisitBranches(leave)
       leave(branch)
     }
