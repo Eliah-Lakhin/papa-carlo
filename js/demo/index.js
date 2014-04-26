@@ -183,7 +183,7 @@ initParser(function(parser) {
     var
       logs = [],
       barWidth = 20,
-      container = $stats.performance.node(),
+      container = d3.select('#performance-container').node(),
       mainGroup = $stats.performance.append('g'),
       barGroup = mainGroup.append('g'),
       timeAxis = d3.svg.axis()
@@ -200,6 +200,7 @@ initParser(function(parser) {
     var
       index = 0,
       skipped = 0;
+
     logs.push({index: 0, time: 0, nodes: {total: 0, added: 0, removed: 0}});
 
     var clip = barGroup
@@ -231,6 +232,10 @@ initParser(function(parser) {
       var
         width = container.clientWidth - marginH * 2,
         height = container.clientHeight - marginV * 2;
+
+      $stats.performance
+        .attr('width', container.clientWidth)
+        .attr('height', container.clientHeight);
 
       clip.attr('width', width);
 
@@ -330,11 +335,15 @@ initParser(function(parser) {
         .linkDistance(distance)
         .charge(-90)
         .gravity(0.1)
-        .size([$svg.node().clientWidth, $svg.node().clientHeight]),
+        .size([
+          $svg.node().parentNode.clientWidth - 40,
+          $svg.node().parentNode.clientHeight - 40
+        ]),
       nodes = force.nodes(),
       links = force.links(),
       node = $svg.selectAll('.node'),
       link = $svg.selectAll('.link');
+
 
     nodes.push({
       index: 0,
@@ -447,6 +456,10 @@ initParser(function(parser) {
     }
 
     return function(tree, added, removed) {
+      $svg
+        .attr('width', $svg.node().parentNode.clientWidth - 40)
+        .attr('height', $svg.node().parentNode.clientHeight - 40);
+
       removed.forEach(removeNode);
       added.map(function(id) {return tree[id]; }).forEach(addNode);
       
