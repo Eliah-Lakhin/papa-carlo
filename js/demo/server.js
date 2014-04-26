@@ -14,9 +14,7 @@
  limitations under the License.
 */
 
-importScripts('./target/scala-2.10/papa-carlo-opt.js');
-
-var parser = Demo();
+var parser = null;
 
 function getStats(data) {
   return {
@@ -27,6 +25,16 @@ function getStats(data) {
 
 onmessage = function(event) {
   switch (event.data.kind) {
+    case 'init':
+      if (!parser) {
+        importScripts('./target/scala-2.10/papa-carlo-opt.js');
+        parser = Demo();
+      }
+
+      postMessage({kind: 'ready'});
+
+      break;
+
     case 'fragment':
       postMessage({
         kind: 'fragment',
@@ -49,6 +57,4 @@ onmessage = function(event) {
       break;
   }
 };
-
-postMessage({kind: 'ready'});
 
