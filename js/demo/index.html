@@ -17,14 +17,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Incremental JSON parser</title>
+  <title>Papa Carlo</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="description"
+        content="Demo incremental parser written in Scala using the Papa Carlo library.">
+  <meta name="keywords"
+        content="compilers,ide,parsing,incremental,parsers,code editors,programming languages,papacarlo,papa carlo">
+  <meta name="author" content="Ilya Lakhin">
+  <meta name="charset" content="UTF-8"><link rel="shortcut icon" href="/favicon.ico">
 
   <link rel="stylesheet"
         href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css"/>
   <link rel="stylesheet"
         href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap-theme.min.css"/>
+  <link href='http://fonts.googleapis.com/css?family=Dancing+Script' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet"
         href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.22.0/codemirror.min.css"/>
@@ -169,6 +176,14 @@
     .tab-content {
       margin-top: 30px;
     }
+
+    .jumbotron-body {
+      margin-top: 50px;
+    }
+
+    .jumbotron h1 {
+      font-family: 'Dancing Script', 'cursive';
+    }
   </style>
 </head>
 <body>
@@ -199,12 +214,19 @@
           <div class="col-sm-10 col-sm-offset-1">
             <br/>
             <p>
-              This is an example of my awesome JSON parser.
+              This is an example of experimental JSON parser.
             </p>
             <p>
-              You can see it in action: when you edit the file on the left side the
-              parser processes it in real time, and modifies the graph on the right
-              side. But the parser does it incrementally.
+              You can see it in action: when you edit the file on the left side
+              the parser processes it in real time, and modifies the graph on
+              the right side. But the parser does it
+              <a target="_blank" href="http://en.wikipedia.org/wiki/Incremental_compiler#Definition">incrementally</a>.
+            </p>
+            <p>
+              The barchart below represents parsing performance. Bar's height
+              reflects parsing time spent to process each change in the code.
+              Small changes are always performing in relatively short time
+              regardless of the entire file size.
             </p>
             <p>
               <strong>Edit the file and see what happens.</strong>
@@ -322,8 +344,9 @@
         <div class="tab-pane" id="description">
           <div class="row">
             <div class="col-xs-10 col-xs-offset-1">
-              <div class="panel panel-default">
-                <div class="panel-body">
+              <div class="jumbotron">
+                <h1>Papa Carlo Demo</h1>
+                <div class="jumbotron-body">
                   <p>
                     This little demo application illustrates the idea of
                     <a href="http://en.wikipedia.org/wiki/Incremental_compiler#Definition"
@@ -331,21 +354,22 @@
                     in action.
                   </p>
                   <p>
-                    The compiler of JSON language is written using
+                    The compiler of JSON language is written in Scala using
                     <a href="https://github.com/Eliah-Lakhin/papa-carlo"
                        target="_blank">Papa Carlo</a>
-                    parser framework in Scala, and compiled to JavaScript using
-                    ScalaJS. So the demo works completely in the web browser.
+                    parser framework and compiled to JavaScript using
+                    ScalaJS. The demo works completely in the web browser.
                     There is no server-side processing at all.
                   </p>
                   <p>
-                    You can type something to the source code pane on the left side.
-                    And the changes will be applied immediately to the Abstract
-                    Syntax Tree visual represenation on the right side.
+                    You can type something in the source code panel on the left
+                    side. The changes will be applied immediately to the
+                    Abstract Syntax Tree visual represenation on the right side.
                   </p>
                   <p>
-                    Also if you click on any AST node, the application highlights
-                    fragment of the source code corresponding to that Node.
+                    Also if you click on any AST node, the application
+                    highlights fragment of the source code corresponding to that
+                    Node.
                   </p>
                 </div>
               </div>
@@ -354,19 +378,19 @@
                 <h4>What's so special about "incremental"?</h4>
                 <p>
                   An incremental compiler is one that can recompile only those
-                  portions of a program that have been modified. Ordinary compilers
-                  must process entire source code file.
+                  portions of a program that have been modified. Ordinary
+                  compilers must process entire source code file.
                 </p>
                 <p>
-                  Therefore, when the end user makes small and frequent changes to
-                  the source code, the incremental compiler usually indexes them
-                  immediately, without any significant time delays. Even if the
-                  program consists of thousands lines of source code.
+                  Therefore, when the end user makes small and frequent changes
+                  in the source code, the incremental compiler usually indexes
+                  them immediately, without any significant time delays. Even if
+                  the program consists of thousands lines of code.
                 </p>
                 <p>
-                  More interesting is that the compiler updates resulting
-                  Abstract Syntax Tree in incremental fashion too by invalidating
-                  only affected parts of the Tree. An incremental compiler should be
+                  More interesting is that this compiler updates resulting
+                  Abstract Syntax Tree incrementally too by invalidating only
+                  affected parts of the Tree. An incremental compiler should be
                   able to perform these updates even if the source code contains
                   syntax errors.
                 </p>
@@ -380,15 +404,16 @@
                 <h4>What are use cases?</h4>
                 <p>
                   Of course, JSON parser is just a conceptual example. However,
-                  Papa Carlo framework can be used to build incremental compilers 
-                  of major programming language such as Java, C#, Objective-C,
-                  etc.
+                  Papa Carlo framework can be used to build incremental
+                  compilers of major programming language such as Java, C#,
+                  Objective-C, etc.
                 </p>
                 <p>
                   For example, these compilers can serve as core components in
                   development of full featured in-browser Web IDE with code
-                  analysis and refactoring tools comparable to the class of modern
-                  desktop IDEs like Eclipse, Visual Studio or IntelliJ Idea.
+                  analysis and refactoring tools comparable to the class of
+                  modern desktop IDEs like Eclipse, Visual Studio or IntelliJ
+                  Idea.
                 </p>
               </div>
 
