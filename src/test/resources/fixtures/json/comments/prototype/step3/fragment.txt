@@ -1,0 +1,16 @@
+ > create:
+<<<{
+    "hello": "world",    /*
+    "second": "line",  */
+    "third": "line"
+}>>>
+
+
+ > invalidate:
+<<<{
+    "hello": "world",    /*
+    "second": "line",  */
+    "third": "line"
+}
+>>>
+

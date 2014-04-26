@@ -43,4 +43,14 @@ final case class SequentialRule(steps: List[Rule]) extends Rule {
   }
 
   override val show = steps.map(_.showOperand(3)).mkString(" & ") -> 3
+
+  override val captures = steps.map(_.captures).reduce(_ ++ _)
+
+  override val branches = steps.map(_.branches).reduce {
+    (left, right) =>
+      var result = left
+      for ((key, values) <- right)
+        result += key -> (result.getOrElse(key, Set.empty) ++ values)
+      result
+  }
 }

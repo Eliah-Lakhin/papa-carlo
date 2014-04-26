@@ -16,29 +16,54 @@
 import sbt._
 import Keys._
 import com.typesafe.sbt._
+import scala.scalajs.sbtplugin.ScalaJSPlugin._
+import ScalaJSKeys._
 
 object PapaCarlo extends Build {
-  lazy val PapaCarlo = Project(
-    id = "papa-carlo",
-    base = file("."),
-    settings = Defaults.defaultSettings ++ SbtPgp.settings ++
+  val papaCarloVersion = "0.7.0-SNAPSHOT"
+  
+  val baseSettings = Seq(
+    name := "Papa Carlo",
+    version := papaCarloVersion,
+
+    scalacOptions += "-unchecked",
+
+    sourceDirectory := (sourceDirectory in PapaCarlo).value,
+
+    description :=
+      "Constructor of incremental parsers in Scala using PEG grammars",
+    homepage := Some(new URL("http://lakhin.com/projects/papa-carlo/")),
+
+    organization := "name.lakhin.eliah.projects.papacarlo",
+    organizationHomepage  := Some(new URL("http://lakhin.com/")),
+
+    licenses := Seq("The Apache Software License, Version 2.0" ->
+      new URL("http://www.apache.org/licenses/LICENSE-2.0.txt")),
+    startYear := Some(2013),
+
+    scalaVersion := "2.10.0"
+  )
+
+  val jsSettings = Defaults.defaultSettings ++ baseSettings ++
+    scalaJSSettings ++ Seq(
+      libraryDependencies += "org.scala-lang.modules.scalajs" %%
+        "scalajs-jasmine-test-framework" % scalaJSVersion % "test",
+
+      sourceDirectory := (sourceDirectory in PapaCarlo).value,
+
+      excludeFilter in unmanagedSources := "test"
+    )
+
+  lazy val PapaCarlo: sbt.Project = Project(
+    id = "root",
+    base = file(".")
+  ).aggregate(JVM, JSDemo)
+
+  lazy val JVM = Project(
+    id = "jvm",
+    base = file("./jvm/"),
+    settings = Defaults.defaultSettings ++ SbtPgp.settings ++ baseSettings ++
       Seq(
-        name := "Papa Carlo",
-        version := "0.6.1",
-
-        description :=
-          "Constructor of incremental parsers in Scala using PEG grammars",
-        homepage := Some(new URL("http://lakhin.com/projects/papa-carlo/")),
-
-        organization := "name.lakhin.eliah.projects.papacarlo",
-        organizationHomepage  := Some(new URL("http://lakhin.com/")),
-
-        licenses := Seq("The Apache Software License, Version 2.0" ->
-          new URL("http://www.apache.org/licenses/LICENSE-2.0.txt")),
-        startYear := Some(2013),
-
-        scalaVersion := "2.10.0",
-
         libraryDependencies ++= Seq(
           "org.scalatest" % "scalatest_2.10" % "2.0.M6-SNAP8",
           "net.liftweb" % "lift-json_2.10" % "2.5-RC6"
@@ -77,5 +102,14 @@ object PapaCarlo extends Build {
             </developer>
           </developers>
       )
+  )
+
+  lazy val JSDemo = Project(
+    id = "js-demo",
+    base = file("./js/demo/"),
+    settings = jsSettings/* ++ Seq(
+      unmanagedSources in (Compile, ScalaJSKeys.packageJS) +=
+        (baseDirectory in PapaCarlo).value / "js" / "demo" / "Demo.js"
+    )                      */
   )
 }

@@ -47,4 +47,8 @@ final case class CapturingRule(tag: String, rule: Rule) extends Rule {
   }
 
   override val show = rule.showOperand(1) + " -> " + tag -> 1
+
+  override val captures = rule.captures + tag
+
+  override val branches = rule.branches
 }

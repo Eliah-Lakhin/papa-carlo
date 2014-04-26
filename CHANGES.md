@@ -1,6 +1,27 @@
 Development history
 ===================
 
+0.7.0
+-----
+_2014-05-27_
+
+ - In-browser demo of JSON parser. Compiled with ScalaJS.
+ - Improvements:
+   - Flat mode of syntax error recovery based on skips entire fragments.
+     Turned on by default.
+   - Ctags support.
+   - Fragment.getTokens becomes a public method.
+   - Rule Tree reflection features. Traversing structure of rules belong to
+     Node.
+   - Node.visit becomes a public method.
+ - Bug fix:
+   - Ignoring removed tokens of detached Nodes.
+   - Wrong difference of files with trailing empty lines.
+   - Lexer.input works wrong when the cursor bounds provided explicitly.
+   - Top level fragments wrong parsing. Appropriate "comments" parsing test
+     added.
+
+
 0.6.1
 -----
 _2014-02-20_

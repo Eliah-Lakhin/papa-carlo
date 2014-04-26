@@ -28,6 +28,7 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
 
   private val sourceTokens = fragment.getTokens
   private[syntax] val sourceTokensOffset = fragment.begin.index
+  private val sourceTokensCount =fragment.end.index - sourceTokensOffset + 1
 
   private var initialIndex = IndexedSeq.empty[Int]
   private var index = IndexedSeq.empty[Int]
@@ -155,20 +156,33 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
     }
 
   private def exclude(virtualSegment: Bounds, reason: String) = {
-    val relativeSegment = relativeSegmentOf(virtualSegment)
+    var actualSegment = virtualSegment
+    var relativeSegment = relativeSegmentOf(virtualSegment)
+
+    if (!syntax.deepRecoveryMode) {
+      for (extension <- reference(relativeSegment.until - 1).getFragment) {
+        val rightRelativeBound =
+          (extension.end.index - sourceTokensOffset) min (sourceTokensCount - 1)
+
+        relativeSegment = relativeSegment.copy(until = rightRelativeBound + 1)
+        actualSegment =
+          actualSegment.copy(until = virtualIndexOf(rightRelativeBound) + 1)
+      }
+    }
+
     packrat = packrat
-      .filter(!_._2.range.touches(virtualSegment))
+      .filter(!_._2.range.touches(actualSegment))
       .mapValues {
         packrat =>
-          if (packrat.range.from >= virtualSegment.from)
-            packrat.copy(range = packrat.range.shift(-virtualSegment.length))
+          if (packrat.range.from >= actualSegment.from)
+            packrat.copy(range = packrat.range.shift(-actualSegment.length))
           else
             packrat
       }
       .view.force
 
-    tokens = virtualSegment.replace(tokens, Vector.empty)
-    index = virtualSegment.replace(index, Vector.empty)
+    tokens = actualSegment.replace(tokens, Vector.empty)
+    index = actualSegment.replace(index, Vector.empty)
 
     Issue(relativeSegment, reason)
   }

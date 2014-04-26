@@ -91,6 +91,7 @@ final class Syntax(val lexer: Lexer) {
   private var mainRule: Option[String] = None
   private[papacarlo] var nodes = new Registry[Node]
   private[papacarlo] var cache = Map.empty[Int, Cache]
+  private[papacarlo] var deepRecoveryMode = false
 
   val onCacheCreate = new Signal[Cache]
   val onCacheRemove = new Signal[Cache]
@@ -129,6 +130,10 @@ final class Syntax(val lexer: Lexer) {
 
         definition
     }
+
+  def setDeepRecovery(mode: Boolean) {
+    deepRecoveryMode = mode
+  }
 
   def getRootNode = rootNode
 

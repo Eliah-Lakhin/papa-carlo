@@ -166,8 +166,8 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
 
     val result = expression.session.state.products
       .headOption
-      .filter(_._1 == "operand" && expression.session.state.products.length >
-        initialState.products.length)
+      .filter(_._1 == ExpressionRule.Operand &&
+        expression.session.state.products.length > initialState.products.length)
       .map(_._2)
 
     expression.session.state =
@@ -206,4 +206,12 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
       }
 
   override val show = "expression(" + atom.show._1 + ") -> " + tag -> 1
+
+  override val captures = atom.captures
+
+  override val branches = Map.empty[String, Set[String]]
+}
+
+object ExpressionRule {
+  val Operand = "operand"
 }

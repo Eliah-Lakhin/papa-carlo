@@ -29,6 +29,7 @@ final class Node(private[syntax] var kind: String,
   private[syntax] var constants = Map.empty[String, String]
   private[syntax] var cachable = false
   private[syntax] var parent = Option.empty[Node]
+  private[syntax] var producer = Option.empty[Rule]
 
   val onChange = new Signal[Node]
   val onRemove = new Signal[Node]
@@ -48,23 +49,24 @@ final class Node(private[syntax] var kind: String,
 
   def getRange = Bounds(begin.index, end.index + 1)
 
-  def getBranches(tag: String) = branches.getOrElse(tag, Nil)
+  def getBranches = branches
 
-  def getBranch(tag: String) = getBranches(tag).headOption
-
-  def hasBranch(tag: String) = branches.contains(tag)
+  def getValues = references.map {
+    case (tag, tokens) =>
+      tag -> constants
+        .get(tag).map(constant => List(constant))
+        .getOrElse(tokens.filter(_.exists).map(_.token.value))
+  }
 
   def getParent = parent
 
-  def getValues(tag: String) =
-    references.lift(tag).map(_.map(_.token.value)).getOrElse(Nil)
+  def getBranchName(deep: Int = 0): Option[String] = parent.flatMap {
+    parent =>
+      if (deep > 0) parent.getBranchName(deep - 1)
+      else parent.branches.find(entry => entry._2.exists(_.id == id)).map(_._1)
+  }
 
-  def getValue(tag: String) =
-    constants.get(tag).getOrElse(references.lift(tag)
-      .map(_.map(_.token.value).mkString).getOrElse(""))
-
-  def hasValue(tag: String) =
-    constants.contains(tag) || references.contains(tag)
+  def getProducer = producer
 
   def range = Bounds(begin.index, end.index + 1)
 
@@ -74,6 +76,8 @@ final class Node(private[syntax] var kind: String,
     if (onChange.nonEmpty && !ancestor) onChange.trigger(this)
     else for (parent <- parent) parent.update(ancestor)
   }
+
+  private def getChildren = branches.map(_._2).flatten
 
   private[syntax] def remove(registry: Registry[Node]) {
     if (bound) {
@@ -147,15 +151,21 @@ final class Node(private[syntax] var kind: String,
     reversedUnregistered
   }
 
+  def visit(enter: Node => Any, leave: Node => Any) {
+    enter(this)
+    for (branch <- branches.map(_._2).flatten) branch.visit(enter, leave)
+    leave(this)
+  }
+
   private def visitBranches(current: Node, enter: (Node, Node) => Any) {
-    for (branch <- branches.map(_._2).flatten) {
+    for (branch <- getChildren) {
       enter(current, branch)
       branch.visitBranches(branch, enter)
     }
   }
 
   private def reverseVisitBranches(leave: Node => Any) {
-    for (branch <- branches.map(_._2).flatten) {
+    for (branch <- getChildren) {
       branch.reverseVisitBranches(leave)
       leave(branch)
     }
@@ -203,7 +213,7 @@ final class Node(private[syntax] var kind: String,
         .filter(constant => !references.contains(constant))) {
 
         result ++= "\n" + prefix + "  " + reference + ": " +
-          getValue(reference)
+          getValues(reference).mkString("")
       }
 
       for ((name, subnodes) <- branches; branch <- subnodes) {

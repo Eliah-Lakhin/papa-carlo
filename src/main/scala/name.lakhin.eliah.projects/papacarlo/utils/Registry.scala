@@ -25,6 +25,8 @@ final class Registry[A] {
 
   def elements = records.values
 
+  def size = records.size
+
   def add(element: A) = {
     val name = generateName
     records += name -> element

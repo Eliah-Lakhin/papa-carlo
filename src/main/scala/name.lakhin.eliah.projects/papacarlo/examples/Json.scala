@@ -16,8 +16,7 @@
 package name.lakhin.eliah.projects
 package papacarlo.examples
 
-import name.lakhin.eliah.projects.papacarlo.lexis.{Matcher, Tokenizer,
-  Contextualizer}
+import name.lakhin.eliah.projects.papacarlo.lexis.{Token, Matcher, Tokenizer, Contextualizer}
 import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
 import name.lakhin.eliah.projects.papacarlo.syntax.Rule
 import name.lakhin.eliah.projects.papacarlo.syntax.rules.NamedRule
@@ -75,7 +74,7 @@ object Json {
       oneOrMore(rangeOf('a', 'z'))
     )
 
-    terminals(",", ":", "{", "}", "[", "]")
+    terminals(",", ":", "{", "}", "[", "]", "//", "/*", "*/")
 
     keywords("true", "false", "null")
 
@@ -89,6 +88,8 @@ object Json {
 
     trackContext("[", "]").allowCaching
     trackContext("{", "}").allowCaching
+    trackContext("//", Token.LineBreakKind).forceSkip.topContext
+    trackContext("/*", "*/").forceSkip.topContext
 
     contextualizer
   }

@@ -1,0 +1,9 @@
+ > invalidate:
+Node 1. Fragment:
+<<<{
+    "hello": "world",    /*
+    "second": "line",  */
+    "third": "line"
+}
+>>>
+
