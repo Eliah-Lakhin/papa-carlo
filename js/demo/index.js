@@ -24,7 +24,7 @@ initParser(function(parser) {
       lastTime = delta;
       $stats.initTime.text(lastTime);
       $progressBar.style('width', '100%');
-      var $progress = d3.select('.progress');
+      var $progress = d3.select('#progress-container');
       $progress
         .transition().delay(1000).style('opacity', 0)
         .transition().each('end', function() {
@@ -85,11 +85,11 @@ initParser(function(parser) {
     lines: d3.select('#stats-lines'),
     chars: d3.select('#stats-chars'),
     ast: d3.select('#stats-ast'),
-    statsPane: d3.select('#logs'),
+    demoPane: d3.select('#demo'),
     performance: d3.select('#performance')
   };
 
-  $('a[href="#logs"]').bind('shown.bs.tab', function() {
+  $('a[href="#demo"]').bind('shown.bs.tab', function() {
     logPerformance();
   });
 
@@ -152,7 +152,7 @@ initParser(function(parser) {
 
       if (errors.length > 0) {
         $errorsCounter
-          .text('(' + errors.length + ')')
+          .text(' (' + errors.length + ')')
           .classed('hidden', false);
 
         errors.forEach(function(error, index) {
@@ -224,7 +224,7 @@ initParser(function(parser) {
         });
       }
 
-      if (!$stats.statsPane.node().classList.contains('active')) {
+      if (!$stats.demoPane.node().classList.contains('active')) {
         return;
       }
 
