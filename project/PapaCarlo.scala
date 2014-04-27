@@ -106,10 +106,8 @@ object PapaCarlo extends Build {
 
   lazy val JSDemo = Project(
     id = "js-demo",
-    base = file("./js/demo/"),
-    settings = jsSettings/* ++ Seq(
-      unmanagedSources in (Compile, ScalaJSKeys.packageJS) +=
-        (baseDirectory in PapaCarlo).value / "js" / "demo" / "Demo.js"
-    )                      */
+    base = file(".//demo/"),
+    settings = jsSettings
   )
 }
+

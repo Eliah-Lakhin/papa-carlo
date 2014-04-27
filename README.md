@@ -94,7 +94,7 @@ JAR artifacts
 1. Install [SBT](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html#installing-sbt). Version 0.13.0 is preferable.
 2. Run `sbt jvm/test` to compile and run tests.
 3. Run `sbt jvm/packageBin` to build JAR package. The JAR package can be found in the `./jvm/target/` directory.
-4. Run `sbt js-demo/optimizeJS` to build JavaScript demo using [Scala-JS](https://github.com/scala-js/scala-js) compiler. To start demo run static http web server with `./js/demo/` as a root.
+4. Run `sbt js-demo/optimizeJS` to build JavaScript demo using [Scala-JS](https://github.com/scala-js/scala-js) compiler. To start demo run static http web server with `./demo/` as a root.
 
 
 License
