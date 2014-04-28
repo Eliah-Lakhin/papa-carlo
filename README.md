@@ -1,14 +1,23 @@
 What is "incremental parser"?
 -----------------------------
 
-Papa Carlo is the first Scala parser library utilises incremental parsing
+Papa Carlo is the first Scala parsing library utilises incremental parsing
 approach.
 
-In contrast to all other parsing libraries that designed to parse complete
-source code file at once, Papa Carlo continuously parses source code while end
-users edit the file. And parser's performance is always relative to the changes
-in the code. Hence parsing time does not depend on the whole code size, small
-changes performing in no time even if the code consists of thousands lines.
+An incremental parser is one that can recompile only those portions of a program
+that have been modified. Ordinary parsers must process entire source code file.
+
+Therefore, when the end user makes small and frequent changes in the source
+code, an incremental parser indexes them immediately, without any
+significant time delays. Even if the program consists of thousands lines of
+code.
+
+This property is very important in development of programming language analysis
+tools such as Integrated Development Environments that managing codebase in real
+time.
+
+See the [Demo Webapp](http://lakhin.com/projects/papa-carlo/demo/) of the
+incremental JSON parser based on Papa Carlo.
 
 ![Incremental parser workflow illustration](https://raw.github.com/Eliah-Lakhin/papa-carlo-media/master/snapshots/manuscript.jpg)
 
