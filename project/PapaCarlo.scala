@@ -41,7 +41,9 @@ object PapaCarlo extends Build {
       new URL("http://www.apache.org/licenses/LICENSE-2.0.txt")),
     startYear := Some(2013),
 
-    scalaVersion := "2.10.0"
+    scalaVersion := "2.11.1",
+
+    crossScalaVersions := Seq("2.10.4", "2.11.1")
   )
 
   val jsSettings = Defaults.defaultSettings ++ baseSettings ++
@@ -65,8 +67,8 @@ object PapaCarlo extends Build {
     settings = Defaults.defaultSettings ++ SbtPgp.settings ++ baseSettings ++
       Seq(
         libraryDependencies ++= Seq(
-          "org.scalatest" % "scalatest_2.10" % "2.0.M6-SNAP8",
-          "net.liftweb" % "lift-json_2.10" % "2.5-RC6"
+          "org.scalatest" %% "scalatest" % "2.2.0",
+          "net.liftweb" %% "lift-json" % "2.6-M4"
         ),
         resolvers ++= Seq(
           "sonatype" at "http://oss.sonatype.org/content/repositories/releases",
