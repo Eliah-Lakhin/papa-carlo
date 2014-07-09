@@ -81,7 +81,7 @@ var initParser = function(main) {
     worker.postMessage({ kind: 'init' });
   } else {
     d3.text(
-      './target/scala-2.10/papa-carlo-opt.js',
+      './target/scala-2.11/papa-carlo-opt.js',
       function(error, parserCode) {
         if (error) {
           console.error(error);
