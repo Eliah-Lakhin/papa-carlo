@@ -27,7 +27,7 @@ onmessage = function(event) {
   switch (event.data.kind) {
     case 'init':
       if (!parser) {
-        importScripts('./target/scala-2.10/papa-carlo-opt.js');
+        importScripts('./target/scala-2.11/papa-carlo-opt.js');
         parser = Demo();
       }
 
