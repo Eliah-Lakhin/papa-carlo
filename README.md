@@ -44,6 +44,51 @@ Papa Carlo features
    [Pratt algorithm](http://en.wikipedia.org/wiki/Pratt_parser) and prepared
    primitives.
 
+Contribution policy
+-------------------
+
+##### Branch quick reference
+ * `master`: Primary GitHub branch that one should fork from and Pull Request to.
+   This branch is for upcoming release commits. So all of the accepted Pull Request
+   need to be tested at least with provided functional tests
+ * `release`: All release commits starting from the version 0.7.1
+ * `development`: This branch may contain intermediate development commits that
+   are not well tested. It is used internally by the repository maintainers
+
+##### Steps
+
+ 1. Fork the master branch of the repository to your GitHub account.
+ 2. Test your changes locally using `sbt jvm/test` command.
+ 3. Commit your code changes and push them to your fork on GitHub.
+ 4. Make a Pull Request back to the master branch of [Eliah-Lakhin/papa-carlo](https://github.com/Eliah-Lakhin/papa-carlo).
+ 5. Repository maintainers will review your Pull Request and merge in a few days.
+ 6. New master branch will be built and the artifact will be pushed to
+    [Sonatype's Snapshot Repository](http://oss.sonatype.org/content/groups/public/name/lakhin/eliah/projects/papacarlo/papa-carlo_2.10/).
+ 7. Sooner or later `master` branch with your commits will be merged onto
+    `releases` branch, and the new release artifact will appear in
+    [Maven Central](http://central.maven.org/maven2/name/lakhin/eliah/projects/papacarlo/).
+    Also I'll add you to the
+    [Contributors List](https://github.com/Eliah-Lakhin/papa-carlo/blob/a78fc592d8499b9f1f209b64114d45a276813986/project/PapaCarlo.scala#L98).
+
+If you find something that needs to be reviewed and merged quickly(important bug
+or something that stucks your development process), please poke me by
+email/GoogleTalk: eliah.lakhin [at] gmail.com. Or by Skype: eliah.lakhin. I'll
+do the review as soon as possible.
+
+##### License
+
+Please read [LICENSE](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/LICENSE) for
+licensing details.
+
+
+Related projects
+----------------
+ * [Papa Carlo's Aunt](https://github.com/nightscape/papa-carlos-aunt). ANTLR4
+   grammar port for Papa Carlo by [Martin Mauch](https://github.com/nightscape).
+ * [Java Incremental Parser](https://github.com/ftomassetti/JavaIncrementalParser)
+   by [Federico Tomassetti](https://github.com/ftomassetti).
+ * [Malvina programming language compiler](https://github.com/Eliah-Lakhin/malvina-in-scala).
+
 
 Documentation
 -------------
@@ -57,16 +102,15 @@ read/write access to everyone. And contribution is very welcome!
 
 Users support forum: [https://groups.google.com/forum/#!forum/papa-carlo](https://groups.google.com/forum/#!forum/papa-carlo).
 
-
 ##### Example parsers
 
- * [Malvina programming language compiler](https://github.com/Eliah-Lakhin/malvina-in-scala).
  * [JSON parser](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Json.scala).
  * [Calculator parser](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/src/main/scala/name.lakhin.eliah.projects/papacarlo/examples/Calculator.scala).
 
 ##### Another links
 
  * [Introduction blog post](http://lakhin.com/blog/15.11.2013-handy-incremental-parser/).
+ * [Scala Days 2014](http://www.parleys.com/play/53a7d2cbe4b0543940d9e555/chapter35/agenda) presentation by [Sébastien Doeraene](https://github.com/sjrd).
  * [Discussion on Reddit](http://www.reddit.com/r/programming/comments/1rfyzx/whats_wrong_with_the_most_programming_language/).
  * [Introduction article on Habrahabr in Russian](http://habrahabr.ru/post/201774/).
  * [Approach brief description on Lambda the Ultimate](http://lambda-the-ultimate.org/node/4840).
@@ -104,13 +148,6 @@ JAR artifacts
 2. Run `sbt jvm/test` to compile and run tests.
 3. Run `sbt jvm/packageBin` to build JAR package. The JAR package can be found in the `./jvm/target/` directory.
 4. Run `sbt js-demo/optimizeJS` to build JavaScript demo using [Scala-JS](https://github.com/scala-js/scala-js) compiler. To start demo run static http web server with `./js/demo/` as a root.
-
-
-License
--------
-
-Please read [LICENSE](https://github.com/Eliah-Lakhin/papa-carlo/blob/master/LICENSE) for
-licensing details.
 
 
 Author
