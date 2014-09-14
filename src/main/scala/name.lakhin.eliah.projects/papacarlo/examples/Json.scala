@@ -37,7 +37,7 @@ object Json {
       "string",
       sequence(
         chunk("\""),
-        oneOrMore(choice(
+        zeroOrMore(choice(
           anyExceptOf("\n\r\\\""),
           sequence(chunk("\\"), anyOf("\"\\/bfnrt")),
           sequence(
