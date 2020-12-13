@@ -16,7 +16,7 @@
 
 ThisBuild / organization := "name.lakhin.eliah.projects"
 ThisBuild / organizationName := "papacarlo"
-ThisBuild / name := "Papa Carlo"
+//ThisBuild / name := "Papa Carlo" // not used
 ThisBuild / version := "0.8.0-SNAPSHOT"
 ThisBuild / organizationHomepage := Some(url("http://lakhin.com/"))
 ThisBuild / scmInfo := Some(
@@ -47,8 +47,9 @@ ThisBuild / publishTo := {
 }
 ThisBuild / publishMavenStyle := true
 
-ThisBuild / scalaVersion := "latest.integration"
-ThisBuild / crossScalaVersions := Seq("latest.integration")
+// these versions must be static (no "latest.integration")
+ThisBuild / scalaVersion := "2.13.0"
+ThisBuild / crossScalaVersions := Seq("2.13.0")
 
 import sbt._
 import sbt.Keys._
@@ -66,22 +67,33 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 
   // used by JVM and JSDemo
-  val baseSettings = Seq(
+  lazy val baseSettings = Seq(
     scalacOptions += "-unchecked",
-    sourceDirectory := (sourceDirectory in PapaCarlo).value,
+    //sourceDirectory := (sourceDirectory in PapaCarlo).value, // CIRCULAR
   )
 
 
 
-  val jsSettings =
+  lazy val jsSettings =
     Defaults.coreDefaultSettings ++
     baseSettings ++
     ScalaJSPlugin.projectSettings ++
     Seq(
-      libraryDependencies += "org.scala-js" %%
-        "scalajs-jasmine-test-framework" % scalaJSVersion % "test",
+      libraryDependencies += "com.lihaoyi" %%% "utest" % "latest.integration" % "test",
+      testFrameworks += new TestFramework("utest.runner.Framework"),
 
-      sourceDirectory := (sourceDirectory in PapaCarlo).value,
+      //sourceDirectory := (sourceDirectory in PapaCarlo).value, // CIRCULAR
+
+      //jsEnvInput := "not working"
+/*
+[error] Cannot determine `jsEnvInput`: Linking result does not have a module named `main`. Set jsEnvInput manually?
+[error] Full report:
+[error] Report(
+[error]   publicModules = [
+[error]
+[error]   ],
+[error] )
+*/
 
       excludeFilter in unmanagedSources := "test"
     )
@@ -90,8 +102,11 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
   lazy val PapaCarlo: sbt.Project = Project(
     id = "root",
+    //id = "main", // did not help
     base = file(".")
-  ).aggregate(JVM, JSDemo)
+  )
+  .enablePlugins(ScalaJSPlugin)
+  .aggregate(JVM, JSDemo)
 
 
 
@@ -104,7 +119,6 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
   .settings(SbtPgp.projectSettings: _*) // projectSettings globalSettings
 
-  // java.lang.NullPointerException, also with jdk 14
   .settings(baseSettings: _*)
 
   .settings(
@@ -129,8 +143,8 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
     id = "js-demo",
     base = file("./js/demo/"),
   )
+  .enablePlugins(ScalaJSPlugin)
 
-  // java.lang.NullPointerException, also with jdk 14
   .settings(jsSettings: _*)
 
   /*
