@@ -17,13 +17,13 @@ package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
-import org.scalatest.FunSpec
+import org.scalatest.funspec.AnyFunSpec
 import net.liftweb.json.JsonAST._
 
 abstract class ParserSpec(parserName: String,
                           inputBase: String = Resources.DefaultResourceBase,
                           outputBase: String = Resources.DefaultResourceBase)
-  extends FunSpec {
+  extends AnyFunSpec {
 
   protected def lexer: Lexer
   protected def parser: (Lexer, Syntax)

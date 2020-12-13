@@ -179,7 +179,7 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
           else
             packrat
       }
-      .view.force
+      .toMap
 
     tokens = actualSegment.replace(tokens, Vector.empty)
     index = actualSegment.replace(index, Vector.empty)

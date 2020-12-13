@@ -108,12 +108,13 @@ final class Contextualizer {
       }
 
       val result =
-        stateMachine.groupBy(_._1).mapValues(_.groupBy(_._2)
-          .mapValues(list => (list.head._3, list.head._4)).view.force)
-          .view.force
+        stateMachine.groupBy(_._1).mapValues(
+          _.groupBy(_._2).mapValues(
+            list => (list.head._3, list.head._4)
+          ).toMap
+        ).toMap
 
       this.stateMachineCache = Some(result)
-
       result
     })
   }
@@ -124,7 +125,7 @@ final class Contextualizer {
     var context = entryContext
     for (token <- tokens) {
       val next = stateMachine.get(token.kind).flatMap(_.get(context.kind))
-        .getOrElse(Pair(RegularSeam, 0))
+        .getOrElse(Tuple2(RegularSeam, 0))
 
       token.seam = next._1
 

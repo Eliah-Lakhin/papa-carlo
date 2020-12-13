@@ -19,12 +19,12 @@ package papacarlo.utils
 object Difference {
   def head[A](first: Seq[A],
                 second: Seq[A],
-                comparator: Pair[A, A] => Boolean) =
+                comparator: Tuple2[A, A] => Boolean) =
     first.zip(second).takeWhile(comparator).length
 
   def double[A](first: Seq[A],
                 second: Seq[A],
-                comparator: Pair[A, A] => Boolean) = {
+                comparator: Tuple2[A, A] => Boolean) = {
     val pairs = first.zip(second)
     val head = pairs.takeWhile(comparator).length
     (

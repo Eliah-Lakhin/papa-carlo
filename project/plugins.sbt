@@ -1,8 +1,10 @@
-addSbtPlugin("com.typesafe.sbt" % "sbt-pgp" % "0.8.1")
+addSbtPlugin("com.jsuereth" % "sbt-pgp" % "latest.integration")
 
-addSbtPlugin("org.scala-lang.modules.scalajs" %% "scalajs-sbt-plugin" % "0.4.3")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "latest.integration")
 
-addSbtPlugin("com.kalmanb.sbt" % "sbt-ctags" % "0.3.0")
+addSbtPlugin("net.ceedubs" %% "sbt-ctags" % "latest.integration")
 
-resolvers += Resolver.url("scala-js-snapshots", url("http://repo.scala-js.org/repo/releases/"))(Resolver.ivyStylePatterns)
+resolvers += Resolver.url("scala-js-snapshots", url("https://repo.scala-js.org/repo/releases/"))(Resolver.ivyStylePatterns)
 
+resolvers += Resolver.sonatypeRepo("releases")
+resolvers += Resolver.sonatypeRepo("snapshots")

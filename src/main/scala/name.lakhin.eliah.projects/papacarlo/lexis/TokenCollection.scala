@@ -184,7 +184,7 @@ final class TokenCollection(lineCutTokens: Set[String]) {
 
   private def computeDifference(first: Seq[Token], second: Seq[Token]) = {
     val comparator =
-      (pair: Pair[Token, Token]) => pair._1.value == pair._2.value
+      (pair: Tuple2[Token, Token]) => pair._1.value == pair._2.value
 
     if (first.exists(token => lineCutTokens(token.kind))
         || second.exists(token => lineCutTokens(token.kind)))

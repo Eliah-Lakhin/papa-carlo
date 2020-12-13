@@ -51,7 +51,7 @@ final class FragmentController(contextualizer: Contextualizer,
       var index = newRange.from
       for (token <- newTokens) {
         if (token.seam == UnexpectedSeam) {
-          invalidTokens += Pair(index, LeaveContext)
+          invalidTokens += Tuple2(index, LeaveContext)
           valid = false
         }
         index += 1
@@ -155,7 +155,8 @@ final class FragmentController(contextualizer: Contextualizer,
     val fragment = registry.add(id => Fragment(id, start, end))
 
     fragment.onInvalidate.bind(fragment =>
-      onInvalidate.trigger(Pair(fragment, invalidationRange)))
+      onInvalidate.trigger(Tuple2(fragment, invalidationRange)))
+
     fragment.onRemove.bind(fragment => registry.remove(fragment.id))
 
     fragment

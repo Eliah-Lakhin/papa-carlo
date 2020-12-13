@@ -56,7 +56,7 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
           case None => performReferredRule(session)
         }
 
-        session.packrat += Pair(packratKey, Packrat(
+        session.packrat += Tuple2(packratKey, Packrat(
           name,
           Bounds(initialPosition, session.state.virtualPosition),
           result,
@@ -103,11 +103,11 @@ final case class ReferentialRule(name: String, tag: Option[String] = None)
                 node.cachable = rule.cachingFlag
                 node.branches =
                   session.state.products.groupBy(_._1)
-                    .mapValues(_.map(_._2).reverse).view.force
+                    .mapValues(_.map(_._2).reverse).toMap
                 node.references =
                   session.state.captures.groupBy(_._1)
                     .mapValues(_.map(_._2.iterator
-                      .map(session.reference)).flatten).view.force
+                      .map(session.reference)).flatten).toMap
                 node.producer = Some(rule.body)
 
                 node

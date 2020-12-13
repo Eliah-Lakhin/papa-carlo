@@ -96,7 +96,7 @@ final class Node(private[syntax] var kind: String,
       val difference = Difference.double[Node](
         oldBranches,
         newBranches,
-        (pair: Pair[Node, Node]) => {
+        (pair: Tuple2[Node, Node]) => {
           pair._1.bound &&
             !pair._2.range.intersects(invalidationRange) &&
             pair._1.sourceCode == pair._2.sourceCode
@@ -236,14 +236,14 @@ object Node {
   def apply(kind: String,
             begin: TokenReference,
             end: TokenReference,
-            branches: List[Pair[String, Node]] = Nil,
-            references: List[Pair[String, TokenReference]] = Nil,
+            branches: List[Tuple2[String, Node]] = Nil,
+            references: List[Tuple2[String, TokenReference]] = Nil,
             constants: Map[String, String] = Map.empty) = {
     val result = new Node(kind, begin, end)
 
-    result.branches = branches.groupBy(_._1).mapValues(_.map(_._2)).view.force
+    result.branches = branches.groupBy(_._1).mapValues(_.map(_._2)).toMap
     result.references = references.groupBy(_._1).mapValues(_.map(_._2))
-      .view.force
+      .toMap
     result.constants = constants
 
     result

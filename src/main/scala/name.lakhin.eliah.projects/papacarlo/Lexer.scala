@@ -111,7 +111,8 @@ final class Lexer(tokenizer: Tokenizer,
       targetTokens += Token.lineBreak
     }
 
-    tokens.write(tokenBounds, targetTokens)
+    tokens.write(tokenBounds, targetTokens.toSeq)
+
     this.code = codeBounds.replace(this.code, targetCode)
 
     if (this.code.nonEmpty && this.code.charAt(this.code.length - 1) != '\n') {
