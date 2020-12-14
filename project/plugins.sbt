@@ -11,3 +11,6 @@ addSbtPlugin("net.ceedubs" %% "sbt-ctags" % "0.3.0")
 
 // https://scalacenter.github.io/scalafix/docs/users/installation.html
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.24")
+
+// https://github.com/lucidsoftware/neo-sbt-scalafmt
+addSbtPlugin("com.lucidchart" % "sbt-scalafmt" % "1.16")

@@ -21,19 +21,25 @@ import scala.io.Source
 import java.io.{FileWriter, File}
 import net.liftweb.json.{NoTypeHints, Serialization}
 
-final class Resources(inputBase: String = Resources.DefaultResourceBase,
-                      outputBase: String = Resources.DefaultResourceBase) {
+final class Resources(
+  inputBase: String = Resources.DefaultResourceBase,
+  outputBase: String = Resources.DefaultResourceBase
+) {
+
   private implicit val formats = Serialization.formats(NoTypeHints)
 
   def exist(category: String, name: String) =
     getClass.getResource(inputBase + fileName(category, name)) != null
 
-  def input(category: String, name: String) =
+  def input(category: String, name: String) : String =
     try {
-      Source.fromURL(getClass
-        .getResource(inputBase + fileName(category, name))).mkString
+      val filePath = "src/test/resources" + inputBase + fileName(category, name)
+      val textSource = scala.io.Source.fromFile(filePath)
+      val str = textSource.mkString
+      textSource.close
+      return str
     } catch {
-      case _: RuntimeException => ""
+      case _: java.io.FileNotFoundException => return ""
     }
 
   def update(category: String, name: String, content: String) {

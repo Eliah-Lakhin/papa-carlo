@@ -31,3 +31,7 @@ ThisBuild / scalacOptions ++= Seq("-unchecked", "-deprecation")
 ```
 
 to make sbt more verbose
+
+## prettify code
+
+run `scalafmt` in the sbt console

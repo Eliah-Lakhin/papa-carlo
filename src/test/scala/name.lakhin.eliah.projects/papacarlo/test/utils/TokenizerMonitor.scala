@@ -43,7 +43,7 @@ final class TokenizerMonitor(lexer: Lexer) extends Monitor(lexer) {
     result.toString()
   }
 
-  def prepare() {}
+  def prepare() : Unit = {}
 
-  def release() {}
+  def release() : Unit = {}
 }
