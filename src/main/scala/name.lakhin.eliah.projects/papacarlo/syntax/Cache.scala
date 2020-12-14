@@ -39,7 +39,7 @@ final class Cache(syntax: Syntax,
 
   syntax.onCacheCreate.trigger(this)
 
-  private[papacarlo] def invalidate(range: Bounds) {
+  private[papacarlo] def invalidate(range: Bounds): Unit = {
     val session = new Session(syntax, fragment)
 
     ready = false
@@ -62,7 +62,7 @@ final class Cache(syntax: Syntax,
     }
   }
 
-  private def remove() {
+  private def remove(): Unit = {
     syntax.onCacheRemove.trigger(this)
     syntax.cache -= fragment.id
     node.onRemove.unbind(nodeRemove)

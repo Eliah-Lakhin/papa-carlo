@@ -17,9 +17,7 @@
 package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
 
-import name.lakhin.eliah.projects.papacarlo.syntax.{Issue,
-  Result, Session, Rule}
-import name.lakhin.eliah.projects.papacarlo.utils.Bounds
+import name.lakhin.eliah.projects.papacarlo.syntax.{Result, Session, Rule}
 
 final case class NamedRule(label: String,
                            rule: Rule,

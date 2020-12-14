@@ -32,7 +32,7 @@ final class Token(val kind: String,
   def isMutable = mutable
   def getContext = context
 
-  private[lexis] def applySkipLevel(level: SkipLevel) {
+  private[lexis] def applySkipLevel(level: SkipLevel): Unit = {
     level match {
       case ForceSkip => skipped = true
       case ForceUse => skipped = false
@@ -40,7 +40,7 @@ final class Token(val kind: String,
     }
   }
 
-  private[lexis] def revertMutability() {
+  private[lexis] def revertMutability(): Unit = {
     mutable = originallyMutable
   }
 

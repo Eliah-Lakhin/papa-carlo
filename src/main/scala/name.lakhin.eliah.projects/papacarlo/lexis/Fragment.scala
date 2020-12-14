@@ -44,7 +44,7 @@ final case class Fragment(id: Int,
     if (defined) Bounds(begin.index, end.index + 1)
     else Bounds.undefined
 
-  private[lexis] def remove() {
+  private[lexis] def remove(): Unit = {
     if (defined) {
       onRemove.trigger(this)
       defined = false

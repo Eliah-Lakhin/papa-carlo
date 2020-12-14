@@ -73,14 +73,14 @@ final class Node(private[syntax] var kind: String,
 
   def getCachable = cachable
 
-  def update(ancestor: Boolean = false) {
+  def update(ancestor: Boolean = false): Unit = {
     if (onChange.nonEmpty && !ancestor) onChange.trigger(this)
     else for (parent <- parent) parent.update(ancestor)
   }
 
   private def getChildren = branches.map(_._2).flatten
 
-  private[syntax] def remove(registry: Registry[Node]) {
+  private[syntax] def remove(registry: Registry[Node]): Unit = {
     if (bound) {
       onRemove.trigger(this)
       releaseReflection()
@@ -152,20 +152,20 @@ final class Node(private[syntax] var kind: String,
     reversedUnregistered
   }
 
-  def visit(enter: Node => Any, leave: Node => Any) {
+  def visit(enter: Node => Any, leave: Node => Any): Unit = {
     enter(this)
     for (branch <- branches.map(_._2).flatten) branch.visit(enter, leave)
     leave(this)
   }
 
-  private def visitBranches(current: Node, enter: (Node, Node) => Any) {
+  private def visitBranches(current: Node, enter: (Node, Node) => Any): Unit = {
     for (branch <- getChildren) {
       enter(current, branch)
       branch.visitBranches(branch, enter)
     }
   }
 
-  private def reverseVisitBranches(leave: Node => Any) {
+  private def reverseVisitBranches(leave: Node => Any): Unit = {
     for (branch <- getChildren) {
       branch.reverseVisitBranches(leave)
       leave(branch)
@@ -179,12 +179,12 @@ final class Node(private[syntax] var kind: String,
         reference.token.isMutable))
       .flatten
 
-  private def initializeReflection() {
+  private def initializeReflection(): Unit = {
     for (reference <- subscribableReferences)
       reference.onUpdate.bind(reflection)
   }
 
-  private def releaseReflection() {
+  private def releaseReflection(): Unit = {
     for (reference <- subscribableReferences)
       reference.onUpdate.unbind(reflection)
   }

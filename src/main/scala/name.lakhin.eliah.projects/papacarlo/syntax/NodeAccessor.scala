@@ -92,7 +92,7 @@ final class NodeAccessor(val node: Node) {
     this
   }
 
-  private def change() {
+  private def change(): Unit = {
     node.cachable = false
     node.producer = None
   }

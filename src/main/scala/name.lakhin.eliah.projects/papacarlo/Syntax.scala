@@ -132,7 +132,7 @@ final class Syntax(val lexer: Lexer) {
         definition
     }
 
-  def setDeepRecovery(mode: Boolean) {
+  def setDeepRecovery(mode: Boolean): Unit = {
     deepRecoveryMode = mode
   }
 

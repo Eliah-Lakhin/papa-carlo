@@ -82,7 +82,7 @@ final class FragmentController(contextualizer: Contextualizer,
         invalidationRange = invalidationRange.union(index)
   }
 
-  private def invalidate() {
+  private def invalidate(): Unit = {
     val range = computeActualRange
     updateSkipLevel(range)
 
@@ -163,7 +163,7 @@ final class FragmentController(contextualizer: Contextualizer,
     fragment
   }
 
-  private def updateSkipLevel(range: Bounds) {
+  private def updateSkipLevel(range: Bounds): Unit = {
     for (token <- range.slice(tokens.descriptions);
          skipLevel <- contextualizer.getContextSkipLevel(token.context))
       token.applySkipLevel(skipLevel)
@@ -201,7 +201,7 @@ final class FragmentController(contextualizer: Contextualizer,
     )
   }
 
-  private def updateInvalidationContext(range: Bounds) {
+  private def updateInvalidationContext(range: Bounds): Unit = {
     var outOfContext = true
     var index = range.from
 
@@ -238,12 +238,12 @@ final class FragmentController(contextualizer: Contextualizer,
       })
       .getOrElse(Context.Base)
 
-  private def checkLeftBalance(start: Int, prototype: Context) {
+  private def checkLeftBalance(start: Int, prototype: Context): Unit = {
     checkBalance((0 until (start + 1)).reverse, LeaveContext, EnterContext,
       prototype)
   }
 
-  private def checkRightBalance(start: Int, prototype: Context) {
+  private def checkRightBalance(start: Int, prototype: Context): Unit = {
     checkBalance(start until tokens.descriptions.length, EnterContext,
       LeaveContext, prototype)
   }
@@ -251,7 +251,7 @@ final class FragmentController(contextualizer: Contextualizer,
   private def checkBalance(indexes: Range,
                            increment: SeamType,
                            decrement: SeamType,
-                           prototype: Context) {
+                           prototype: Context): Unit = {
     var balance = 0
 
     breakable {

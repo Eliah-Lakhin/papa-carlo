@@ -23,7 +23,7 @@ object Expressions {
   def infix(rule: ExpressionRule,
             operator: String,
             precedence: Int,
-            rightAssociativity: Boolean = false) {
+            rightAssociativity: Boolean = false): Unit = {
     val leftBindingPower = Int.MaxValue - precedence * 10
     val rightBindingPower =
       leftBindingPower - (if (rightAssociativity) 1 else 0)
@@ -43,7 +43,7 @@ object Expressions {
       }
   }
 
-  def postfix(rule: ExpressionRule, operator: String, precedence: Int) {
+  def postfix(rule: ExpressionRule, operator: String, precedence: Int): Unit = {
     rule.parselet(operator)
       .leftBindingPower(Int.MaxValue - precedence * 10)
       .leftDenotation {
@@ -54,7 +54,7 @@ object Expressions {
       }
   }
 
-  def prefix(rule: ExpressionRule, operator: String, precedence: Int) {
+  def prefix(rule: ExpressionRule, operator: String, precedence: Int): Unit = {
     val power = Int.MaxValue - precedence * 10
 
     rule.parselet(operator).nullDenotation {
@@ -66,7 +66,7 @@ object Expressions {
     }
   }
 
-  def group(rule: ExpressionRule, open: String, close: String) {
+  def group(rule: ExpressionRule, open: String, close: String): Unit = {
     rule.parselet(open).nullDenotation {
       (expression, _) =>
         val result = expression.parseRight()

@@ -67,7 +67,7 @@ the compiler can't find a way to check the outer reference, because you've decla
     RuleDefinition(name)
   }
 
-  def terminals(patterns: String*) {
+  def terminals(patterns: String*): Unit = {
     for (pattern <- patterns)
       if (!terminals.exists(terminal => terminal._1 == pattern))
         terminals = (Tuple2(pattern, StringMatcher(pattern)) :: terminals)
@@ -76,7 +76,7 @@ the compiler can't find a way to check the outer reference, because you've decla
     terminals = terminals.sortBy(_._1).reverse
   }
 
-  def keywords(patterns: String*) {
+  def keywords(patterns: String*): Unit = {
     keywords ++= patterns
   }
 

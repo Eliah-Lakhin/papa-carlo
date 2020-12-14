@@ -17,7 +17,7 @@
 package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
 
-import name.lakhin.eliah.projects.papacarlo.syntax.{Issue, Rule, Session}
+import name.lakhin.eliah.projects.papacarlo.syntax.{Rule, Session}
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 

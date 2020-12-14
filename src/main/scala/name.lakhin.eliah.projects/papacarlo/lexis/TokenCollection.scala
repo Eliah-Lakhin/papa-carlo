@@ -64,7 +64,7 @@ final class TokenCollection(lineCutTokens: Set[String]) {
     result
   }
 
-  def write(bounds: Bounds, replacement: Seq[Token]) {
+  def write(bounds: Bounds, replacement: Seq[Token]): Unit = {
     val oldTokens = bounds.slice(descriptions)
 
     var equal = false

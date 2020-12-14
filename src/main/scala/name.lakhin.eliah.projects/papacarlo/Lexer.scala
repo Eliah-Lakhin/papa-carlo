@@ -29,7 +29,7 @@ final class Lexer(tokenizer: Tokenizer,
 
   val fragments = new FragmentController(contextualizer, tokens)
 
-  def input(newCode: String) {
+  def input(newCode: String): Unit = {
     val prepared = prepareCode(newCode)
 
     if (code.isEmpty) inputPrepared(prepared, Bounds(0, 0))
@@ -97,7 +97,7 @@ final class Lexer(tokenizer: Tokenizer,
     offset
   }
 
-  private def inputPrepared(code: String, range: Bounds) {
+  private def inputPrepared(code: String, range: Bounds): Unit = {
     val tokenBounds = align(range)
     val codeBounds = tokenBounds.enlarge(0, -1).map(index =>
       tokens.descriptions.take(index).foldLeft(0)((offset, token) =>

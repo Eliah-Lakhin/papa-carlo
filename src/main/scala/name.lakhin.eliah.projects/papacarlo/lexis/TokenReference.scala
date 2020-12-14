@@ -36,7 +36,7 @@ final class TokenReference(val collection: TokenCollection,
 
   def getFragment = fragment
 
-  private[lexis] def remove() {
+  private[lexis] def remove(): Unit = {
     removed = true
     onRemove.trigger(this)
   }
