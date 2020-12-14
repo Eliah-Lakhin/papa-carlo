@@ -14,6 +14,7 @@ addSbtPlugin("net.ceedubs" %% "sbt-ctags" % "0.3.0")
 // optional plugins for auto-correction and formatting
 
 // https://scalacenter.github.io/scalafix/docs/users/installation.html
+// CHORE to activate this, also enable `ThisBuild / semanticdb` in `build.sbt`
 //addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.24")
 
 // https://github.com/lucidsoftware/neo-sbt-scalafmt

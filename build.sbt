@@ -19,20 +19,20 @@ ThisBuild / scalaVersion := "2.13.4"
 ThisBuild / crossScalaVersions := Seq("2.13.4")
 
 // needed for scalafix
-ThisBuild / semanticdbEnabled := true
-ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+//ThisBuild / semanticdbEnabled := true
+//ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
 ThisBuild / scalacOptions ++=
   Seq(
-    "-unchecked", "-deprecation", // make compiler more verbose
-    "-Ywarn-unused", // needed for scalafix
+    //"-unchecked", "-deprecation", // make compiler more verbose
+    //"-Ywarn-unused", // needed for scalafix
   )
 
 ThisBuild / organization := "name.lakhin.eliah.projects"
 ThisBuild / organizationHomepage := Some(url("http://lakhin.com/"))
 ThisBuild / organizationName := "papacarlo"
 ThisBuild / description := "Constructor of incremental parsers in Scala using PEG grammars"
-ThisBuild / version := "0.8.0-SNAPSHOT"
+ThisBuild / version := "0.8.1-SNAPSHOT"
 ThisBuild / homepage := Some(url("http://lakhin.com/projects/papa-carlo/"))
 ThisBuild / licenses := List("Apache 2.0" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 ThisBuild / startYear := Some(2013)
@@ -106,9 +106,12 @@ lazy val JSDemo =
   .enablePlugins(ScalaJSPlugin)
   .settings(baseSettings: _*)
   .settings(
-    // CHORE bump versions
-    libraryDependencies += "com.lihaoyi" %%% "utest" % "0.7.5" % "test",
-    testFrameworks += new TestFramework("utest.runner.Framework")
+
+    // tests not used
+    //// CHORE bump versions
+    //libraryDependencies += "com.lihaoyi" %%% "utest" % "0.7.5" % "test",
+    //testFrameworks += new TestFramework("utest.runner.Framework")
+
     // TODO verify. what was this supposed to do?
     //excludeFilter in unmanagedSources := "test"
   )
