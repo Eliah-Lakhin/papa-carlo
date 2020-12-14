@@ -9,8 +9,12 @@ addSbtPlugin("net.ceedubs" %% "sbt-ctags" % "0.3.0")
 // TODO sbt-ctags is abandoned, replace with metals
 // https://scalameta.org/metals/docs/build-tools/sbt.html
 
+
+
+// optional plugins for auto-correction and formatting
+
 // https://scalacenter.github.io/scalafix/docs/users/installation.html
-addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.24")
+//addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.24")
 
 // https://github.com/lucidsoftware/neo-sbt-scalafmt
-addSbtPlugin("com.lucidchart" % "sbt-scalafmt" % "1.16")
+//addSbtPlugin("com.lucidchart" % "sbt-scalafmt" % "1.16")

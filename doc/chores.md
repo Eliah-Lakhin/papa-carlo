@@ -22,7 +22,16 @@ reference: [getting updates for sbt plugins](https://github.com/rtimush/sbt-upda
 
 in sbt console, run `evicted` to check for version conflicts
 
-## replace deprecated code
+## optional chores
+
+these chores are optional:
+they are not needed to compile the project,
+and need significant extra downloads
+
+the corresponding plugins must be activated (uncommented)
+in [project/plugins.sbt](../project/plugins.sbt)
+
+### replace deprecated code
 
 in [build.sbt](../build.sbt), use
 
@@ -32,6 +41,6 @@ ThisBuild / scalacOptions ++= Seq("-unchecked", "-deprecation")
 
 to make sbt more verbose
 
-## prettify code
+### prettify code
 
 run `scalafmt` in the sbt console
