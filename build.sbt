@@ -14,139 +14,101 @@
    limitations under the License.
 */
 
+// CHORE bump versions
+ThisBuild / scalaVersion := "2.13.4"
+ThisBuild / crossScalaVersions := Seq("2.13.4")
+
+ThisBuild / scalacOptions ++=
+  Seq(
+    //"-unchecked", "-deprecation", // make compiler more verbose
+  )
+
 ThisBuild / organization := "name.lakhin.eliah.projects"
-ThisBuild / organizationName := "papacarlo"
-//ThisBuild / name := "Papa Carlo" // not used
-ThisBuild / version := "0.8.0-SNAPSHOT"
 ThisBuild / organizationHomepage := Some(url("http://lakhin.com/"))
-ThisBuild / scmInfo := Some(
-  ScmInfo(
-    url("https://github.com/your-account/your-project"),
-    "scm:git@github.com:Eliah-Lakhin/papa-carlo.git"
-  )
-)
-ThisBuild / developers := List(
-  Developer(
-    id = "Eliah-Lakhin",
-    name = "Ilya Lakhin",
-    email = "eliah.lakhin@gmail.com",
-    url = url("http://lakhin.com/")
-  )
-)
+ThisBuild / organizationName := "papacarlo"
 ThisBuild / description := "Constructor of incremental parsers in Scala using PEG grammars"
+ThisBuild / version := "0.8.0-SNAPSHOT"
+ThisBuild / homepage := Some(url("http://lakhin.com/projects/papa-carlo/"))
 ThisBuild / licenses := List("Apache 2.0" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 ThisBuild / startYear := Some(2013)
-ThisBuild / homepage := Some(url("http://lakhin.com/projects/papa-carlo/"))
-ThisBuild / pomIncludeRepository := { _ => false }
-ThisBuild / publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (isSnapshot.value)
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-}
-ThisBuild / publishMavenStyle := true
-
-// these versions must be static (no "latest.integration")
-ThisBuild / scalaVersion := "2.13.0"
-ThisBuild / crossScalaVersions := Seq("2.13.0")
-
-import sbt._
-import sbt.Keys._
-
-//addSbtPlugin("com.jsuereth" % "sbt-pgp" % "latest.integration")
-import com.jsuereth.sbtpgp._
-
-//addSbtPlugin("org.scala-js" % "sbt-scalajs" % "latest.integration")
-enablePlugins(ScalaJSPlugin)
-
-// "If you are using a Build.scala definition, import the following"
-import org.scalajs.sbtplugin.ScalaJSPlugin
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
-
-
-
-  // used by JVM and JSDemo
-  lazy val baseSettings = Seq(
-    scalacOptions += "-unchecked",
-    //sourceDirectory := (sourceDirectory in PapaCarlo).value, // CIRCULAR
-  )
-
-
-
-  lazy val jsSettings =
-    Defaults.coreDefaultSettings ++
-    baseSettings ++
-    ScalaJSPlugin.projectSettings ++
-    Seq(
-      libraryDependencies += "com.lihaoyi" %%% "utest" % "latest.integration" % "test",
-      testFrameworks += new TestFramework("utest.runner.Framework"),
-
-      //sourceDirectory := (sourceDirectory in PapaCarlo).value, // CIRCULAR
-
-      //jsEnvInput := "not working"
-/*
-[error] Cannot determine `jsEnvInput`: Linking result does not have a module named `main`. Set jsEnvInput manually?
-[error] Full report:
-[error] Report(
-[error]   publicModules = [
-[error]
-[error]   ],
-[error] )
-*/
-
-      excludeFilter in unmanagedSources := "test"
+ThisBuild / scmInfo :=
+  Some(
+    ScmInfo(
+      url("https://github.com/Eliah-Lakhin/papa-carlo"),
+      "scm:git@github.com:Eliah-Lakhin/papa-carlo.git"
     )
-
-
-
-  lazy val PapaCarlo: sbt.Project = Project(
-    id = "root",
-    //id = "main", // did not help
-    base = file(".")
   )
-  .enablePlugins(ScalaJSPlugin)
-  .aggregate(JVM, JSDemo)
+ThisBuild / developers :=
+  List(
+    Developer(
+      id = "Eliah-Lakhin",
+      name = "Ilya Lakhin",
+      email = "eliah.lakhin@gmail.com",
+      url = url("http://lakhin.com/")
+    )
+  )
 
+import sbt.Project
+import com.jsuereth.sbtpgp.SbtPgp
 
+// used by JVM and JSDemo
+lazy val baseSettings =
+  Seq(
+    sourceDirectory := file("./src/")
+  )
 
-  lazy val JVM = Project(
+lazy val PapaCarlo =
+  Project(
+    id = "root",
+    base = file("./")
+  )
+  .aggregate(JVM)
+  .aggregate(JSDemo)
+
+lazy val JVM =
+  Project(
     id = "jvm",
     base = file("./jvm/")
   )
-
-  .settings(sbt.Defaults.coreDefaultSettings: _*)
-
-  .settings(SbtPgp.projectSettings: _*) // projectSettings globalSettings
-
+  .enablePlugins(SbtPgp)
   .settings(baseSettings: _*)
-
   .settings(
-        libraryDependencies ++= Seq(
-          "org.scalatest" %% "scalatest" % "latest.integration",
-          "net.liftweb" %% "lift-json" % "latest.integration"
-        ),
-        resolvers ++= Seq(
-          "sonatype" at "https://oss.sonatype.org/content/repositories/releases",
-          "typesafe" at "https://dl.bintray.com/typesafe/maven-releases/"
-        ),
+    // CHORE bump versions
+    libraryDependencies ++= Seq(
+      "org.scalatest" %% "scalatest" % "3.3.0-SNAP3",
+      "net.liftweb" %% "lift-json" % "3.4.3"
+    ),
+    testOptions in Test += Tests.Argument("-oD"),
 
-        testOptions in Test += Tests.Argument("-oD"),
-
-        credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
-        publishArtifact in Test := false,
+    publishTo :=
+      {
+        val nexus = "https://oss.sonatype.org/"
+        if (isSnapshot.value)
+          Some("snapshots" at nexus + "content/repositories/snapshots")
+        else
+          Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+      },
+    publishMavenStyle := true,
+    pomIncludeRepository := { _ => false },
+    credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
+    publishArtifact in Test := false,
   )
 
-
-
-  lazy val JSDemo = Project(
+lazy val JSDemo =
+  Project(
     id = "js-demo",
     base = file("./js/demo/"),
   )
   .enablePlugins(ScalaJSPlugin)
-
-  .settings(jsSettings: _*)
-
+  .settings(baseSettings: _*)
+  .settings(
+    // CHORE bump versions
+    libraryDependencies += "com.lihaoyi" %%% "utest" % "0.7.5" % "test",
+    testFrameworks += new TestFramework("utest.runner.Framework")
+    // TODO verify. what was this supposed to do?
+    //excludeFilter in unmanagedSources := "test"
+  )
+  // TODO what was this supposed to do?
   /*
   .settings(
     Seq(

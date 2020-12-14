@@ -1,10 +1,10 @@
-addSbtPlugin("com.jsuereth" % "sbt-pgp" % "latest.integration")
+// https://github.com/sbt/sbt-pgp
+addSbtPlugin("com.jsuereth" % "sbt-pgp" % "2.1.1")
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "latest.integration")
+// https://www.scala-js.org/doc/project/index.html
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.3.1")
 
-addSbtPlugin("net.ceedubs" %% "sbt-ctags" % "latest.integration")
-
-resolvers += Resolver.url("scala-js-snapshots", url("https://repo.scala-js.org/repo/releases/"))(Resolver.ivyStylePatterns)
-
-resolvers += Resolver.sonatypeRepo("releases")
-resolvers += Resolver.sonatypeRepo("snapshots")
+// https://github.com/ceedubs/sbt-ctags
+addSbtPlugin("net.ceedubs" %% "sbt-ctags" % "0.3.0")
+// TODO sbt-ctags is abandoned, replace with metals
+// https://scalameta.org/metals/docs/build-tools/sbt.html

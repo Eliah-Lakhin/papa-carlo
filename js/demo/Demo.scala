@@ -17,13 +17,13 @@
 package name.lakhin.eliah.projects.papacarlo.js.demo
 
 import scala.scalajs.js
-import js.annotation.{ JSName, JSExport }
+import js.annotation.{ JSName, JSExport, JSExportTopLevel }
 
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import name.lakhin.eliah.projects.papacarlo.syntax.Node
 import name.lakhin.eliah.projects.papacarlo.examples.Json
 
-@JSExport
+@JSExportTopLevel("js_demo")
 object Demo {
   private val lexer = Json.lexer
   private val syntax = Json.syntax(lexer)
@@ -132,7 +132,7 @@ object Demo {
       "values" -> mapToObject(node.getValues
         .map {
           case (key, values) =>
-            key -> toJsArray(values.map(s => s: js.String))
+            key -> toJsArray(values.map(s => s: String))
         }
       )
     )
