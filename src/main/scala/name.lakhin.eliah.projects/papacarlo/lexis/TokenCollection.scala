@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.lexis
@@ -128,8 +128,9 @@ final class TokenCollection(lineCutTokens: Set[String]) {
         if (context) {
           val contextView = token.context.view
           if (currentContext != contextView ||
-            segments.exists(segment => segment._1.from == index ||
-              segment._1.until - 1 == index)) {
+              segments.exists(segment =>
+                segment._1.from == index ||
+                  segment._1.until - 1 == index)) {
 
             currentContext = contextView
             view += "~" + currentContext + "~"
@@ -145,8 +146,7 @@ final class TokenCollection(lineCutTokens: Set[String]) {
             if (range.until - 1 == index) {
               view = view + end
             }
-          }
-          else if (range.from == index) {
+          } else if (range.from == index) {
             view = start + end + view
           }
         }
@@ -189,11 +189,11 @@ final class TokenCollection(lineCutTokens: Set[String]) {
 
     if (first.exists(token => lineCutTokens(token.kind))
         || second.exists(token => lineCutTokens(token.kind)))
-        (
-          Difference.head[Token](first, second, comparator),
-          0
-        )
-      else
-        Difference.double[Token](first, second, comparator)
+      (
+        Difference.head[Token](first, second, comparator),
+        0
+      )
+    else
+      Difference.double[Token](first, second, comparator)
   }
 }

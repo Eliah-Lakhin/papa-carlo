@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
@@ -28,7 +28,7 @@ final case class RequiredRule(rule: Rule) extends Rule {
     var result = rule(session)
 
     if (result == Recoverable &&
-      session.state.virtualPosition == initialPosition)
+        session.state.virtualPosition == initialPosition)
       result = Failed
 
     session.syntax.onRuleLeave.trigger(this, session.state, result)

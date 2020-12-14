@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
@@ -23,7 +23,8 @@ import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 final case class RepetitionRule(element: Rule,
                                 separator: Option[Rule] = None,
                                 min: Option[Int] = None,
-                                max: Option[Int] = None) extends Rule {
+                                max: Option[Int] = None)
+    extends Rule {
   def apply(session: Session): Int = {
     session.syntax.onRuleEnter.trigger(this, session.state)
 
@@ -88,11 +89,12 @@ final case class RepetitionRule(element: Rule,
         }
     }
 
-    val result = if (counter >= min) Successful
-    else {
-      session.state = initialState.copy(issues = lastIssues)
-      Failed
-    }
+    val result =
+      if (counter >= min) Successful
+      else {
+        session.state = initialState.copy(issues = lastIssues)
+        Failed
+      }
 
     session.syntax.onRuleLeave.trigger(this, session.state, result)
     result
@@ -100,14 +102,16 @@ final case class RepetitionRule(element: Rule,
 
   override val show =
     (((min, max) match {
-      case (None, None) => element.showOperand(4) + "*"
-      case (Some(0), None) => element.showOperand(4) + "*"
-      case (Some(1), None) => element.showOperand(4) + "+"
+      case (None, None)           => element.showOperand(4) + "*"
+      case (Some(0), None)        => element.showOperand(4) + "*"
+      case (Some(1), None)        => element.showOperand(4) + "+"
       case (Some(min: Int), None) => element.showOperand(4) + " * " + min
-      case (Some(min: Int), Some(max: Int)) => element.showOperand(4) + " * (" +
-        min + ", " +  max + ")"
-      case (None, Some(max: Int)) => element.showOperand(4) + " * (0, " +  max +
-        ")"
+      case (Some(min: Int), Some(max: Int)) =>
+        element.showOperand(4) + " * (" +
+          min + ", " + max + ")"
+      case (None, Some(max: Int)) =>
+        element.showOperand(4) + " * (0, " + max +
+          ")"
     }) + separator.map(" / " + _.showOperand(4)).getOrElse("")) -> 4
 
   override val captures =

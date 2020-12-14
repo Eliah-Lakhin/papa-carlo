@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
@@ -21,8 +21,8 @@ import name.lakhin.eliah.projects.papacarlo.syntax.{Rule, Session}
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
-final case class TokenRule(kind: String,
-                           matchUntil: Boolean = false) extends Rule {
+final case class TokenRule(kind: String, matchUntil: Boolean = false)
+    extends Rule {
   def apply(session: Session) = {
     session.syntax.onRuleEnter.trigger(this, session.state)
 
@@ -33,7 +33,9 @@ final case class TokenRule(kind: String,
     }
 
     val actualKind = session.tokens
-      .lift(index).map(_.kind).getOrElse(TokenRule.EndOfFragmentKind)
+      .lift(index)
+      .map(_.kind)
+      .getOrElse(TokenRule.EndOfFragmentKind)
 
     val result = if (actualKind == kind) {
       session.state = session.state.copy(virtualPosition = index + 1)
@@ -41,7 +43,7 @@ final case class TokenRule(kind: String,
     } else {
       session.state = session.state.issue(
         Bounds(session.state.virtualPosition, index + 1),
-        kind + " expected, but " + actualKind  + " found"
+        kind + " expected, but " + actualKind + " found"
       )
       Failed
     }

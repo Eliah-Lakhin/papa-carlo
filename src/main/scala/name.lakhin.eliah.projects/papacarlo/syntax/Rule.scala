@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.syntax
@@ -42,9 +42,9 @@ abstract class Rule {
 
   final def required = RequiredRule(this)
 
-  final def name(label: String) =  this match {
+  final def name(label: String) = this match {
     case NamedRule(_, rule: Rule, trace) => NamedRule(label, rule, trace)
-    case _ => NamedRule(label, this)
+    case _                               => NamedRule(label, this)
   }
 }
 
@@ -55,7 +55,7 @@ object Rule {
 
   def capture(tag: String, rule: Rule) = rule match {
     case CapturingRule(_, rule: Rule) => CapturingRule(tag, rule)
-    case _ => CapturingRule(tag, rule)
+    case _                            => CapturingRule(tag, rule)
   }
 
   def branch(tag: String, rule: Rule): Rule = rule match {
@@ -67,7 +67,7 @@ object Rule {
     case SequentialRule(steps) =>
       ChoiceRule(steps.map(step => branch(tag, step)))
 
-    case rule@RepetitionRule(element, _, _, _) =>
+    case rule @ RepetitionRule(element, _, _, _) =>
       rule.copy(element = branch(tag, element))
 
     case RecoveryRule(rule: Rule, exception, recoveryBranch) =>
@@ -97,8 +97,10 @@ object Rule {
     RepetitionRule(rule, separator = Some(separator), min = Some(1))
 
   def repeat(rule: Rule, separator: Rule, times: Int) =
-    RepetitionRule(rule, separator = Some(separator), min = Some(times),
-      max = Some(times))
+    RepetitionRule(rule,
+                   separator = Some(separator),
+                   min = Some(times),
+                   max = Some(times))
 
   def sequence(steps: Rule*) = SequentialRule(steps.toList)
 

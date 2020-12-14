@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo
@@ -20,8 +20,10 @@ package papacarlo
 import name.lakhin.eliah.projects.papacarlo.lexis.Token
 import name.lakhin.eliah.projects.papacarlo.syntax.{State, Rule, Node, Cache}
 import name.lakhin.eliah.projects.papacarlo.utils.{Signal, Registry}
-import name.lakhin.eliah.projects.papacarlo.syntax.rules.{NamedRule,
-  ReferentialRule}
+import name.lakhin.eliah.projects.papacarlo.syntax.rules.{
+  NamedRule,
+  ReferentialRule
+}
 
 final class Syntax(val lexer: Lexer) {
   final class RuleDefinition(val name: String) {
@@ -32,7 +34,7 @@ final class Syntax(val lexer: Lexer) {
     private var constructor = Option.empty[() => Rule]
     private[papacarlo] lazy val body = constructor match {
       case Some(bodyConstructor) => bodyConstructor()
-      case _ => throw new RuntimeException("Rule " + name + " undefined")
+      case _                     => throw new RuntimeException("Rule " + name + " undefined")
     }
 
     def produce(kind: String) = {
@@ -70,10 +72,9 @@ final class Syntax(val lexer: Lexer) {
 
           if (mainRule.exists(_ == name)) {
             val rootFragment = lexer.fragments.rootFragment
-            val rootNode = new Node(name, rootFragment.begin,
-              rootFragment.end)
+            val rootNode = new Node(name, rootFragment.begin, rootFragment.end)
 
-            nodes.add(id => {rootNode.id = id; rootNode})
+            nodes.add(id => { rootNode.id = id; rootNode })
 
             new Cache(Syntax.this, rootFragment, rootNode)
 
@@ -108,11 +109,11 @@ final class Syntax(val lexer: Lexer) {
     case (fragment, range) =>
       var candidate = Option(fragment)
 
-      while (candidate.exists(fragment => !cache.contains(fragment.id)))
-        candidate = candidate.flatMap(_.parent)
+      while (candidate.exists(fragment => !cache.contains(fragment.id))) candidate =
+        candidate.flatMap(_.parent)
 
-      for (cache <-
-           cache.get(candidate.getOrElse(lexer.fragments.rootFragment).id)) {
+      for (cache <- cache.get(
+             candidate.getOrElse(lexer.fragments.rootFragment).id)) {
         onCacheInvalidate.trigger(cache)
         cache.invalidate(range)
       }

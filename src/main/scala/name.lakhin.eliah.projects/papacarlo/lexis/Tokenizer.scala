@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.lexis
@@ -26,8 +26,7 @@ final class Tokenizer {
   private var mutables = Set.empty[String]
   private var indentations = Set.empty[String]
 
-
-/*
+  /*
 [warn] papacarlo/lexis/Tokenizer.scala:28:20:
        The outer reference in this type test cannot be checked at run time.
 
@@ -36,7 +35,7 @@ final class Tokenizer {
 
 https://stackoverflow.com/questions/16450008/typesafe-swing-events-the-outer-reference-in-this-type-test-cannot-be-checked-a/16466541
 the compiler can't find a way to check the outer reference, because you've declared your inner class as final.
-*/
+   */
   //final case class RuleDefinition(name: String) {
   case class RuleDefinition(name: String) {
     def skip = {

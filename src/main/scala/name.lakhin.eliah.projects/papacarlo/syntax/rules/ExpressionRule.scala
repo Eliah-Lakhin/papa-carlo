@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
@@ -30,16 +30,16 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
       ExpressionRule.this.parse(this, rightBindingPower)
 
     def placeholder = {
-      val place = session.reference(session
-        .relativeIndexOf(session.state.virtualPosition))
+      val place = session.reference(
+        session
+          .relativeIndexOf(session.state.virtualPosition))
       new Node(RecoveryRule.PlaceholderKind, place, place)
     }
 
     def consume(expectedToken: String, optional: Boolean = false) = {
       val currentPosition = session.state.virtualPosition
 
-      val actualKind = session
-        .tokens
+      val actualKind = session.tokens
         .lift(currentPosition)
         .map(_.kind)
         .getOrElse(TokenRule.EndOfFragmentKind)
@@ -52,7 +52,7 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
       } else if (!optional) {
         issues = true
         session.state = session.state
-          .issue(expectedToken + " expected, but " + actualKind  + " found")
+          .issue(expectedToken + " expected, but " + actualKind + " found")
         None
       } else {
         None
@@ -66,7 +66,7 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
     def freeState(): Unit = {
       states match {
         case _ :: tail => states = tail
-        case _ =>
+        case _         =>
       }
     }
 
@@ -95,15 +95,14 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
       this
     }
 
-    def nullDenotation(procedure: (ExpressionState,
-      TokenReference) => Node) = {
+    def nullDenotation(procedure: (ExpressionState, TokenReference) => Node) = {
       this.nud = Some(procedure)
 
       this
     }
 
-    def leftDenotation(procedure: (ExpressionState, Node,
-      TokenReference) => Node) = {
+    def leftDenotation(
+        procedure: (ExpressionState, Node, TokenReference) => Node) = {
       this.led = Some(procedure)
 
       this
@@ -119,8 +118,9 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
 
     val result = parse(state) match {
       case Some(result: Node) =>
-        session.state = session.state.copy(products = (tag, result) ::
-          session.state.products)
+        session.state = session.state.copy(
+          products = (tag, result) ::
+            session.state.products)
 
         if (state.issues) Recoverable
         else Successful
@@ -142,8 +142,7 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
     })
 
   private def token(session: Session) =
-    session
-      .tokens
+    session.tokens
       .lift(session.state.virtualPosition)
       .map(_.kind)
       .getOrElse(TokenRule.EndOfFragmentKind)
@@ -154,8 +153,9 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
   private def next(session: Session) = {
     val result = reference(session)
 
-    session.state = session.state.copy(virtualPosition =
-      session.state.virtualPosition + 1)
+    session.state = session.state.copy(
+      virtualPosition =
+        session.state.virtualPosition + 1)
 
     result
   }
@@ -165,8 +165,7 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
 
     if (atom(expression.session) != Successful) expression.issues = true
 
-    val result = expression.session.state.products
-      .headOption
+    val result = expression.session.state.products.headOption
       .filter(_._1 == ExpressionRule.Operand &&
         expression.session.state.products.length > initialState.products.length)
       .map(_._2)
@@ -182,28 +181,29 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
 
   private def parse(expression: ExpressionState,
                     rightBindingPower: Int = 0): Option[Node] =
-    parselets.get(token(expression.session))
-      .flatMap(parselet => parselet.nud.map(nud => {
-        val operatorReference = next(expression.session)
-        Some(nud(expression, operatorReference))
-      }))
+    parselets
+      .get(token(expression.session))
+      .flatMap(parselet =>
+        parselet.nud.map(nud => {
+          val operatorReference = next(expression.session)
+          Some(nud(expression, operatorReference))
+        }))
       .getOrElse(operand(expression))
-      .map {
-        first =>
-          var left = first
-          var finished = false
+      .map { first =>
+        var left = first
+        var finished = false
 
-          while (!finished) {
-            finished = true
+        while (!finished) {
+          finished = true
 
-            for (parselet <- parselets.get(token(expression.session));
-                 led <- parselet.led if rightBindingPower < parselet.lbp) {
-              left = led(expression, left, next(expression.session))
-              finished = false
-            }
+          for (parselet <- parselets.get(token(expression.session));
+               led <- parselet.led if rightBindingPower < parselet.lbp) {
+            left = led(expression, left, next(expression.session))
+            finished = false
           }
+        }
 
-          left
+        left
       }
 
   override val show = "expression(" + atom.show._1 + ") -> " + tag -> 1

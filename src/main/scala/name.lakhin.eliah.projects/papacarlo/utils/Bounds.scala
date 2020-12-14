@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.utils
@@ -51,8 +51,7 @@ final case class Bounds(from: Int, until: Int) {
         Bounds(from, until + injection.length)
       else
         Bounds(from, injection.until)
-    }
-    else if (defined) this
+    } else if (defined) this
     else injection
 
   def takeout(another: Bounds) =
@@ -64,8 +63,7 @@ final case class Bounds(from: Int, until: Int) {
         Bounds(from, (until - another.length) max another.from)
       else
         Bounds(another.until, until - another.from)
-    }
-    else this
+    } else this
 
   def enlarge(leftRadius: Int, rightRadius: Int) =
     if (defined) Bounds(from - leftRadius, until + rightRadius)

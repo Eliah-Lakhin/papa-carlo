@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.syntax
@@ -29,7 +29,7 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
 
   private val sourceTokens = fragment.getTokens
   private[syntax] val sourceTokensOffset = fragment.begin.index
-  private val sourceTokensCount =fragment.end.index - sourceTokensOffset + 1
+  private val sourceTokensCount = fragment.end.index - sourceTokensOffset + 1
 
   private var initialIndex = IndexedSeq.empty[Int]
   private var index = IndexedSeq.empty[Int]
@@ -56,11 +56,11 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
   }
 
   private[syntax] def getCache(virtualIndex: Int, nodeKind: String) =
-    reference(relativeIndexOf(virtualIndex))
-      .getFragment
+    reference(relativeIndexOf(virtualIndex)).getFragment
       .flatMap(fragment => syntax.cache.get(fragment.id))
-      .filter(cache => cache.errors.isEmpty && cache.node.kind == nodeKind &&
-        cache.ready)
+      .filter(cache =>
+        cache.errors.isEmpty && cache.node.kind == nodeKind &&
+          cache.ready)
       .map(_.node)
 
   private[syntax] def parse(ruleName: String) = {
@@ -84,13 +84,13 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
       val result = ReferentialRule(ruleName, Some("result"))(this)
 
       if (result == Result.Failed) {
-        var firstIssue = state.issues.foldLeft(Issue(
-          Bounds.cursor(tokens.length),
-          "code mismatched"
-        )) {
-          (current, issue) =>
-            if (issue.range.from <= current.range.from) issue
-            else current
+        var firstIssue = state.issues.foldLeft(
+          Issue(
+            Bounds.cursor(tokens.length),
+            "code mismatched"
+          )) { (current, issue) =>
+          if (issue.range.from <= current.range.from) issue
+          else current
         }
 
         if (firstIssue.range.length == 0)
@@ -128,10 +128,12 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
               result.headOption match {
                 case Some(current) =>
                   if ((current.range.until < issue.range.from) &&
-                    (initialIndex.indexOf(current.range.until - 1) + 1 <
-                      initialIndex.indexOf(issue.range.from))) result ::= issue
-                  else result = current
-                    .copy(range = current.range.union(issue.range)) ::
+                      (initialIndex.indexOf(current.range.until - 1) + 1 <
+                        initialIndex.indexOf(issue.range.from)))
+                    result ::= issue
+                  else
+                    result = current
+                      .copy(range = current.range.union(issue.range)) ::
                       result.tail
 
                 case None => result ::= issue
@@ -173,12 +175,11 @@ final class Session(val syntax: Syntax, fragment: Fragment) {
 
     packrat = packrat
       .filter(!_._2.range.touches(actualSegment))
-      .mapValues {
-        packrat =>
-          if (packrat.range.from >= actualSegment.from)
-            packrat.copy(range = packrat.range.shift(-actualSegment.length))
-          else
-            packrat
+      .mapValues { packrat =>
+        if (packrat.range.from >= actualSegment.from)
+          packrat.copy(range = packrat.range.shift(-actualSegment.length))
+        else
+          packrat
       }
       .toMap
 

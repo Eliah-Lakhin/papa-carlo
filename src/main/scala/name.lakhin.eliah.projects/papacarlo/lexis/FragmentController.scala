@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.lexis
@@ -45,7 +45,7 @@ final class FragmentController(contextualizer: Contextualizer,
       invalidationRange = invalidationRange.inject(newRange)
       val newTokens = invalidationRange.slice(tokens.descriptions)
       contextualizer.contextualize(contextAfter(invalidationRange.from - 1),
-        newTokens)
+                                   newTokens)
       invalidTokens = Map.empty
       valid = true
 
@@ -77,9 +77,9 @@ final class FragmentController(contextualizer: Contextualizer,
       if (valid) {
         invalidationRange = Bounds.undefined
         invalidationContext = None
-      }
-      else for ((index, seam) <- invalidTokens)
-        invalidationRange = invalidationRange.union(index)
+      } else
+        for ((index, seam) <- invalidTokens)
+          invalidationRange = invalidationRange.union(index)
   }
 
   private def invalidate(): Unit = {
@@ -100,7 +100,8 @@ final class FragmentController(contextualizer: Contextualizer,
         token.seam match {
           case EnterContext =>
             fragmentOrigins ::= tokens.references
-              .lift(index).getOrElse(tokens.head)
+              .lift(index)
+              .getOrElse(tokens.head)
 
           case LeaveContext =>
             val begin = fragmentOrigins match {
@@ -117,7 +118,7 @@ final class FragmentController(contextualizer: Contextualizer,
               same
             })
             if (begin.fragment.isEmpty
-              || token.context == invalidationContext)
+                || token.context == invalidationContext)
               existFragment match {
                 case Some(fragment) => fragmentsToInvalidate ::= fragment
                 case None =>
@@ -126,10 +127,10 @@ final class FragmentController(contextualizer: Contextualizer,
               }
 
           case _ =>
-        }
-      else
-        for (fragmentToRemove <-
-             tokens.references.lift(index).flatMap(_.fragment))
+        } else
+        for (fragmentToRemove <- tokens.references
+               .lift(index)
+               .flatMap(_.fragment))
           fragmentToRemove.remove()
 
       if (index == tokenCount - 1 && fragmentOrigins.nonEmpty) {
@@ -145,7 +146,7 @@ final class FragmentController(contextualizer: Contextualizer,
       fragment.onInvalidate.trigger(fragment)
 
     if (fragmentsToInvalidate.isEmpty &&
-      this.invalidationContext.exists(_.parent.nonEmpty)) {
+        this.invalidationContext.exists(_.parent.nonEmpty)) {
 
       this.invalidationContext = this.invalidationContext.flatMap(_.parent)
       invalidate()
@@ -175,28 +176,32 @@ final class FragmentController(contextualizer: Contextualizer,
 
     invalidationRange.map(
       from =>
-        (0 until (from + 1))
-          .reverse
+        (0 until (from + 1)).reverse
           .takeWhile(index => {
             val token = tokens.descriptions
-              .lift(index).getOrElse(Token.lineBreak)
+              .lift(index)
+              .getOrElse(Token.lineBreak)
 
             invalidTokens.contains(index) || token.seam != EnterContext ||
-              token.context != invalidationContext
+            token.context != invalidationContext
           })
-          .lastOption.map(_ - 1).filter(_ >= 0)
+          .lastOption
+          .map(_ - 1)
+          .filter(_ >= 0)
           .getOrElse(0),
-
       until =>
         (((until - 1) max 0) until tokenCount)
           .takeWhile(index => {
             val token = tokens.descriptions
-              .lift(index).getOrElse(Token.lineBreak)
+              .lift(index)
+              .getOrElse(Token.lineBreak)
 
             invalidTokens.contains(index) || token.seam != LeaveContext ||
-              token.context != invalidationContext
+            token.context != invalidationContext
           })
-          .lastOption.map(_ + 1).filter(_ < tokenCount)
+          .lastOption
+          .map(_ + 1)
+          .filter(_ < tokenCount)
           .getOrElse(tokenCount - 1) + 1
     )
   }
@@ -213,16 +218,19 @@ final class FragmentController(contextualizer: Contextualizer,
           .map(_.intersect(token.context))
           .orElse(Some(token.context))
         outOfContext = false
-      }
-      else if (!invalid && token.seam == LeaveContext) outOfContext = true
+      } else if (!invalid && token.seam == LeaveContext) outOfContext = true
 
       index += 1
     }
 
     if (outOfContext)
       invalidationContext = invalidationContext
-        .map(_.intersect(tokens.descriptions.lift(range.until)
-          .map(_.context).getOrElse(Context.Base)))
+        .map(
+          _.intersect(
+            tokens.descriptions
+              .lift(range.until)
+              .map(_.context)
+              .getOrElse(Context.Base)))
   }
 
   private def contextAfter(index: Int) = contextNear(index, LeaveContext)
@@ -239,13 +247,17 @@ final class FragmentController(contextualizer: Contextualizer,
       .getOrElse(Context.Base)
 
   private def checkLeftBalance(start: Int, prototype: Context): Unit = {
-    checkBalance((0 until (start + 1)).reverse, LeaveContext, EnterContext,
-      prototype)
+    checkBalance((0 until (start + 1)).reverse,
+                 LeaveContext,
+                 EnterContext,
+                 prototype)
   }
 
   private def checkRightBalance(start: Int, prototype: Context): Unit = {
-    checkBalance(start until tokens.descriptions.length, EnterContext,
-      LeaveContext, prototype)
+    checkBalance(start until tokens.descriptions.length,
+                 EnterContext,
+                 LeaveContext,
+                 prototype)
   }
 
   private def checkBalance(indexes: Range,

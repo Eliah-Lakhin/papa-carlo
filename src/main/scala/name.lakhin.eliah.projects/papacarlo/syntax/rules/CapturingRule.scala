@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
@@ -29,15 +29,16 @@ final case class CapturingRule(tag: String, rule: Rule) extends Rule {
     var result = rule(session)
 
     if (initialState.virtualPosition < session.state.virtualPosition) {
-      session.state = session.state.copy(captures =
-        (
-          tag,
-          session.relativeSegmentOf(Bounds(
-            initialState.virtualPosition,
-            session.state.virtualPosition
-          ))
-        ) :: session.state.captures
-      )
+      session.state = session.state.copy(
+        captures =
+          (
+            tag,
+            session.relativeSegmentOf(
+              Bounds(
+                initialState.virtualPosition,
+                session.state.virtualPosition
+              ))
+          ) :: session.state.captures)
     } else if (result != Failed) {
       session.state = initialState.copy(issues = session.state.issues)
       result = Failed

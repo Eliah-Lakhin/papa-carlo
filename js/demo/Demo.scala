@@ -12,12 +12,12 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects.papacarlo.js.demo
 
 import scala.scalajs.js
-import js.annotation.{ JSName, JSExport, JSExportTopLevel }
+import js.annotation.{JSName, JSExport, JSExportTopLevel}
 
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import name.lakhin.eliah.projects.papacarlo.syntax.Node
@@ -29,9 +29,13 @@ object Demo {
   private val syntax = Json.syntax(lexer)
   private var addedNodes = List.empty[Int]
   private var removedNodes = List.empty[Int]
-  
-  syntax.onNodeCreate.bind { node => addedNodes ::= node.getId }
-  syntax.onNodeRemove.bind { node => removedNodes ::= node.getId }
+
+  syntax.onNodeCreate.bind { node =>
+    addedNodes ::= node.getId
+  }
+  syntax.onNodeRemove.bind { node =>
+    removedNodes ::= node.getId
+  }
 
   @JSExport
   def inputAll(text: String) {
@@ -49,16 +53,15 @@ object Demo {
 
   @JSExport
   def getErrors() = {
-    toJsArray(syntax.getErrors.map {
-      error =>
-        val from = tokenCursor(error.from)
-        val to = tokenCursor(error.to, after = true)
+    toJsArray(syntax.getErrors.map { error =>
+      val from = tokenCursor(error.from)
+      val to = tokenCursor(error.to, after = true)
 
-        js.Dynamic.literal(
-          "from" -> from,
-          "to" -> to,
-          "description" -> error.description
-        )
+      js.Dynamic.literal(
+        "from" -> from,
+        "to" -> to,
+        "description" -> error.description
+      )
     })
   }
 
@@ -73,10 +76,11 @@ object Demo {
           "to" -> tokenCursor(node.getEnd, after = true)
         )
 
-      case None => js.Dynamic.literal(
-        "exists" -> false,
-        "id" -> id
-      )
+      case None =>
+        js.Dynamic.literal(
+          "exists" -> false,
+          "id" -> id
+        )
     }
   }
 
@@ -129,12 +133,12 @@ object Demo {
       "children" ->
         toJsArray(node.getBranches.map(_._2).flatten.map(_.getId: js.Any)),
       "kind" -> node.getKind,
-      "values" -> mapToObject(node.getValues
-        .map {
-          case (key, values) =>
-            key -> toJsArray(values.map(s => s: String))
-        }
-      )
+      "values" -> mapToObject(
+        node.getValues
+          .map {
+            case (key, values) =>
+              key -> toJsArray(values.map(s => s: String))
+          })
     )
   }
 
@@ -144,4 +148,3 @@ object Demo {
     js.Dynamic.literal("line" -> (pair._1 - 1), "ch" -> (pair._2 - 1))
   }
 }
-

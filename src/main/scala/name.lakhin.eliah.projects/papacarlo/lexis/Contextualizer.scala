@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.lexis
@@ -87,33 +87,44 @@ final class Contextualizer {
 
         if (first.open != first.close) {
           if (!first.top)
-            stateMachine ::= Tuple4(first.open, first.context, EnterContext,
-              first.context)
+            stateMachine ::= Tuple4(first.open,
+                                    first.context,
+                                    EnterContext,
+                                    first.context)
           if (first.close != Token.LineBreakKind)
             stateMachine ::= Tuple4(first.close, 0, UnexpectedSeam, -1)
         }
 
         for (second <- pairs)
           if (!second.top
-            && first.context != second.context
-            && first.priorityLevel >= second.priorityLevel) {
+              && first.context != second.context
+              && first.priorityLevel >= second.priorityLevel) {
 
-            stateMachine ::= Tuple4(first.open, second.context, EnterContext,
-              first.context)
+            stateMachine ::= Tuple4(first.open,
+                                    second.context,
+                                    EnterContext,
+                                    first.context)
             if (first.open != first.close &&
-              first.close != Token.LineBreakKind) {
-              stateMachine ::= Tuple4(first.close, second.context,
-                UnexpectedSeam, -1)
+                first.close != Token.LineBreakKind) {
+              stateMachine ::= Tuple4(first.close,
+                                      second.context,
+                                      UnexpectedSeam,
+                                      -1)
             }
           }
       }
 
       val result =
-        stateMachine.groupBy(_._1).mapValues(
-          _.groupBy(_._2).mapValues(
-            list => (list.head._3, list.head._4)
-          ).toMap
-        ).toMap
+        stateMachine
+          .groupBy(_._1)
+          .mapValues(
+            _.groupBy(_._2)
+              .mapValues(
+                list => (list.head._3, list.head._4)
+              )
+              .toMap
+          )
+          .toMap
 
       this.stateMachineCache = Some(result)
       result
@@ -125,7 +136,9 @@ final class Contextualizer {
 
     var context = entryContext
     for (token <- tokens) {
-      val next = stateMachine.get(token.kind).flatMap(_.get(context.kind))
+      val next = stateMachine
+        .get(token.kind)
+        .flatMap(_.get(context.kind))
         .getOrElse(Tuple2(RegularSeam, 0))
 
       token.seam = next._1

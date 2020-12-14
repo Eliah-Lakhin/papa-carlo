@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.lexis
@@ -21,18 +21,18 @@ sealed abstract class Matcher {
   def apply(code: String, position: Int): Option[Int]
 }
 
-final case class StringMatcher(pattern: String)
-  extends Matcher {
+final case class StringMatcher(pattern: String) extends Matcher {
 
   def apply(code: String, position: Int) =
     Some(position + pattern.length)
-      .filter(next => next <= code.length
-        && code.substring(position, next) == pattern)
+      .filter(
+        next =>
+          next <= code.length
+            && code.substring(position, next) == pattern)
 }
 
-final case class CharSetMatcher(set: Set[Char],
-                                positive: Boolean = true)
-  extends Matcher {
+final case class CharSetMatcher(set: Set[Char], positive: Boolean = true)
+    extends Matcher {
 
   def apply(code: String, position: Int) =
     Some(position + 1)
@@ -45,13 +45,14 @@ final case class CharSetMatcher(set: Set[Char],
 final case class CharRangeMatcher(from: Char,
                                   to: Char,
                                   positive: Boolean = true)
-  extends Matcher {
+    extends Matcher {
 
   def apply(code: String, position: Int) =
     Some(position + 1)
       .filter(next => next <= code.length)
-      .filter(_ => (from <= code.charAt(position)
-        && code.charAt(position) <= to) == positive)
+      .filter(_ =>
+        (from <= code.charAt(position)
+          && code.charAt(position) <= to) == positive)
 
   def sup = copy(positive = !positive)
 }
@@ -59,7 +60,7 @@ final case class CharRangeMatcher(from: Char,
 final case class RepetitionMatcher(sub: Matcher,
                                    min: Int = 0,
                                    max: Int = Int.MaxValue)
-  extends Matcher {
+    extends Matcher {
 
   def apply(code: String, position: Int) = {
     var count = 0
@@ -79,23 +80,21 @@ final case class RepetitionMatcher(sub: Matcher,
   }
 }
 
-final case class ChoiceMatcher(first: Matcher,
-                               second: Matcher) extends Matcher {
+final case class ChoiceMatcher(first: Matcher, second: Matcher)
+    extends Matcher {
   def apply(code: String, position: Int) =
     first(code, position).orElse(second(code, position))
 }
 
-final case class SequentialMatcher(first: Matcher,
-                                   second: Matcher)
-  extends Matcher {
+final case class SequentialMatcher(first: Matcher, second: Matcher)
+    extends Matcher {
 
   def apply(code: String, position: Int) =
     first(code, position).flatMap(next => second(code, next))
 }
 
-final case class PredicativeMatcher(sub: Matcher,
-                                    positive: Boolean = true)
-  extends Matcher {
+final case class PredicativeMatcher(sub: Matcher, positive: Boolean = true)
+    extends Matcher {
 
   def apply(code: String, position: Int) =
     Some(position)

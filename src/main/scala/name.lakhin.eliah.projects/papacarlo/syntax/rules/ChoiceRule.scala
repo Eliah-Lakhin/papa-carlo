@@ -12,7 +12,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
@@ -35,7 +35,7 @@ final case class ChoiceRule(choices: List[Rule]) extends Rule {
 
         case Recoverable =>
           if (bestResult._1 < Recoverable ||
-            bestResult._2.virtualPosition < session.state.virtualPosition)
+              bestResult._2.virtualPosition < session.state.virtualPosition)
             bestResult = (Recoverable, session.state)
 
           session.state = initialState
@@ -57,11 +57,10 @@ final case class ChoiceRule(choices: List[Rule]) extends Rule {
 
   override val captures = choices.map(_.captures).reduce(_ ++ _)
 
-  override val branches = choices.map(_.branches).reduce {
-    (left, right) =>
-      var result = left
-      for ((key, values) <- right)
-        result += key -> (result.getOrElse(key, Set.empty) ++ values)
-      result
+  override val branches = choices.map(_.branches).reduce { (left, right) =>
+    var result = left
+    for ((key, values) <- right)
+      result += key -> (result.getOrElse(key, Set.empty) ++ values)
+    result
   }
 }
