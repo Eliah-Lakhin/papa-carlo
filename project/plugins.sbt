@@ -8,3 +8,6 @@ addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.3.1")
 addSbtPlugin("net.ceedubs" %% "sbt-ctags" % "0.3.0")
 // TODO sbt-ctags is abandoned, replace with metals
 // https://scalameta.org/metals/docs/build-tools/sbt.html
+
+// https://scalacenter.github.io/scalafix/docs/users/installation.html
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.24")

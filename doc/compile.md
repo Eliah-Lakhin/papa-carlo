@@ -2,8 +2,9 @@
 
 to compile `papa-carlo`, you need
 
-* JDK, the Java Development Kit. `sbt` recommends [AdoptOpenJDK JDK 11](https://adoptopenjdk.net/) (version 15 should work too)
-* [sbt](https://www.scala-sbt.org/release/docs/Setup.html), the Simple Build Tool for scala and java apps
+* JDK, the Java Development Kit.  
+`sbt` recommends [AdoptOpenJDK JDK 11](https://adoptopenjdk.net/?variant=openjdk11) or [AdoptOpenJDK JDK 8](https://adoptopenjdk.net/?variant=openjdk8)
+* [sbt](https://www.scala-sbt.org/release/docs/Setup.html), the Scala Build Tool, version 1.x
 
 the folder of the `sbt` executable should now be in your PATH environment variable
 
@@ -22,6 +23,18 @@ sbt
 sbt:root> 
 ```
 
-enter `; reload; compile` to compile
-
+enter `; reload; jvm/test` to compile the papa-carlo library for java.  
 to compile again, press `arrow up` and hit enter
+
+enter `jvm/packageBin` to build a JAR package to [jvm/target/](../jvm/target/)
+
+enter `js-demo/optimizeJS` to build the JavaScript demo.  
+To use the demo, [start an HTTP server](https://gist.github.com/willurd/5720255)
+in the folder [js/demo/](../js/demo).  
+for example on Linux:
+
+```
+cd js/demo/
+python -m http.server 8000 &
+xdg-open http://localhost:8000/
+```

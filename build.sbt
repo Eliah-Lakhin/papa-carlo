@@ -18,9 +18,14 @@
 ThisBuild / scalaVersion := "2.13.4"
 ThisBuild / crossScalaVersions := Seq("2.13.4")
 
+// needed for scalafix
+ThisBuild / semanticdbEnabled := true
+ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+
 ThisBuild / scalacOptions ++=
   Seq(
-    //"-unchecked", "-deprecation", // make compiler more verbose
+    "-unchecked", "-deprecation", // make compiler more verbose
+    "-Ywarn-unused", // needed for scalafix
   )
 
 ThisBuild / organization := "name.lakhin.eliah.projects"
@@ -75,11 +80,10 @@ lazy val JVM =
   .settings(
     // CHORE bump versions
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.3.0-SNAP3",
+      "org.scalatest" %% "scalatest" % "3.3.0-SNAP3" % "test",
       "net.liftweb" %% "lift-json" % "3.4.3"
     ),
     testOptions in Test += Tests.Argument("-oD"),
-
     publishTo :=
       {
         val nexus = "https://oss.sonatype.org/"
