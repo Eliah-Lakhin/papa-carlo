@@ -28,7 +28,11 @@ to compile again, press `arrow up` and hit enter
 
 enter `jvm/packageBin` to build a JAR package to [jvm/target/](../jvm/target/)
 
-enter `js-demo/optimizeJS` to build the JavaScript demo.  
+enter `js-demo/fullLinkJS` to build the JavaScript demo
+with [scala-js](https://www.scala-js.org/doc/tutorial/basic/).  
+This will generate `js/demo/target/scala-2.13/js-demo-opt/main.js`,
+which is included by `js/demo/client.js` and `js/demo/server.js`,
+which are included by `js/demo/index.html`.  
 To use the demo, [start an HTTP server](https://gist.github.com/willurd/5720255)
 in the folder [js/demo/](../js/demo).  
 for example on Linux:
@@ -36,5 +40,9 @@ for example on Linux:
 ```
 cd js/demo/
 python -m http.server 8000 &
-xdg-open http://localhost:8000/
+xdg-open http://localhost:8000/index.html
 ```
+
+enter `js-demo/fastLinkJS` to build the JavaScript demo in development mode.
+in `js/demo/client.js` and `js/demo/server.js`,
+replace `js-demo-opt/main.js` with `js-demo-fastopt/main.js`

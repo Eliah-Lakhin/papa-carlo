@@ -27,8 +27,9 @@ onmessage = function(event) {
   switch (event.data.kind) {
     case 'init':
       if (!parser) {
-        importScripts('./target/scala-2.11/papa-carlo-opt.js');
-        parser = Demo();
+        importScripts('./target/scala-2.13/js-demo-opt/main.js'); // produced by `sbt js-demo/fullLinkJS`
+        //importScripts('./target/scala-2.13/js-demo-fastopt/main.js'); // produced by `sbt js-demo/fastLinkJS`
+        parser = PapaCarloDemoParser;
       }
 
       postMessage({kind: 'ready'});

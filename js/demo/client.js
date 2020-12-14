@@ -81,17 +81,16 @@ var initParser = function(main) {
     worker.postMessage({ kind: 'init' });
   } else {
     d3.text(
-      './target/scala-2.11/papa-carlo-opt.js',
+      './target/scala-2.13/js-demo-opt/main.js', // produced by `sbt js-demo/fullLinkJS`
+      //'./target/scala-2.13/js-demo-fastopt/main.js', // produced by `sbt js-demo/fastLinkJS`
       function(error, parserCode) {
         if (error) {
           console.error(error);
           return;
         }
-
         eval(parserCode);
-
         var
-          parser = Demo(),
+          parser = PapaCarloDemoParser,
           buffer = null,
           api = function(code) {
             if (api.busy) {

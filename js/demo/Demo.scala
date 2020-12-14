@@ -23,7 +23,7 @@ import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import name.lakhin.eliah.projects.papacarlo.syntax.Node
 import name.lakhin.eliah.projects.papacarlo.examples.Json
 
-@JSExportTopLevel("js_demo")
+@JSExportTopLevel("PapaCarloDemoParser")
 object Demo {
   private val lexer = Json.lexer
   private val syntax = Json.syntax(lexer)
