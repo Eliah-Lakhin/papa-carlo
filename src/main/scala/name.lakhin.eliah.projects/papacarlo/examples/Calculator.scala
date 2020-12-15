@@ -12,13 +12,17 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
+
 package name.lakhin.eliah.projects
 package papacarlo.examples
 
 import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
-import name.lakhin.eliah.projects.papacarlo.lexis.{Contextualizer, Matcher,
-  Tokenizer}
+import name.lakhin.eliah.projects.papacarlo.lexis.{
+  Contextualizer,
+  Matcher,
+  Tokenizer
+}
 import name.lakhin.eliah.projects.papacarlo.syntax.{Expressions, Rule}
 
 object Calculator {
@@ -48,29 +52,30 @@ object Calculator {
 
   def lexer = new Lexer(tokenizer, new Contextualizer)
 
-  def syntax(lexer: Lexer) = new {
-    val syntax = new Syntax(lexer)
+  def syntax(lexer: Lexer) =
+    new {
+      val syntax = new Syntax(lexer)
 
-    import syntax._
-    import Rule._
-    import Expressions._
+      import syntax._
+      import Rule._
+      import Expressions._
 
-    rule("expression").main {
-      val rule =
-        expression(branch("operand", recover(number, "operand required")))
+      rule("expression").main {
+        val rule =
+          expression(branch("operand", recover(number, "operand required")))
 
-      group(rule, "(", ")")
-      postfix(rule, "%", 1)
-      prefix(rule, "+", 2)
-      prefix(rule, "-", 2)
-      infix(rule, "*", 3)
-      infix(rule, "/", 3, rightAssociativity = true)
-      infix(rule, "+", 4)
-      infix(rule, "-", 4)
+        group(rule, "(", ")")
+        postfix(rule, "%", 1)
+        prefix(rule, "+", 2)
+        prefix(rule, "-", 2)
+        infix(rule, "*", 3)
+        infix(rule, "/", 3, rightAssociativity = true)
+        infix(rule, "+", 4)
+        infix(rule, "-", 4)
 
-      rule
-    }
+        rule
+      }
 
-    val number = rule("number") {capture("value", token("number"))}
-  }.syntax
+      val number = rule("number") { capture("value", token("number")) }
+    }.syntax
 }

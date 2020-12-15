@@ -12,15 +12,14 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
+
 package name.lakhin.eliah.projects
 package papacarlo.lexis
 
 import name.lakhin.eliah.projects.papacarlo.utils.{Bounds, Signal}
 
-final case class Fragment(id: Int,
-                          begin: TokenReference,
-                          end: TokenReference) {
+final case class Fragment(id: Int, begin: TokenReference, end: TokenReference) {
   private var defined = true
   private val tokenRemoveReaction = (reference: TokenReference) => remove()
 
@@ -36,14 +35,13 @@ final case class Fragment(id: Int,
         if (candidate.end.index >= end.index) return Some(candidate)
 
       None
-    }
-    else None
+    } else None
 
   def range =
     if (defined) Bounds(begin.index, end.index + 1)
     else Bounds.undefined
 
-  private[lexis] def remove() {
+  private[lexis] def remove(): Unit = {
     if (defined) {
       onRemove.trigger(this)
       defined = false

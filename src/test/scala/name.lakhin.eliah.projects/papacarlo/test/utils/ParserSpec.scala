@@ -13,29 +13,34 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
-import org.scalatest.FunSpec
-import net.liftweb.json.JsonAST._
+import org.scalatest.funspec.AnyFunSpec
+import net.liftweb.json.JsonAST.{JValue, JInt, JArray, JString, JBool}
 
-abstract class ParserSpec(parserName: String,
-                          inputBase: String = Resources.DefaultResourceBase,
-                          outputBase: String = Resources.DefaultResourceBase)
-  extends FunSpec {
+// Resources = papacarlo.test.utils.Resources
+// Test = papacarlo.test.utils.Test
+
+abstract class ParserSpec(
+  parserName: String,
+  inputBase: String = Resources.DefaultResourceBase,
+  outputBase: String = Resources.DefaultResourceBase
+) extends AnyFunSpec {
 
   protected def lexer: Lexer
   protected def parser: (Lexer, Syntax)
 
   private val resources = new Resources(inputBase, outputBase)
 
-  private val monitors:
-    Map[String, (String, () => Monitor, Boolean)] = Map(
+  private val monitors: Map[String, (String, () => Monitor, Boolean)] =
+    Map(
       "token" ->
         (
           "tokenize",
-          () => new TokenizerMonitor(lexer),
+          () => new TokenizerMonitor(lexer), // monitorConstructor = actual result generator
           true
         ),
       "fragment" ->
@@ -91,6 +96,8 @@ abstract class ParserSpec(parserName: String,
         )
     )
 
+  // src/test/resources/fixtures/json/config.json
+  // src/test/resources/fixtures/calculator/config.json
   private val tests =
     resources.json[Map[String, Map[String, JValue]]](parserName, "config.json")
       .map({
@@ -150,11 +157,12 @@ abstract class ParserSpec(parserName: String,
   }
 
   for (test <- tests) {
-    describe(test.testName + " test") {
+    describe(parserName + " " + test.testName) {
 
       for ((monitorName, (description, monitorConstructor, default)) <-
            monitors)
         if (test.monitors.contains(monitorName))
+
           it("should " + description) {
             var monitor = constructMonitor(test, monitorConstructor)
 
@@ -184,11 +192,19 @@ abstract class ParserSpec(parserName: String,
 
             for ((result, step) <- results.reverse.zipWithIndex)
               if (step >= test.outputFrom)
-                assert(
-                  result == test.prototypes.get(monitorName)
-                    .flatMap(_.get(step)).getOrElse(""),
-                  "Step " + step + " result did not equal to the prototype"
-                )
+                assertResult(
+                  // expected
+                  test.prototypes.get(monitorName)
+                    .flatMap(_.get(step)).getOrElse("")
+                  ,
+                  "- Result did not match the prototype in " +
+                    "src/test/resources/fixtures/" + parserName + "/" +
+                    test.testName + "/prototype/step" + step + "/" +
+                    monitorName + ".txt"
+                ) {
+                  // actual
+                  result
+                }
           }
     }
   }

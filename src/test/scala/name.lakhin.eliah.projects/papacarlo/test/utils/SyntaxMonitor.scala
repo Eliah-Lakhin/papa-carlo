@@ -13,24 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
-import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
+import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
 
-final class ErrorMonitor(lexer: Lexer, syntax: Syntax)
-  extends SyntaxMonitor(lexer, syntax) {
-
-  def getResult = syntax
-    .getErrors
-    .map(error => " > " + error.description +
-      (
-        if (shortOutput) " " + lexer.rangeToString(error.range)
-        else ":\n" + lexer.highlight(error.range, Some(10)))
-      )
-    .mkString("\n\n")
-
-  def prepare() {}
-
-  def release() {}
-}
+abstract class SyntaxMonitor(lexer: Lexer, syntax: Syntax)
+  extends Monitor(lexer)

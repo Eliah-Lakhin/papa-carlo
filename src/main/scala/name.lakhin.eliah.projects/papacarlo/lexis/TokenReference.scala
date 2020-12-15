@@ -12,14 +12,14 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
+
 package name.lakhin.eliah.projects
 package papacarlo.lexis
 
 import name.lakhin.eliah.projects.papacarlo.utils.Signal
 
-final class TokenReference(val collection: TokenCollection,
-                           var index: Int) {
+final class TokenReference(val collection: TokenCollection, var index: Int) {
   private[lexis] var fragment = Option.empty[Fragment]
   private var removed: Boolean = false
 
@@ -35,7 +35,7 @@ final class TokenReference(val collection: TokenCollection,
 
   def getFragment = fragment
 
-  private[lexis] def remove() {
+  private[lexis] def remove(): Unit = {
     removed = true
     onRemove.trigger(this)
   }

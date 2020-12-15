@@ -12,7 +12,8 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
+
 package name.lakhin.eliah.projects
 package papacarlo.lexis
 
@@ -25,7 +26,18 @@ final class Tokenizer {
   private var mutables = Set.empty[String]
   private var indentations = Set.empty[String]
 
-  final case class RuleDefinition(name: String) {
+  /*
+[warn] papacarlo/lexis/Tokenizer.scala:28:20:
+       The outer reference in this type test cannot be checked at run time.
+
+[warn]   final case class RuleDefinition(name: String) {
+[warn]                    ^
+
+https://stackoverflow.com/questions/16450008/typesafe-swing-events-the-outer-reference-in-this-type-test-cannot-be-checked-a/16466541
+the compiler can't find a way to check the outer reference, because you've declared your inner class as final.
+   */
+  //final case class RuleDefinition(name: String) {
+  case class RuleDefinition(name: String) {
     def skip = {
       skips += name
 
@@ -47,23 +59,23 @@ final class Tokenizer {
 
   def tokenCategory(name: String, matcher: Matcher) = {
     if (!rules.contains(name)) {
-      rules += Pair(name, matcher)
+      rules += Tuple2(name, matcher)
       order :+= name
     }
 
     RuleDefinition(name)
   }
 
-  def terminals(patterns: String*) {
+  def terminals(patterns: String*): Unit = {
     for (pattern <- patterns)
       if (!terminals.exists(terminal => terminal._1 == pattern))
-        terminals = (Pair(pattern, StringMatcher(pattern)) :: terminals)
+        terminals = (Tuple2(pattern, StringMatcher(pattern)) :: terminals)
           .sortBy(_._1.length)
 
     terminals = terminals.sortBy(_._1).reverse
   }
 
-  def keywords(patterns: String*) {
+  def keywords(patterns: String*): Unit = {
     keywords ++= patterns
   }
 

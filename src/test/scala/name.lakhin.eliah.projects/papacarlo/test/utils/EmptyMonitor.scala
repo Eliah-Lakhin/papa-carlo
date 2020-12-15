@@ -13,10 +13,18 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
-import name.lakhin.eliah.projects.papacarlo.{Syntax, Lexer}
+import name.lakhin.eliah.projects.papacarlo.{Lexer, Syntax}
 
-abstract class SyntaxMonitor(lexer: Lexer, syntax: Syntax)
-  extends Monitor(lexer)
+final class EmptyMonitor(lexer: Lexer, syntax: Syntax)
+  extends SyntaxMonitor(lexer, syntax) {
+
+  def getResult = ""
+
+  def prepare() {}
+
+  def release() {}
+}

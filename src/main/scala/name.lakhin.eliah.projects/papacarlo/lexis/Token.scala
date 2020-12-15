@@ -12,7 +12,8 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
+
 package name.lakhin.eliah.projects
 package papacarlo.lexis
 
@@ -31,21 +32,21 @@ final class Token(val kind: String,
   def isMutable = mutable
   def getContext = context
 
-  private[lexis] def applySkipLevel(level: SkipLevel) {
+  private[lexis] def applySkipLevel(level: SkipLevel): Unit = {
     level match {
-      case ForceSkip => skipped = true
-      case ForceUse => skipped = false
+      case ForceSkip        => skipped = true
+      case ForceUse         => skipped = false
       case OriginalSkipping => skipped = originallySkipped
     }
   }
 
-  private[lexis] def revertMutability() {
+  private[lexis] def revertMutability(): Unit = {
     mutable = originallyMutable
   }
 
   private[lexis] def sameAs(another: Token) = {
     value == another.value || kind == another.kind &&
-      (mutable || another.mutable)
+    (mutable || another.mutable)
   }
 }
 

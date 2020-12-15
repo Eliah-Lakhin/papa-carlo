@@ -12,7 +12,8 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
+
 package name.lakhin.eliah.projects
 package papacarlo.syntax.rules
 
@@ -23,7 +24,7 @@ import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 final case class RecoveryRule(rule: Rule,
                               exception: Option[String] = None,
                               branch: Option[String] = None)
-  extends Rule {
+    extends Rule {
 
   def apply(session: Session) = {
     session.syntax.onRuleEnter.trigger(this, session.state)
@@ -34,19 +35,19 @@ final case class RecoveryRule(rule: Rule,
     if (result == Failed) {
       val issues =
         exception
-          .map {
-            description =>
-              Issue(
-                Bounds.cursor(initialState.virtualPosition),
-                description
-              ) :: initialState.issues
+          .map { description =>
+            Issue(
+              Bounds.cursor(initialState.virtualPosition),
+              description
+            ) :: initialState.issues
           }
           .getOrElse(session.state.issues)
 
       branch match {
         case Some(tag) =>
-          val place = session.reference(session
-            .relativeIndexOf(initialState.virtualPosition))
+          val place = session.reference(
+            session
+              .relativeIndexOf(initialState.virtualPosition))
 
           session.state = initialState.copy(
             issues = issues,
@@ -71,7 +72,7 @@ final case class RecoveryRule(rule: Rule,
 
     branch match {
       case Some(branch: String) => branch + " -> " + atom -> 1
-      case None => atom -> Int.MaxValue
+      case None                 => atom -> Int.MaxValue
     }
   }
 
@@ -81,7 +82,8 @@ final case class RecoveryRule(rule: Rule,
     branch match {
       case Some(tag) =>
         rule.branches + (tag ->
-          (rule.branches.getOrElse(tag, Set.empty) + RecoveryRule.PlaceholderKind))
+          (rule.branches
+            .getOrElse(tag, Set.empty) + RecoveryRule.PlaceholderKind))
 
       case None => rule.branches
     }

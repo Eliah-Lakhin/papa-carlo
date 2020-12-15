@@ -12,7 +12,8 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
+
 package name.lakhin.eliah.projects
 package papacarlo.syntax
 
@@ -20,9 +21,7 @@ import name.lakhin.eliah.projects.papacarlo.Syntax
 import name.lakhin.eliah.projects.papacarlo.lexis.Fragment
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 
-final class Cache(syntax: Syntax,
-                  val fragment: Fragment,
-                  val node: Node) {
+final class Cache(syntax: Syntax, val fragment: Fragment, val node: Node) {
   private[papacarlo] var errors = List.empty[Error]
   private[syntax] var ready = true
 
@@ -38,7 +37,7 @@ final class Cache(syntax: Syntax,
 
   syntax.onCacheCreate.trigger(this)
 
-  private[papacarlo] def invalidate(range: Bounds) {
+  private[papacarlo] def invalidate(range: Bounds): Unit = {
     val session = new Session(syntax, fragment)
 
     ready = false
@@ -53,15 +52,15 @@ final class Cache(syntax: Syntax,
         if (descendant.cachable)
           for (descendantFragment <- descendant.begin.getFragment)
             if (descendantFragment.end.index == descendant.end.index
-              && !errorBounds.exists(_.intersects(descendant.range)))
-                new Cache(syntax, descendantFragment, descendant)
+                && !errorBounds.exists(_.intersects(descendant.range)))
+              new Cache(syntax, descendantFragment, descendant)
 
       syntax.onNodeMerge.trigger(node)
       node.update()
     }
   }
 
-  private def remove() {
+  private def remove(): Unit = {
     syntax.onCacheRemove.trigger(this)
     syntax.cache -= fragment.id
     node.onRemove.unbind(nodeRemove)

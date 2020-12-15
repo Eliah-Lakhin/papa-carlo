@@ -12,24 +12,28 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
+
 package name.lakhin.eliah.projects
 package papacarlo.utils
 
 object Difference {
   def head[A](first: Seq[A],
-                second: Seq[A],
-                comparator: Pair[A, A] => Boolean) =
+              second: Seq[A],
+              comparator: Tuple2[A, A] => Boolean) =
     first.zip(second).takeWhile(comparator).length
 
   def double[A](first: Seq[A],
                 second: Seq[A],
-                comparator: Pair[A, A] => Boolean) = {
+                comparator: Tuple2[A, A] => Boolean) = {
     val pairs = first.zip(second)
     val head = pairs.takeWhile(comparator).length
     (
       head,
-      first.drop(head).reverse.zip(second.drop(head).reverse)
+      first
+        .drop(head)
+        .reverse
+        .zip(second.drop(head).reverse)
         .takeWhile(comparator)
         .length
     )

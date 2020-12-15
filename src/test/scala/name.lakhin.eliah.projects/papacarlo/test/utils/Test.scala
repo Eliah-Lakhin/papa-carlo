@@ -13,42 +13,50 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
-final case class Test(resources: Resources,
-                      parserName: String,
-                      testName: String,
-                      steps: Int,
-                      monitors: Set[String],
-                      shortOutput: Boolean,
-                      outputFrom: Int,
-                      independentSteps: Boolean) {
+final case class Test(
+  resources: Resources,
+  parserName: String,
+  testName: String,
+  steps: Int,
+  monitors: Set[String],
+  shortOutput: Boolean,
+  outputFrom: Int,
+  independentSteps: Boolean
+) {
+
   val inputs = read("input")
 
-  val prototypes = monitors.map(name => name -> read("prototype", name)).toMap
+  val prototypes = monitors.map(
+    monitorName => monitorName -> read("prototype", monitorName)
+  ).toMap
 
-  private def read(dir: String, tag: String = "") = (
+  private def read(dir: String, monitorName: String = "") = (
     for (step <- 0 until steps)
       yield (
         step,
-        if (tag.nonEmpty)
+        if (monitorName.nonEmpty) {
           resources.input(
             parserName + "/" + testName + "/" + dir + "/step" + step,
-            tag + ".txt"
+            monitorName + ".txt"
           )
-        else
+        }
+        else {
           resources.input(
             parserName + "/" + testName + "/" + dir,
             "step" + step + ".txt"
           )
+        }
       )
   ).toMap
 
-  def write(kind: String, step: Int, value: String) {
+  def write(monitorName: String, step: Int, value: String): Unit = {
     resources.update(
       parserName + "/" + testName + "/output/step" + step,
-      kind + ".txt",
+      monitorName + ".txt",
       value
     )
   }

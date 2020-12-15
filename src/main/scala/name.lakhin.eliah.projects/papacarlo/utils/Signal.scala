@@ -12,7 +12,8 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
+
 package name.lakhin.eliah.projects
 package papacarlo.utils
 
@@ -23,19 +24,19 @@ final class Signal[T] {
 
   def nonEmpty = slots.nonEmpty
 
-  def bind(slot: T => Any) {
+  def bind(slot: T => Any): Unit = {
     slots ::= slot
   }
 
-  def unbind(slot: T => Any) {
+  def unbind(slot: T => Any): Unit = {
     slots = slots.filter(_ != slot)
   }
 
-  def unbindAll() {
+  def unbindAll(): Unit = {
     slots = Nil
   }
 
-  def trigger(value: T) {
+  def trigger(value: T): Unit = {
     slots.foreach(_(value))
   }
 }

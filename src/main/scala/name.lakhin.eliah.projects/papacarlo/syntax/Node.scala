@@ -12,13 +12,18 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
+
 package name.lakhin.eliah.projects
 package papacarlo.syntax
 
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
-import name.lakhin.eliah.projects.papacarlo.utils.{Difference, Registry, Bounds,
-  Signal}
+import name.lakhin.eliah.projects.papacarlo.utils.{
+  Difference,
+  Registry,
+  Bounds,
+  Signal
+}
 
 final class Node(private[syntax] var kind: String,
                  private[syntax] var begin: TokenReference,
@@ -54,16 +59,16 @@ final class Node(private[syntax] var kind: String,
   def getValues = references.map {
     case (tag, tokens) =>
       tag -> constants
-        .get(tag).map(constant => List(constant))
+        .get(tag)
+        .map(constant => List(constant))
         .getOrElse(tokens.filter(_.exists).map(_.token.value))
   }
 
   def getParent = parent
 
-  def getBranchName(deep: Int = 0): Option[String] = parent.flatMap {
-    parent =>
-      if (deep > 0) parent.getBranchName(deep - 1)
-      else parent.branches.find(entry => entry._2.exists(_.id == id)).map(_._1)
+  def getBranchName(deep: Int = 0): Option[String] = parent.flatMap { parent =>
+    if (deep > 0) parent.getBranchName(deep - 1)
+    else parent.branches.find(entry => entry._2.exists(_.id == id)).map(_._1)
   }
 
   def getProducer = producer
@@ -72,14 +77,14 @@ final class Node(private[syntax] var kind: String,
 
   def getCachable = cachable
 
-  def update(ancestor: Boolean = false) {
+  def update(ancestor: Boolean = false): Unit = {
     if (onChange.nonEmpty && !ancestor) onChange.trigger(this)
     else for (parent <- parent) parent.update(ancestor)
   }
 
   private def getChildren = branches.map(_._2).flatten
 
-  private[syntax] def remove(registry: Registry[Node]) {
+  private[syntax] def remove(registry: Registry[Node]): Unit = {
     if (bound) {
       onRemove.trigger(this)
       releaseReflection()
@@ -96,10 +101,10 @@ final class Node(private[syntax] var kind: String,
       val difference = Difference.double[Node](
         oldBranches,
         newBranches,
-        (pair: Pair[Node, Node]) => {
+        (pair: Tuple2[Node, Node]) => {
           pair._1.bound &&
-            !pair._2.range.intersects(invalidationRange) &&
-            pair._1.sourceCode == pair._2.sourceCode
+          !pair._2.range.intersects(invalidationRange) &&
+          pair._1.sourceCode == pair._2.sourceCode
         }
       )
 
@@ -138,10 +143,9 @@ final class Node(private[syntax] var kind: String,
     val reversedUnregistered = unregistered.reverse
 
     for (descendant <- reversedUnregistered)
-      registry.add {
-        id =>
-          descendant.id = id
-          descendant
+      registry.add { id =>
+        descendant.id = id
+        descendant
       }
 
     for (descendant <- reversedUnregistered;
@@ -151,20 +155,20 @@ final class Node(private[syntax] var kind: String,
     reversedUnregistered
   }
 
-  def visit(enter: Node => Any, leave: Node => Any) {
+  def visit(enter: Node => Any, leave: Node => Any): Unit = {
     enter(this)
     for (branch <- branches.map(_._2).flatten) branch.visit(enter, leave)
     leave(this)
   }
 
-  private def visitBranches(current: Node, enter: (Node, Node) => Any) {
+  private def visitBranches(current: Node, enter: (Node, Node) => Any): Unit = {
     for (branch <- getChildren) {
       enter(current, branch)
       branch.visitBranches(branch, enter)
     }
   }
 
-  private def reverseVisitBranches(leave: Node => Any) {
+  private def reverseVisitBranches(leave: Node => Any): Unit = {
     for (branch <- getChildren) {
       branch.reverseVisitBranches(leave)
       leave(branch)
@@ -174,16 +178,17 @@ final class Node(private[syntax] var kind: String,
   private def subscribableReferences =
     references
       .filter(pair => !constants.contains(pair._1))
-      .map(_._2.filter(reference => !reference.exists ||
-        reference.token.isMutable))
+      .map(_._2.filter(reference =>
+        !reference.exists ||
+          reference.token.isMutable))
       .flatten
 
-  private def initializeReflection() {
+  private def initializeReflection(): Unit = {
     for (reference <- subscribableReferences)
       reference.onUpdate.bind(reflection)
   }
 
-  private def releaseReflection() {
+  private def releaseReflection(): Unit = {
     for (reference <- subscribableReferences)
       reference.onUpdate.unbind(reflection)
   }
@@ -192,8 +197,10 @@ final class Node(private[syntax] var kind: String,
 
   def sourceCode =
     if (begin.exists && end.exists)
-      begin.collection.descriptions.slice(begin.index, end.index + 1)
-        .map(_.value).mkString
+      begin.collection.descriptions
+        .slice(begin.index, end.index + 1)
+        .map(_.value)
+        .mkString
     else
       ""
 
@@ -210,7 +217,7 @@ final class Node(private[syntax] var kind: String,
       result ++= " {"
 
       for (reference <- references.keys ++ constants.keys
-        .filter(constant => !references.contains(constant))) {
+             .filter(constant => !references.contains(constant))) {
 
         result ++= "\n" + prefix + "  " + reference + ": " +
           getValues(reference).mkString("")
@@ -236,14 +243,13 @@ object Node {
   def apply(kind: String,
             begin: TokenReference,
             end: TokenReference,
-            branches: List[Pair[String, Node]] = Nil,
-            references: List[Pair[String, TokenReference]] = Nil,
+            branches: List[Tuple2[String, Node]] = Nil,
+            references: List[Tuple2[String, TokenReference]] = Nil,
             constants: Map[String, String] = Map.empty) = {
     val result = new Node(kind, begin, end)
 
-    result.branches = branches.groupBy(_._1).mapValues(_.map(_._2)).view.force
-    result.references = references.groupBy(_._1).mapValues(_.map(_._2))
-      .view.force
+    result.branches = branches.groupBy(_._1).mapValues(_.map(_._2)).toMap
+    result.references = references.groupBy(_._1).mapValues(_.map(_._2)).toMap
     result.constants = constants
 
     result

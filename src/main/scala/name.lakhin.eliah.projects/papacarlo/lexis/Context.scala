@@ -12,12 +12,12 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
+
 package name.lakhin.eliah.projects
 package papacarlo.lexis
 
-final case class Context(kind: Int,
-                         parent: Option[Context] = None) {
+final case class Context(kind: Int, parent: Option[Context] = None) {
   val view: String = kind + parent.map(":" + _.view).getOrElse("")
 
   val depth: Int = parent.map(_.depth + 1).getOrElse(0)

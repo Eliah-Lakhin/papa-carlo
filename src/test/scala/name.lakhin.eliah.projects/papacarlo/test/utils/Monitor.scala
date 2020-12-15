@@ -13,36 +13,44 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 package name.lakhin.eliah.projects
 package papacarlo.test.utils
 
 import name.lakhin.eliah.projects.papacarlo.Lexer
 
-final class TokenizerMonitor(lexer: Lexer) extends Monitor(lexer) {
-  def getResult = {
-    var context = ""
+abstract class Monitor(lexer: Lexer) {
+  var shortOutput = false
+
+  final def input(text: String) = {
+    val start = System.currentTimeMillis()
+    lexer.input(text)
+    val end = System.currentTimeMillis()
+
+    end - start
+  }
+
+  def prepare()
+  def getResult: String
+  def release()
+
+  protected final def unionLog(log: List[(Symbol, String)],
+                               enterLeaveIndentation: Boolean = false) = {
     val result = new StringBuilder
+    var indent = 0
 
-    for (token <- lexer.fragments.rootFragment.getTokens) {
-      token.getContext.view
-      if (token.isMutable) result ++= "`"
+    for ((title, details) <- log.reverse) {
+      if (title == 'leave) indent -= 1
 
-      if (token.isSkippable) result ++= token.value
-      else result ++= token.kind
+      val offset = "  " * (indent * 2)
 
-      if (token.isMutable) result ++= "`"
+      result ++= offset + " > " + title.name + ":\n"
+      result ++= details.split("\n", -1).map(offset + _).mkString("\n")
+      result ++= "\n\n"
 
-      val tokenContext = token.getContext.view
-      if (context != tokenContext) {
-        context = tokenContext
-        result ++= "~" + context + "~"
-      }
+      if (title == 'enter) indent += 1
     }
 
     result.toString()
   }
-
-  def prepare() {}
-
-  def release() {}
 }
